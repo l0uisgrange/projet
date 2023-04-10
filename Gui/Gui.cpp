@@ -5,28 +5,62 @@
 **/
 
 #include "Gui.h"
+#include <vector>
 #include <iostream>
 using namespace std;
 
-Window::Window() : box_1(Gtk::Orientation::VERTICAL, 10),
+Window::Window() : box(Gtk::Orientation::HORIZONTAL, 20),
+                   box_actions(Gtk::Orientation::VERTICAL, 10),
+                   label_maj("Mises à jour"), label_particules("Particules"),
+                   label_rs("Robots réparateurs en service"),
+                   label_rr("Robots réparateurs en réserve"),
+                   label_ns("Robots neutraliseurs en service"),
+                   label_np("Robots neutraliseurs en panne"),
+                   label_nd("Robots neutraliseurs détruits"),
+                   label_nr("Robots neutraliseurs en réserve"),
                    exit_button("exit"), open_button("open"),
                    save_button("save"), start_button("start"),
-                   stop_button("stop") {
+                   stop_button("stop"), drawingArea() {
 	set_default_size(820, 350);
-	set_title("Propre-en-ordre");
+	set_title("Mission Propre En Ordre");
     // Marges
     exit_button.set_margin(2);
     open_button.set_margin(2);
     save_button.set_margin(2);
     start_button.set_margin(2);
     stop_button.set_margin(2);
-    box_1.set_margin(10);
+    box_actions.set_margin(10);
     // Ajout à la boîte
-    box_1.append(exit_button);
-    box_1.append(open_button);
-    box_1.append(save_button);
-    box_1.append(start_button);
-    box_1.append(stop_button);
+    box_actions.append(exit_button);
+    box_actions.append(open_button);
+    box_actions.append(save_button);
+    box_actions.append(start_button);
+    box_actions.append(stop_button);
+    box_actions.append(separator);
+    std::vector<std::pair<std::string, int>> namedObjects = {
+            {"Mises à jour",                    2},
+            {"Particules",                      3},
+            {"Robots réparateurs en service",   10},
+            {"Robots réparateurs en réserve",   10},
+            {"Robots neutraliseurs en service", 10},
+            {"Robots neutraliseurs en panne",   10},
+            {"Robots neutraliseurs détruits",   10},
+            {"Robots neutraliseurs en réserve", 10}
+    };
+    for(auto& item : namedObjects) {
+        Gtk::Box box_ligne = Gtk::Box(Gtk::Orientation::HORIZONTAL, 20);
+        Gtk::Label label = Gtk::Label(item.first);
+        label.set_halign(Gtk::Align::START);
+        label.set_hexpand(true);
+        Gtk::Label valeur = Gtk::Label(to_string(item.second));
+        valeur.set_halign(Gtk::Align::END);
+        box_ligne.append(label);
+        box_ligne.append(valeur);
+        box_actions.append(box_ligne);
+    }
+    box_actions.set_halign(Gtk::Align::START);
+    box.append(box_actions);
+    box.append(drawingArea);
 
-    set_child(box_1);
+    set_child(box_actions);
 }
