@@ -11,9 +11,9 @@ LINKING = `pkg-config --cflags gtkmm-4.0`
 LDLIBS = `pkg-config --libs gtkmm-4.0`
 CXXFILES = Projet.cpp Simulation/Simulation.cpp \
 	Particule/Particule.cpp Robot/Robot.cpp Message/Message.cpp \
-	Shape/Shape.cpp
+	Shape/Shape.cpp Gui/Gui.cpp
 OFILES = Projet.o Constantes.o Simulation/Simulation.o Particule/Particule.o \
-	Robot/Robot.o Message/Message.o Shape/Shape.o
+	Robot/Robot.o Message/Message.o Shape/Shape.o Gui/Gui.o
 
 all: $(OUT)
 
@@ -32,29 +32,27 @@ clean:
 	@echo "*** MODULES OBJETS ET EXECUTABLES EFFACES ***"
 	@/bin/rm -f *.o */*.o $(OUT)
 
-Projet.o: Projet.cpp Simulation/Simulation.cpp Simulation/Simulation.h
+Projet.o: Projet.cpp \
+  Simulation/Simulation.h \
+  Gui/Gui.h
 	$(CXX) $(CXXFLAGS) $(LINKING) -c $< -o $@ $(LINKING)
-
 Simulation.o: Simulation/Simulation.cpp Simulation/Simulation.h \
-  Simulation/../Particule/Particule.h \
-  Simulation/../Particule/../Shape/Shape.h \
-  Simulation/../Particule/../Constantes.h \
-  Simulation/../Particule/../Message/Message.h \
-  Simulation/../Robot/Robot.h Simulation/../Robot/../Message/Message.h \
-  Simulation/../Robot/../Shape/Shape.h \
-  Simulation/../Robot/../Particule/Particule.h
-
+  Particule/Particule.h \
+  Shape/Shape.h \
+  Constantes.h \
+  Message/Message.h \
+  Message/Message.h \
+  Shape/Shape.h \
+  Particule/Particule.h
 Particule.o: Particule/Particule.cpp Particule/Particule.h \
-  Particule/../Shape/Shape.h Particule/../Constantes.h \
-  Particule/../Message/Message.h
-
-Robot.o: Robot/Robot.cpp Robot/Robot.h Robot/../Message/Message.h \
-  Robot/../Shape/Shape.h Robot/../Particule/Particule.h \
-  Robot/../Particule/../Shape/Shape.h Robot/../Particule/../Constantes.h \
-  Robot/../Particule/../Message/Message.h Robot/../Constantes.h
-	$(CXX) $(CXXFLAGS) $(LINKING) -c $< -o $@ $(LINKING)
-
+  Constantes.h \
+  Message/Message.h
+Robot.o: Robot/Robot.cpp Robot/Robot.h \
+  Message/Message.h \
+  Particule/Particule.h \
+  Constantes.h \
+  Constantes.h
 Message.o: Message/Message.cpp Message/Message.h
-
 Shape.o: Shape/Shape.cpp Shape/Shape.h
+Gui/Gui.o: Gui/Gui.cpp Gui/Gui.h
 	$(CXX) $(CXXFLAGS) $(LINKING) -c $< -o $@ $(LINKING)

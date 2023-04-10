@@ -6,22 +6,9 @@
 
 #include "Simulation/Simulation.h"
 #include <iostream>
-#include <gtkmm/window.h>
-#include <gtkmm/application.h>
+#include <gtkmm.h>
+#include "Gui/Gui.h"
 using namespace std;
-
-class ExampleWindow : public Gtk::Window
-{
-public:
-	ExampleWindow();
-};
-
-ExampleWindow::ExampleWindow()
-{
-	set_default_size(820, 350);
-	set_title("EPFL Logo");
-}
-
 
 int main(int argc, char *argv[]) {
     S2d position;
@@ -32,5 +19,5 @@ int main(int argc, char *argv[]) {
     }
     simulation.lecture(argv[1]);
     auto app = Gtk::Application::create();
-	return app->make_window_and_run<ExampleWindow>(1, argv);
+	return app->make_window_and_run<Window>(1, argv);
 }
