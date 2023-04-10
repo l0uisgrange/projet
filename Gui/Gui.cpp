@@ -9,6 +9,11 @@
 #include <iostream>
 using namespace std;
 
+Drawing::Drawing() {
+    set_content_width(400);
+	set_content_height(400);
+}
+
 Window::Window() : box(Gtk::Orientation::HORIZONTAL, 20),
                    box_actions(Gtk::Orientation::VERTICAL, 10),
                    label_maj("Mises à jour"), label_particules("Particules"),
@@ -20,8 +25,8 @@ Window::Window() : box(Gtk::Orientation::HORIZONTAL, 20),
                    label_nr("Robots neutraliseurs en réserve"),
                    exit_button("exit"), open_button("open"),
                    save_button("save"), start_button("start"),
-                   stop_button("stop"), drawingArea() {
-	set_default_size(820, 350);
+                   stop_button("stop"), drawingArea_() {
+	set_default_size(820, 400);
 	set_title("Mission Propre En Ordre");
     // Marges
     exit_button.set_margin(2);
@@ -48,7 +53,7 @@ Window::Window() : box(Gtk::Orientation::HORIZONTAL, 20),
             {"Robots neutraliseurs en réserve", 10}
     };
     for(auto& item : namedObjects) {
-        Gtk::Box box_ligne = Gtk::Box(Gtk::Orientation::HORIZONTAL, 20);
+        Gtk::Box box_ligne = Gtk::Box(Gtk::Orientation::HORIZONTAL, 40);
         Gtk::Label label = Gtk::Label(item.first);
         label.set_halign(Gtk::Align::START);
         label.set_hexpand(true);
@@ -60,7 +65,8 @@ Window::Window() : box(Gtk::Orientation::HORIZONTAL, 20),
     }
     box_actions.set_halign(Gtk::Align::START);
     box.append(box_actions);
-    box.append(drawingArea);
+    box.append(drawingArea_);
 
-    set_child(box_actions);
+    set_child(box);
 }
+

@@ -4,10 +4,21 @@
  Version 1.0
 **/
 
-#include <gtkmm.h>
+#include <gtkmm/application.h>
+#include <gtkmm/window.h>
+#include <gtkmm/button.h>
+#include <gtkmm/separator.h>
+#include <gtkmm/label.h>
+#include <gtkmm/box.h>
+#include <gtkmm/drawingarea.h>
 
 #ifndef FENETRE_H
 #define FENETRE_H
+
+class Drawing : public Gtk::DrawingArea {
+public:
+    Drawing();
+};
 
 class Window : public Gtk::Window {
 public:
@@ -34,7 +45,7 @@ protected:
     // Séparateurs
     Gtk::Separator separator;
     // Zone de dessin
-    Gtk::DrawingArea drawingArea;
+    Drawing drawingArea_;
 };
 
 #endif
