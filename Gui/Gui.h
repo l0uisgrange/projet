@@ -18,6 +18,8 @@
 class Drawing : public Gtk::DrawingArea {
 public:
     Drawing();
+protected:
+    void on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int height);
 };
 
 class Window : public Gtk::Window {

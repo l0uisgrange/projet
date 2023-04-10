@@ -12,7 +12,14 @@ using namespace std;
 Drawing::Drawing() {
     set_content_width(400);
 	set_content_height(400);
+    set_draw_func(sigc::mem_fun(*this, &Drawing::on_draw));
 }
+
+void Drawing::on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int height) {
+    cr->set_source_rgb(1.0, 1.0, 1.0);
+    cr->rectangle(0, 0, width, height);
+    cr->fill();
+};
 
 Window::Window() : box(Gtk::Orientation::HORIZONTAL, 20),
                    box_actions(Gtk::Orientation::VERTICAL, 10),
