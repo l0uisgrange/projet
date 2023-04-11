@@ -10,8 +10,8 @@
 using namespace std;
 
 Drawing::Drawing() {
-    set_content_width(400);
-	set_content_height(400);
+    set_content_width(500);
+	set_content_height(500);
     set_draw_func(sigc::mem_fun(*this, &Drawing::on_draw));
 }
 
@@ -21,7 +21,7 @@ void Drawing::on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int he
     cr->fill();
 };
 
-Window::Window() : box(Gtk::Orientation::HORIZONTAL, 20),
+Window::Window() : box(Gtk::Orientation::HORIZONTAL, 0),
                    box_actions(Gtk::Orientation::VERTICAL, 10),
                    label_maj("Mises à jour"), label_particules("Particules"),
                    label_rs("Robots réparateurs en service"),
@@ -33,7 +33,7 @@ Window::Window() : box(Gtk::Orientation::HORIZONTAL, 20),
                    exit_button("exit"), open_button("open"),
                    save_button("save"), start_button("start"),
                    stop_button("stop"), drawingArea_() {
-	set_default_size(820, 400);
+	set_default_size(820, 500);
 	set_title("Mission Propre En Ordre");
     // Marges
     exit_button.set_margin(2);
@@ -42,6 +42,7 @@ Window::Window() : box(Gtk::Orientation::HORIZONTAL, 20),
     start_button.set_margin(2);
     stop_button.set_margin(2);
     box_actions.set_margin(10);
+    drawingArea_.set_margin(10);
     // Ajout à la boîte
     box_actions.append(exit_button);
     box_actions.append(open_button);
@@ -60,7 +61,7 @@ Window::Window() : box(Gtk::Orientation::HORIZONTAL, 20),
             {"Robots neutraliseurs en réserve", 10}
     };
     for(auto& item : namedObjects) {
-        Gtk::Box box_ligne = Gtk::Box(Gtk::Orientation::HORIZONTAL, 40);
+        Gtk::Box box_ligne = Gtk::Box(Gtk::Orientation::HORIZONTAL, 50);
         Gtk::Label label = Gtk::Label(item.first);
         label.set_halign(Gtk::Align::START);
         label.set_hexpand(true);
@@ -72,6 +73,7 @@ Window::Window() : box(Gtk::Orientation::HORIZONTAL, 20),
     }
     box_actions.set_halign(Gtk::Align::START);
     box.append(box_actions);
+    box.append(separator2);
     box.append(drawingArea_);
 
     set_child(box);

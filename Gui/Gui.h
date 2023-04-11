@@ -46,6 +46,7 @@ protected:
     Gtk::Button stop_button;
     // Séparateurs
     Gtk::Separator separator;
+    Gtk::Separator separator2;
     // Zone de dessin
     Drawing drawingArea_;
 };
