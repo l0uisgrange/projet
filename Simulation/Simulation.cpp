@@ -233,12 +233,14 @@ vector<Cercle> Simulation::get_cercles() {
 
 vector<Carre> Simulation::get_carres() {
     vector<Carre> tab;
+    tab.reserve(particules_.size());
     for(const auto& particule : particules_) {
         tab.push_back(particule.get_forme());
     }
     return tab;
 }
 
-Simulation::Simulation(int nbP, Spatial spatial) : nbP_(nbP), spatial_(spatial) {
+Simulation::Simulation(int nbP)
+    : nbP_(nbP), spatial_(Spatial(S2d(), 0, 0, 0, 0, 0, 0)) {
 
 }
