@@ -11,13 +11,29 @@
 #include <gtkmm/label.h>
 #include <gtkmm/box.h>
 #include <gtkmm/drawingarea.h>
+#include <gtkmm/filechooserdialog.h>
+#include <gtkmm/filechooser.h>
 
 #ifndef FENETRE_H
 #define FENETRE_H
 
+struct Frame {
+	double xMin;
+	double xMax;
+	double yMin;
+	double yMax;
+	double asp;
+	int width;
+	int height;
+};
+
 class Drawing : public Gtk::DrawingArea {
 public:
     Drawing();
+    void set_frame(Frame x);
+	void adjust_frame(int width, int height);
+private:
+    Frame frame_;
 protected:
     void on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int height);
 };
@@ -26,6 +42,9 @@ class Window : public Gtk::Window {
 public:
 	Window();
 protected:
+    void exit_button_clicked();
+    void open_button_clicked();
+    void fichier_selectionne(int reponse, Gtk::FileChooserDialog* dialogue);
     // Boîtes
     Gtk::Box box;
     Gtk::Box box_actions;

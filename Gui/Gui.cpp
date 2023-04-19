@@ -9,13 +9,56 @@
 #include <iostream>
 using namespace std;
 
+static void orthographic_projection(const Cairo::RefPtr<Cairo::Context>& cr,
+									const Frame& frame) {
+	cr->translate(frame.width/2, frame.height/2);
+    cr->scale(frame.width/(frame.xMax - frame.xMin),
+             -frame.height/(frame.yMax - frame.yMin));
+	cr->translate(-(frame.xMin + frame.xMax)/2, -(frame.yMin + frame.yMax)/2);
+}
+
+static Frame default_frame = {-150., 150., -100., 100., 1.5, 300, 200};
+
 Drawing::Drawing() {
-    set_content_width(500);
-	set_content_height(500);
+    set_frame(default_frame);
+    set_content_width(default_frame.width);
+	set_content_height(default_frame.height);
     set_draw_func(sigc::mem_fun(*this, &Drawing::on_draw));
 }
 
+void Drawing::set_frame(Frame f) {
+	if(f.xMin <= f.xMax and f.yMin <= f.yMax and f.height > 0 and f.width > 0) {
+		f.asp = f.width/f.height;
+		frame_ = f;
+	} else {
+        std::cout << "Incorrect Model framing or window parameters" << std::endl;
+    }
+}
+
+void Drawing::adjust_frame(int width, int height) {
+	frame_.width = width;
+	frame_.height = height;
+    double new_aspect_ratio((double)width/height);
+    if(new_aspect_ratio > default_frame.asp) {
+	    frame_.yMax = default_frame.yMax ;
+	    frame_.yMin = default_frame.yMin ;
+	    double delta(default_frame.xMax - default_frame.xMin);
+	    double mid((default_frame.xMax + default_frame.xMin)/2);
+	    frame_.xMax = mid + 0.5*(new_aspect_ratio/default_frame.asp)*delta ;
+	    frame_.xMin = mid - 0.5*(new_aspect_ratio/default_frame.asp)*delta ;
+    } else {
+	    frame_.xMax = default_frame.xMax ;
+	    frame_.xMin = default_frame.xMin ;
+ 	    double delta(default_frame.yMax - default_frame.yMin);
+	    double mid((default_frame.yMax + default_frame.yMin)/2);
+	    frame_.yMax = mid + 0.5*(default_frame.asp/new_aspect_ratio)*delta ;
+	    frame_.yMin = mid - 0.5*(default_frame.asp/new_aspect_ratio)*delta ;
+    }
+}
+
 void Drawing::on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int height) {
+    adjust_frame(width,height);
+    orthographic_projection(cr, frame_);
     cr->set_source_rgb(1.0, 1.0, 1.0);
     cr->rectangle(0, 0, width, height);
     cr->fill();
@@ -43,6 +86,9 @@ Window::Window() : box(Gtk::Orientation::HORIZONTAL, 0),
     stop_button.set_margin(2);
     box_actions.set_margin(10);
     drawingArea_.set_margin(10);
+    // Connexion aux actions
+    exit_button.signal_clicked().connect(sigc::mem_fun(*this, &Window::exit_button_clicked));
+    open_button.signal_clicked().connect(sigc::mem_fun(*this, &Window::open_button_clicked));
     // Ajout à la boîte
     box_actions.append(exit_button);
     box_actions.append(open_button);
@@ -79,3 +125,29 @@ Window::Window() : box(Gtk::Orientation::HORIZONTAL, 0),
     set_child(box);
 }
 
+void Window::exit_button_clicked() {
+    exit(0);
+}
+
+void Window::fichier_selectionne(int reponse, Gtk::FileChooserDialog* dialogue) {
+    if(reponse == Gtk::ResponseType::OK) {
+        auto fichier = dialogue->get_file()->get_path();
+        dialogue->hide();
+
+    } else {
+        dialogue->hide();
+    }
+    delete dialogue;
+}
+
+void Window::open_button_clicked() {
+    auto dialogue = new Gtk::FileChooserDialog("Please choose a file",
+                                               Gtk::FileChooser::Action::OPEN);
+    dialogue->set_transient_for(*this);
+    dialogue->set_modal(true);
+    dialogue->signal_response().connect(sigc::bind(
+            sigc::mem_fun(*this, &Window::fichier_selectionne), dialogue));
+    dialogue->add_button("Annuler", Gtk::ResponseType::CANCEL);
+    dialogue->add_button("Ouvrir", Gtk::ResponseType::OK);
+    dialogue->show();
+}

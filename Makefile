@@ -36,6 +36,7 @@ Projet.o: Projet.cpp \
   Simulation/Simulation.h \
   Gui/Gui.h
 	$(CXX) $(CXXFLAGS) $(LINKING) -c $< -o $@ $(LINKING)
+Constantes.o: Constantes.cpp Constantes.h
 Simulation.o: Simulation/Simulation.cpp Simulation/Simulation.h \
   Particule/Particule.h \
   Shape/Shape.h \

@@ -18,6 +18,6 @@ add_executable(projet
         Message/Message.cpp
         Particule/Particule.cpp
         Robot/Robot.cpp
-        Shape/Shape.cpp Gui/Gui.h Gui/Gui.cpp)
+        Shape/Shape.cpp Gui/Gui.h Gui/Gui.cpp Constantes.cpp)
 
 target_link_libraries(projet PRIVATE PkgConfig::GTK4)
