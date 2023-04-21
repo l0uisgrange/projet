@@ -44,3 +44,4 @@ int Spatial::get_nbR_tot() const {
 int Spatial::get_nbN_tot() const {
     return (nbNr_ + nbNs_ + nbNd_);
 }
+

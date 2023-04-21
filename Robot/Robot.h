@@ -45,15 +45,14 @@ private:
     int nbRs_;
 };
 
-class Mobile : Robot {
+class Mobile : public Robot {
 public:
     using Robot :: Robot;
-    //virtual void move_to() const = 0;
 protected:
-    //attendre rendu 3
+    virtual void draw() const = 0;
 };
 
-class Neutraliseur : Mobile {
+class Neutraliseur : public Mobile {
 public:
     // CONSTRUCTEURS
     Neutraliseur() = delete;
@@ -72,7 +71,7 @@ private:
     double vtran_ = 0;
 };
 
-class Reparateur : Mobile {
+class Reparateur : public Mobile {
 public:
     // CONSTRUCTEURS
     Reparateur() = delete;
