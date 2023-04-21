@@ -4,8 +4,10 @@
  Version 1.0
 **/
 
-#include "Graphic.h"
+#include "GraphicGui.h"
+
+static const Cairo::RefPtr<Cairo::Context>* ptcr(nullptr);
 
 void graphic_draw_shape(const int width, const int height) {
-
+    
 }

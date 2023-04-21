@@ -7,6 +7,6 @@
 #ifndef GRAPHIC_H
 #define GRAPHIC_H
 
-void graphic_set_context(const Cairo::RefPtr<Cairo::Context>& cr);
+void graphic_draw_shape(int width, int height);
 
 #endif
