@@ -4,3 +4,4 @@
 projet
 /cmake-build-debug/
 .idea
+.idea/.gitignore
