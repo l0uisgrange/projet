@@ -8,5 +8,8 @@
 #define GRAPHIC_H
 
 void graphic_draw_shape(int width, int height);
+void draw_cercle(double x, double y, double rayon, double r, double g, double b);
+void draw_carre(double x, double y, double cote, double r, double g, double b);
+
 
 #endif

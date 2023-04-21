@@ -33,17 +33,16 @@ struct Cercle {
     double rayon = 0.;
 };
 
+struct Couleur {
+    double r,g,b;
+};
 
 bool superposition(Carre const& carre_1, Carre const& carre_2, bool epsil = false);
 bool superposition(Cercle const& cercle_1, Cercle const& cercle_2, bool epsil = false);
 bool superposition(Carre const& carre, Cercle const& cercle, bool epsil = false);
-void draw_cercle();
-void draw_carre();
+void envoyer_cercle(Cercle c, Couleur color);
+void envoyer_carre(Carre c, Couleur color);
 
-struct Couleur {
-     double r,g,b;
-};
 
-void verif_rgb(Couleur c);
 
 #endif
