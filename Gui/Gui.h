@@ -30,10 +30,6 @@ struct Frame {
 class Drawing : public Gtk::DrawingArea {
 public:
     Drawing();
-    void set_frame(Frame x);
-	void adjust_frame(int width, int height);
-private:
-    Frame frame_;
 protected:
     void on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int height);
 };

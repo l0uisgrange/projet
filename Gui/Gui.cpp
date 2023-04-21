@@ -6,8 +6,9 @@
 
 #include "Gui.h"
 #include <vector>
-#include "../Graphic/Graphic.h"
+#include "../Graphic/GraphicGui.h"
 #include <iostream>
+#include "../Simulation/Simulation.h"
 using namespace std;
 
 static Frame default_frame = {-150., 150., -100., 100., 1.5, 300, 200};
@@ -92,7 +93,8 @@ void Window::fichier_selectionne(int reponse, Gtk::FileChooserDialog* dialogue) 
     if(reponse == Gtk::ResponseType::OK) {
         auto fichier = dialogue->get_file()->get_path();
         dialogue->hide();
-
+        Simulation simulation(0);
+        simulation.lecture(fichier);
     } else {
         dialogue->hide();
     }
