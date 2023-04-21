@@ -28,13 +28,13 @@ Window::Window() : exit_button_("exit"), open_button_("open"),
                    label_ns_("0"), label_np_("0"),
                    label_nd_("0"), label_nr_("0"),
                    drawingArea_() {
-	set_default_size(820, 500);
+	set_default_size(753, 500);
 	set_title("Mission Propre En Ordre");
     Gtk::Box fenetre(Gtk::Orientation::HORIZONTAL, 0);
     Gtk::Box menu(Gtk::Orientation::VERTICAL, 0);
-    Gtk::Box texte(Gtk::Orientation::HORIZONTAL, 40);
+    Gtk::Box texte(Gtk::Orientation::HORIZONTAL, 50);
     Gtk::Box labels(Gtk::Orientation::VERTICAL, 7);
-    Gtk::Box stats(Gtk::Orientation::VERTICAL, 0);
+    Gtk::Box stats(Gtk::Orientation::VERTICAL, 7);
     Gtk::Separator separator1;
     Gtk::Separator separator2;
     Gtk::Box boutons(Gtk::Orientation::VERTICAL, 5);
@@ -67,16 +67,23 @@ Window::Window() : exit_button_("exit"), open_button_("open"),
     labels.append(label_ns);
     labels.append(label_np);
     labels.append(label_nd);
-    labels.append(label_nd);
-    labels.set_halign(Gtk::Align::START);
-    stats.append(label_maj);
-    stats.append(label_pa);
-    stats.append(label_rs);
-    stats.append(label_rr);
-    stats.append(label_ns);
-    stats.append(label_np);
-    stats.append(label_nd);
-    stats.append(label_nd);
+    labels.append(label_nr);
+    label_maj.set_halign(Gtk::Align::START);
+    label_pa.set_halign(Gtk::Align::START);
+    label_rs.set_halign(Gtk::Align::START);
+    label_rr.set_halign(Gtk::Align::START);
+    label_ns.set_halign(Gtk::Align::START);
+    label_np.set_halign(Gtk::Align::START);
+    label_nd.set_halign(Gtk::Align::START);
+    label_nr.set_halign(Gtk::Align::START);
+    stats.append(label_maj_);
+    stats.append(label_pa_);
+    stats.append(label_rs_);
+    stats.append(label_rr_);
+    stats.append(label_ns_);
+    stats.append(label_np_);
+    stats.append(label_nd_);
+    stats.append(label_nr_);
 
     texte.append(labels);
     texte.append(stats);
