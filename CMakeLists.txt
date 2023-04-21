@@ -18,6 +18,6 @@ add_executable(projet
         Message/Message.cpp
         Particule/Particule.cpp
         Robot/Robot.cpp
-        Shape/Shape.cpp Gui/Gui.h Gui/Gui.cpp Constantes.cpp Graphic/Graphic.cpp Graphic/Graphic.h)
+        Shape/Shape.cpp Gui/Gui.h Gui/Gui.cpp Constantes.cpp Graphic/Graphic.cpp Graphic/Graphic.h Graphic/GraphicPartielle.h)
 
 target_link_libraries(projet PRIVATE PkgConfig::GTK4)

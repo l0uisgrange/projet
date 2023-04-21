@@ -5,3 +5,7 @@
 **/
 
 #include "Graphic.h"
+
+void graphic_draw_shape(const int width, const int height) {
+
+}

@@ -6,6 +6,7 @@
 
 #include "Gui.h"
 #include <vector>
+#include "../Graphic/Graphic.h"
 #include <iostream>
 using namespace std;
 
@@ -18,9 +19,8 @@ Drawing::Drawing() {
 }
 
 void Drawing::on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int height) {
-    cr->set_source_rgb(1.0, 1.0, 1.0);
-    cr->rectangle(0, 0, width, height);
-    cr->fill();
+    graphic_set_context(cr);
+    graphic_draw_shape(width, height);
 };
 
 Window::Window() : box(Gtk::Orientation::HORIZONTAL, 0),
