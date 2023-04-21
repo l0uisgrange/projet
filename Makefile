@@ -20,14 +20,6 @@ all: $(OUT)
 $(OUT): $(OFILES)
 	$(CXX) $(CXXFLAGS) $(LINKING) $(OFILES) -o $@ $(LDLIBS)
 
-depend:
-	@echo " *** MISE A JOUR DES DEPENDANCES ***"
-	@(sed '/^# DO NOT DELETE THIS LINE/q' Makefile && \
-	  $(CXX) -MM $(CXXFLAGS) $(CXXFILES) | \
-	  egrep -v "/usr/include" \
-	 ) >Makefile.new
-	@mv Makefile.new Makefile
-
 clean:
 	@echo "*** MODULES OBJETS ET EXECUTABLES EFFACES ***"
 	@/bin/rm -f *.o */*.o $(OUT)
@@ -51,7 +43,6 @@ Particule.o: Particule/Particule.cpp Particule/Particule.h \
 Robot.o: Robot/Robot.cpp Robot/Robot.h \
   Message/Message.h \
   Particule/Particule.h \
-  Constantes.h \
   Constantes.h
 Message.o: Message/Message.cpp Message/Message.h
 Shape.o: Shape/Shape.cpp Shape/Shape.h
