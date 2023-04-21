@@ -17,7 +17,7 @@ void graphic_draw_shape(const int width, const int height) {
 
 }
 
-void draw_cercle(double x, double y, double rayon, Couleur couleur){
+void draw_cercle(double x, double y, double rayon, Couleurs couleur){
     rgb color(decode_couleur(couleur));
     (*ptcr)->set_source_rgb(color.r, color.g, color.b);
     (*ptcr)->set_line_width(2.0);
@@ -25,7 +25,7 @@ void draw_cercle(double x, double y, double rayon, Couleur couleur){
     (*ptcr)->stroke();
 }
 
-void draw_carre(double x, double y, double cote, Couleur couleur){
+void draw_carre(double x, double y, double cote, Couleurs couleur){
     rgb color(decode_couleur(couleur));
     (*ptcr)->set_source_rgb(color.r, color.g, color.b);
     (*ptcr)->set_line_width(2.0);
@@ -33,7 +33,7 @@ void draw_carre(double x, double y, double cote, Couleur couleur){
     (*ptcr)->stroke();
 }
 
-rgb decode_couleur(Couleur couleur){
+rgb decode_couleur(Couleurs couleur){
     switch (couleur) {
         case BLANC:
             return {0,0,0};

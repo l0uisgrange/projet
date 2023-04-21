@@ -16,7 +16,7 @@ using namespace std;
 constexpr double epsil_zero(0.125);
 
 enum Etat { NBP, PARTICULE, SPATIAL, REPARATEUR, NEUTRALISEUR };
-enum Robot { ROBOT_S, ROBOT_N, ROBOT_R };
+enum Type_robot { ROBOT_S, ROBOT_N, ROBOT_R };
 
 struct S2d {
     double x = 0.;
