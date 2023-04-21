@@ -13,34 +13,12 @@ using namespace std;
 #ifndef ROBOT_H
 #define ROBOT_H
 
-class Neutraliseur {
+class Robot {
 public:
-    // CONSTRUCTEURS
-    Neutraliseur() = delete;
-    Neutraliseur(S2d position, double angle, int coordination, bool panne, int k_update_panne, int nbUpdate);
-    // GETTERS
-    Cercle get_forme() const { return forme_; }
-private:
-    Cercle forme_;
-    double angle_;
-    bool panne_;
-    int coordination_;
-    double vrot_ = 0;
-    double vtran_ = 0;
+    virtual void draw() const = 0;
 };
 
-class Reparateur {
-public:
-    // CONSTRUCTEURS
-    Reparateur() = delete;
-    explicit Reparateur(S2d position);
-    // GETTERS
-    Cercle get_forme() const { return forme_; }
-private:
-    Cercle forme_;
-};
-
-class Spatial {
+class Spatial : public Robot {
 public:
     // CONSTRUCTEURS
     Spatial() = delete;
@@ -55,6 +33,8 @@ public:
     int get_nbRs() const { return nbRs_; }
     int get_nbR_tot() const;
     int get_nbN_tot() const;
+    //METHODES
+    void draw() const override;
 private:
     Cercle forme_;
     int nbUpdate_;
@@ -63,6 +43,46 @@ private:
     int nbNd_;
     int nbRr_;
     int nbRs_;
+};
+
+class Mobile : Robot {
+public:
+    using Robot :: Robot;
+    //virtual void move_to() const = 0;
+protected:
+    //attendre rendu 3
+};
+
+class Neutraliseur : Mobile {
+public:
+    // CONSTRUCTEURS
+    Neutraliseur() = delete;
+    Neutraliseur(S2d position, double angle, int coordination, bool panne,
+                 int k_update_panne, int nbUpdate);
+    // GETTERS
+    Cercle get_forme() const { return forme_; }
+    //METHODES
+    void draw() const override;
+private:
+    Cercle forme_;
+    double angle_;
+    bool panne_;
+    int coordination_;
+    double vrot_ = 0;
+    double vtran_ = 0;
+};
+
+class Reparateur : Mobile {
+public:
+    // CONSTRUCTEURS
+    Reparateur() = delete;
+    explicit Reparateur(S2d position);
+    // GETTERS
+    Cercle get_forme() const { return forme_; }
+    //METHODES
+    void draw() const override;
+private:
+    Cercle forme_;
 };
 
 #endif
