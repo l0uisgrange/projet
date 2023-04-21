@@ -4,15 +4,8 @@
  Version 1.0
 **/
 
-#include <gtkmm/application.h>
-#include <gtkmm/window.h>
-#include <gtkmm/button.h>
-#include <gtkmm/separator.h>
-#include <gtkmm/label.h>
-#include <gtkmm/box.h>
-#include <gtkmm/drawingarea.h>
-#include <gtkmm/filechooserdialog.h>
-#include <gtkmm/filechooser.h>
+#include "../Graphic/Graphic.h"
+#include "../Simulation/Simulation.h"
 
 #ifndef GUI_H
 #define GUI_H

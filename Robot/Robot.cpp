@@ -36,14 +36,13 @@ Neutraliseur::Neutraliseur(S2d position, double angle, int coordination, bool pa
 }
 
 void Neutraliseur::draw() const {
-    if(panne_ == true) {
+    if(panne_) {
         draw_cercle(forme_.centre.x, forme_.centre.y, forme_.rayon, ORANGE);
     } else {
         draw_cercle(forme_.centre.x, forme_.centre.y, forme_.rayon, NOIR);
     }
     //TODO adapter pour la colision
 }
-
 
 Reparateur::Reparateur(S2d position)
     : forme_(Cercle(position, r_reparateur)) {

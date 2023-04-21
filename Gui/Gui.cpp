@@ -6,14 +6,12 @@
 
 #include "Gui.h"
 #include <vector>
-#include "../Graphic/GraphicGui.h"
 #include <iostream>
-#include "../Simulation/Simulation.h"
 using namespace std;
 
 Drawing::Drawing() {
-    set_content_width(200);
-	set_content_height(200);
+    set_content_width(500);
+	set_content_height(500);
     set_draw_func(sigc::mem_fun(*this, &Drawing::on_draw));
 }
 
@@ -22,7 +20,10 @@ void Drawing::on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int he
     graphic_draw_shape(width, height);
 };
 
-Window::Window() : label_maj_("0"), label_pa_("0"),
+Window::Window() : exit_button_("exit"), open_button_("open"),
+                   save_button_("save"), start_button_("start"),
+                   step_button_("step"),
+                   label_maj_("0"), label_pa_("0"),
                    label_rs_("0"), label_rr_("0"),
                    label_ns_("0"), label_np_("0"),
                    label_nd_("0"), label_nr_("0"),
@@ -31,18 +32,20 @@ Window::Window() : label_maj_("0"), label_pa_("0"),
 	set_title("Mission Propre En Ordre");
     Gtk::Box fenetre(Gtk::Orientation::HORIZONTAL, 0);
     Gtk::Box menu(Gtk::Orientation::VERTICAL, 0);
-    Gtk::Box texte(Gtk::Orientation::HORIZONTAL, 0);
-    Gtk::Box labels(Gtk::Orientation::VERTICAL, 0);
+    Gtk::Box texte(Gtk::Orientation::HORIZONTAL, 40);
+    Gtk::Box labels(Gtk::Orientation::VERTICAL, 7);
     Gtk::Box stats(Gtk::Orientation::VERTICAL, 0);
     Gtk::Separator separator1;
     Gtk::Separator separator2;
-    Gtk::Box box(Gtk::Orientation::VERTICAL, 0);
+    Gtk::Box boutons(Gtk::Orientation::VERTICAL, 5);
 
-    box.append(exit_button_);
-    box.append(open_button_);
-    box.append(save_button_);
-    box.append(start_button_);
-    box.append(step_button_);
+    boutons.set_margin(10);
+    texte.set_margin(10);
+    boutons.append(exit_button_);
+    boutons.append(open_button_);
+    boutons.append(save_button_);
+    boutons.append(start_button_);
+    boutons.append(step_button_);
     exit_button_.signal_clicked().connect(sigc::mem_fun(*this, &Window::exit_button_clicked));
     open_button_.signal_clicked().connect(sigc::mem_fun(*this, &Window::open_button_clicked));
     save_button_.signal_clicked().connect(sigc::mem_fun(*this, &Window::save_button_clicked));
@@ -65,6 +68,7 @@ Window::Window() : label_maj_("0"), label_pa_("0"),
     labels.append(label_np);
     labels.append(label_nd);
     labels.append(label_nd);
+    labels.set_halign(Gtk::Align::START);
     stats.append(label_maj);
     stats.append(label_pa);
     stats.append(label_rs);
@@ -76,7 +80,7 @@ Window::Window() : label_maj_("0"), label_pa_("0"),
 
     texte.append(labels);
     texte.append(stats);
-    menu.append(box);
+    menu.append(boutons);
     menu.append(separator1);
     menu.append(texte);
     fenetre.append(menu);
@@ -101,7 +105,7 @@ void Window::fichier_selectionne(int reponse, Gtk::FileChooserDialog* dialogue) 
         auto fichier = dialogue->get_file()->get_path();
         dialogue->hide();
         Simulation simulation(0);
-        simulation.lecture(fichier);
+        //simulation.lecture(fichier);
         actualiser_stats(simulation.get_spatial().get_update(),
                          simulation.get_nbP(),
                          simulation.get_spatial().get_update(),
@@ -123,11 +127,16 @@ void Window::exit_button_clicked() {
 void Window::open_button_clicked() {
     auto dialogue = new Gtk::FileChooserDialog("Sélectionner un fichier",
                                                Gtk::FileChooser::Action::OPEN);
+    dialogue->set_transient_for(*this);
     dialogue->set_modal(true);
     dialogue->signal_response().connect(sigc::bind(
             sigc::mem_fun(*this, &Window::fichier_selectionne), dialogue));
     dialogue->add_button("Annuler", Gtk::ResponseType::CANCEL);
     dialogue->add_button("Ouvrir", Gtk::ResponseType::OK);
+    auto filter_cpp = Gtk::FileFilter::create();
+    filter_cpp->set_name("Fichiers .txt");
+    filter_cpp->add_mime_type("text/plain");
+    dialogue->add_filter(filter_cpp);
     dialogue->show();
 }
 
