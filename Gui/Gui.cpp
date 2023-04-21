@@ -22,21 +22,22 @@ void Drawing::on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int he
     graphic_draw_shape(width, height);
 };
 
-Window::Window() : drawingArea_() {
+Window::Window() : label_maj_("0"), label_pa_("0"),
+                   label_rs_("0"), label_rr_("0"),
+                   label_ns_("0"), label_np_("0"),
+                   label_nd_("0"), label_nr_("0"),
+                   drawingArea_() {
 	set_default_size(820, 500);
 	set_title("Mission Propre En Ordre");
-
     Gtk::Box fenetre(Gtk::Orientation::HORIZONTAL, 0);
     Gtk::Box menu(Gtk::Orientation::VERTICAL, 0);
+    Gtk::Box texte(Gtk::Orientation::HORIZONTAL, 0);
+    Gtk::Box labels(Gtk::Orientation::VERTICAL, 0);
+    Gtk::Box stats(Gtk::Orientation::VERTICAL, 0);
     Gtk::Separator separator1;
     Gtk::Separator separator2;
-
     Gtk::Box box(Gtk::Orientation::VERTICAL, 0);
-    exit_button_.set_margin(2);
-    open_button_.set_margin(2);
-    save_button_.set_margin(2);
-    start_button_.set_margin(2);
-    step_button_.set_margin(2);
+
     box.append(exit_button_);
     box.append(open_button_);
     box.append(save_button_);
@@ -48,25 +49,40 @@ Window::Window() : drawingArea_() {
     start_button_.signal_clicked().connect(sigc::mem_fun(*this, &Window::start_button_clicked));
     step_button_.signal_clicked().connect(sigc::mem_fun(*this, &Window::step_button_clicked));
 
-    menu.append(box_actions_);
+    Gtk::Label label_maj("Mises à jour");
+    Gtk::Label label_pa("Particules");
+    Gtk::Label label_rs("Robots réparateurs en service");
+    Gtk::Label label_rr("Robots réparateurs en réserve");
+    Gtk::Label label_ns("Robots neutraliseurs en service");
+    Gtk::Label label_np("Robots neutraliseurs en panne");
+    Gtk::Label label_nd("Robots neutraliseurs détruits");
+    Gtk::Label label_nr("Robots neutraliseurs en réserve");
+    labels.append(label_maj);
+    labels.append(label_pa);
+    labels.append(label_rs);
+    labels.append(label_rr);
+    labels.append(label_ns);
+    labels.append(label_np);
+    labels.append(label_nd);
+    labels.append(label_nd);
+    stats.append(label_maj);
+    stats.append(label_pa);
+    stats.append(label_rs);
+    stats.append(label_rr);
+    stats.append(label_ns);
+    stats.append(label_np);
+    stats.append(label_nd);
+    stats.append(label_nd);
+
+    texte.append(labels);
+    texte.append(stats);
+    menu.append(box);
     menu.append(separator1);
-    menu.append(label);
+    menu.append(texte);
     fenetre.append(menu);
     fenetre.append(separator2);
     fenetre.append(drawingArea_);
     set_child(fenetre);
-
-    /*for(auto& item : namedObjects) {
-        Gtk::Box box_ligne = Gtk::Box(Gtk::Orientation::HORIZONTAL, 50);
-        Gtk::Label label = Gtk::Label(item.first);
-        label.set_halign(Gtk::Align::START);
-        label.set_hexpand(true);
-        Gtk::Label valeur = Gtk::Label(to_string(item.second));
-        valeur.set_halign(Gtk::Align::END);
-        box_ligne.append(label);
-        box_ligne.append(valeur);
-        box_actions.append(box_ligne);
-    }*/
 }
 
 void Window::actualiser_stats(int maj, int pa, int rs, int rr, int ns, int np, int nd, int nr) {
@@ -84,9 +100,16 @@ void Window::fichier_selectionne(int reponse, Gtk::FileChooserDialog* dialogue) 
     if(reponse == Gtk::ResponseType::OK) {
         auto fichier = dialogue->get_file()->get_path();
         dialogue->hide();
-        //Simulation simulation(0);
-        //simulation.lecture(fichier);
-        //TODO : Simulation par fichier
+        Simulation simulation(0);
+        simulation.lecture(fichier);
+        actualiser_stats(simulation.get_spatial().get_update(),
+                         simulation.get_nbP(),
+                         simulation.get_spatial().get_update(),
+                         simulation.get_spatial().get_nbRr(),
+                         simulation.get_spatial().get_nbNs(),
+                         simulation.get_spatial().get_nbNd(), // TODO changer pour np
+                         simulation.get_spatial().get_nbNd(),
+                         simulation.get_spatial().get_nbNr());
     } else {
         dialogue->hide();
     }

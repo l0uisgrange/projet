@@ -33,8 +33,6 @@ public:
     int get_nbNd() const { return nbNd_; }
     int get_nbRr() const { return nbRr_; }
     int get_nbRs() const { return nbRs_; }
-    int get_nbR_tot() const;
-    int get_nbN_tot() const;
     //METHODES
     void draw() const override {};
     //DESTRUCTEUR
