@@ -162,6 +162,7 @@ void init_Spatial(const string& line, Etat& etape, Simulation* sim) {
         nbNs >> nbNd >> nbRr >> nbRs) {
         Spatial S(position, nbUpdate, nbNr, nbNs, nbNd, nbRr, nbNs);
         sim->set_Spatial(S);
+        sim->get_spatial().draw();
         etape = REPARATEUR;
     } else {
         exit(EXIT_FAILURE);

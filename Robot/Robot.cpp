@@ -18,7 +18,6 @@ Spatial::Spatial(S2d position, int nbUpdate, int nbNr, int nbNs, int nbNd,
         cout << message::spatial_robot_ouside(position.x, position.y);
         exit(EXIT_FAILURE);
     }
-    draw();
 }
 
 void Spatial::draw() const {
