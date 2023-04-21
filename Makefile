@@ -44,7 +44,7 @@ Robot.o: Robot/Robot.cpp Robot/Robot.h \
   Message/Message.h \
   Particule/Particule.h \
   Constantes.h
-Graphic.o: Graphic/Graphic.cpp Graphic/GraphicGui.h
+Graphic.o: Graphic/Graphic.cpp Graphic/Graphic.h Graphic/GraphicGui.h
 	$(CXX) $(CXXFLAGS) $(LINKING) -c $< -o $@ $(LINKING)
 Message.o: Message/Message.cpp Message/Message.h
 Shape.o: Shape/Shape.cpp Shape/Shape.h Constantes.h
