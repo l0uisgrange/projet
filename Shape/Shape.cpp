@@ -75,10 +75,4 @@ bool superposition(Carre const& c1, Cercle const& c2, bool epsil) {
     return false;
 }
 
-void envoyer_cercle(Cercle c, Couleur color){
 
-}
-
-void envoyer_carre(Carre c, Couleur color){
-    
-}
