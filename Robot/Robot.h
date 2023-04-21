@@ -18,7 +18,7 @@ class Robot {
 public:
     virtual void draw() const = 0;
     //DESTRUCTEUR
-    virtual ~Robot() {};
+    virtual ~Robot() = default;
 };
 
 class Spatial : public Robot {
@@ -37,7 +37,7 @@ public:
     //METHODES
     void draw() const override;
     //DESTRUCTEUR
-    virtual ~Spatial() {};
+    ~Spatial() override = default;
 private:
     Cercle forme_;
     int nbUpdate_;
@@ -53,7 +53,7 @@ class Mobile : public Robot {
 public:
     using Robot :: Robot;
     //DESTRUCTEUR
-    virtual ~Mobile() {};
+    ~Mobile() override = default;
 protected:
     void draw() const override {};
 };
@@ -69,7 +69,7 @@ public:
     //METHODES
     void draw() const override;
     //DESTRUCTEUR
-    virtual ~Neutraliseur() {};
+    virtual ~Neutraliseur() = default;
 private:
     Cercle forme_;
     double angle_;
@@ -89,7 +89,7 @@ public:
     //METHODES
     void draw() const override;
     //DESTRUCTEUR
-    virtual ~Reparateur() {};
+    virtual ~Reparateur() = default;
 private:
     Cercle forme_;
 };

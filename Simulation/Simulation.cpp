@@ -93,7 +93,7 @@ void Simulation::lecture(char* fichier) {
     if(!entree.fail()) {
         Etat etape(NBP);
         while(getline(entree >> ws, line)) {
-            if(line[0] == '#' or line.empty()) {
+            if(line.empty() or line[0] == '#') {
                 continue;
             }
             decodage_ligne(line, etape, this);
@@ -243,5 +243,4 @@ vector<Carre> Simulation::get_carres() {
 
 Simulation::Simulation(int nbP)
     : nbP_(nbP), spatial_(Spatial(S2d(), 0, 0, 0, 0, 0, 0)) {
-
 }

@@ -6,6 +6,7 @@
 
 #include "Graphic.h"
 #include <cmath>
+#include <iostream>
 
 static const Cairo::RefPtr<Cairo::Context>* ptcr(nullptr);
 
@@ -19,9 +20,11 @@ void graphic_draw_shape(const int width, const int height) {
     (*ptcr)->fill();
 }
 
-void draw_cercle(double x, double y, double rayon, Couleurs couleur){
+void draw_cercle(double x, double y, double rayon, Couleurs couleur) {
     rgb color(decode_couleur(couleur));
+    std::cout << "abs" << std::endl;
     (*ptcr)->set_source_rgb(color.r, color.g, color.b);
+    std::cout << "fer" << std::endl;
     (*ptcr)->set_line_width(2.0);
     (*ptcr)->arc(x, y, rayon, 0.0, 2*M_PI);
     (*ptcr)->stroke();
@@ -56,4 +59,4 @@ rgb decode_couleur(Couleurs couleur){
     }
 }
 
-rgb::rgb(double r, double g, double b):r(r), g(g), b(b){};
+rgb::rgb(double r, double g, double b) : r(r), g(g), b(b) {};

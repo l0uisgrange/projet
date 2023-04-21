@@ -10,8 +10,8 @@
 using namespace std;
 
 Drawing::Drawing() {
-    set_content_width(500);
-	set_content_height(500);
+    set_content_width(400);
+	set_content_height(400);
     set_draw_func(sigc::mem_fun(*this, &Drawing::on_draw));
 }
 

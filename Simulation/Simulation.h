@@ -17,7 +17,7 @@ using namespace std;
 class Simulation {
 public:
     Simulation() = delete;
-    Simulation(int nbP);
+    explicit Simulation(int nbP);
     // SETTERS
     void set_nbP(int value);
     void set_Spatial(Spatial& S);
