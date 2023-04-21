@@ -5,6 +5,7 @@
 **/
 
 #include <vector>
+#include "../Constantes.h"
 #include "../Message/Message.h"
 #include "../Shape/Shape.h"
 #include "../Particule/Particule.h"
@@ -34,7 +35,7 @@ public:
     int get_nbRr() const { return nbRr_; }
     int get_nbRs() const { return nbRs_; }
     //METHODES
-    void draw() const override {};
+    void draw() const override;
     //DESTRUCTEUR
     virtual ~Spatial() {};
 private:
@@ -66,7 +67,7 @@ public:
     // GETTERS
     Cercle get_forme() const { return forme_; }
     //METHODES
-    void draw() const override {};
+    void draw() const override;
     //DESTRUCTEUR
     virtual ~Neutraliseur() {};
 private:
@@ -86,7 +87,7 @@ public:
     // GETTERS
     Cercle get_forme() const { return forme_; }
     //METHODES
-    void draw() const override {};
+    void draw() const override;
     //DESTRUCTEUR
     virtual ~Reparateur() {};
 private:

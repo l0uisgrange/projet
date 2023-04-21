@@ -5,7 +5,6 @@
 **/
 
 #include "Robot.h"
-#include "../Constantes.h"
 using namespace std;
 
 Spatial::Spatial(S2d position, int nbUpdate, int nbNr, int nbNs, int nbNd,
@@ -25,14 +24,6 @@ void Spatial::draw() const {
     draw_cercle(forme_.centre.x, forme_.centre.y, forme_.rayon, BLEU_CLAIR);
 }
 
-int Spatial::get_nbR_tot() const {
-    return (nbRr_ + nbRs_);
-}
-
-int Spatial::get_nbN_tot() const {
-    return (nbNr_ + nbNs_ + nbNd_);
-}
-
 Neutraliseur::Neutraliseur(S2d position, double angle, int coordination, bool panne,
                            int k_update_panne, int nbUpdate)
     : angle_(angle), panne_(panne), coordination_(coordination) {
@@ -45,9 +36,9 @@ Neutraliseur::Neutraliseur(S2d position, double angle, int coordination, bool pa
 }
 
 void Neutraliseur::draw() const {
-    if (panne_ == true) {
+    if(panne_ == true) {
         draw_cercle(forme_.centre.x, forme_.centre.y, forme_.rayon, ORANGE);
-    } else if {
+    } else {
         draw_cercle(forme_.centre.x, forme_.centre.y, forme_.rayon, NOIR);
     }
     //TODO adapter pour la colision

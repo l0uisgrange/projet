@@ -24,13 +24,9 @@ clean:
 	@echo "*** MODULES OBJETS ET EXECUTABLES EFFACES ***"
 	@/bin/rm -f *.o */*.o $(OUT)
 
-Projet.o: Projet.cpp \
-  Simulation/Simulation.h \
-  Gui/Gui.h
-	$(CXX) $(CXXFLAGS) $(LINKING) -c $< -o $@ $(LINKING)
 Simulation.o: Simulation/Simulation.cpp Simulation/Simulation.h \
-  Particule/Particule.h \
   Constantes.h \
+  Particule/Particule.h \
   Message/Message.h \
   Shape/Shape.h
 Particule.o: Particule/Particule.cpp Particule/Particule.h \
@@ -46,4 +42,8 @@ Message.o: Message/Message.cpp Message/Message.h
 Shape.o: Shape/Shape.cpp Shape/Shape.h
 Gui/Gui.o: Gui/Gui.cpp Gui/Gui.h \
   Simulation/Simulation.h
+	$(CXX) $(CXXFLAGS) $(LINKING) -c $< -o $@ $(LINKING)
+Projet.o: Projet.cpp \
+  Simulation/Simulation.h \
+  Gui/Gui.h
 	$(CXX) $(CXXFLAGS) $(LINKING) -c $< -o $@ $(LINKING)
