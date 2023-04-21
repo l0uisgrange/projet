@@ -14,8 +14,8 @@
 #include <gtkmm/filechooserdialog.h>
 #include <gtkmm/filechooser.h>
 
-#ifndef FENETRE_H
-#define FENETRE_H
+#ifndef GUI_H
+#define GUI_H
 
 struct Frame {
 	double xMin;
