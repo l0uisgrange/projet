@@ -6,6 +6,7 @@
 
 #include <iostream>
 #include <cmath>
+#include "../Graphic/Graphic.h"
 using namespace std;
 
 #ifndef SHAPE_H
@@ -38,4 +39,11 @@ bool superposition(Cercle const& cercle_1, Cercle const& cercle_2, bool epsil = 
 bool superposition(Carre const& carre, Cercle const& cercle, bool epsil = false);
 void draw_cercle();
 void draw_carre();
+
+struct Couleur {
+     double r,g,b;
+};
+
+void verif_rgb(Couleur c);
+
 #endif
