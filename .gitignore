@@ -3,3 +3,4 @@
 */*.o
 projet
 /cmake-build-debug/
+.idea
