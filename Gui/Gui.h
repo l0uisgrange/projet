@@ -17,16 +17,6 @@
 #ifndef GUI_H
 #define GUI_H
 
-struct Frame {
-	double xMin;
-	double xMax;
-	double yMin;
-	double yMax;
-	double asp;
-	int width;
-	int height;
-};
-
 class Drawing : public Gtk::DrawingArea {
 public:
     Drawing();
@@ -37,32 +27,27 @@ protected:
 class Window : public Gtk::Window {
 public:
 	Window();
-protected:
+    void actualiser_stats(int maj, int p, int rs, int rr, int ns, int np, int nd, int nr);
     void exit_button_clicked();
     void open_button_clicked();
+    void save_button_clicked();
+    void start_button_clicked();
+    void step_button_clicked();
     void fichier_selectionne(int reponse, Gtk::FileChooserDialog* dialogue);
-    // Boîtes
-    Gtk::Box box;
-    Gtk::Box box_actions;
-    // Labels
-    Gtk::Label label_maj;
-    Gtk::Label label_particules;
-    Gtk::Label label_rs;
-    Gtk::Label label_rr;
-    Gtk::Label label_ns;
-    Gtk::Label label_np;
-    Gtk::Label label_nd;
-    Gtk::Label label_nr;
-    // Boutons
-    Gtk::Button exit_button;
-    Gtk::Button open_button;
-    Gtk::Button save_button;
-    Gtk::Button start_button;
-    Gtk::Button stop_button;
-    // Séparateurs
-    Gtk::Separator separator;
-    Gtk::Separator separator2;
-    // Zone de dessin
+private:
+    Gtk::Button exit_button_;
+    Gtk::Button open_button_;
+    Gtk::Button save_button_;
+    Gtk::Button start_button_;
+    Gtk::Button step_button_;
+    Gtk::Label label_maj_;
+    Gtk::Label label_pa_;
+    Gtk::Label label_rs_;
+    Gtk::Label label_rr_;
+    Gtk::Label label_ns_;
+    Gtk::Label label_np_;
+    Gtk::Label label_nd_;
+    Gtk::Label label_nr_;
     Drawing drawingArea_;
 };
 
