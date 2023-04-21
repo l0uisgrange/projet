@@ -46,7 +46,7 @@ Robot.o: Robot/Robot.cpp Robot/Robot.h \
 Graphic.o: Graphic/Graphic.cpp Graphic/Graphic.h Graphic/GraphicGui.h
 	$(CXX) $(CXXFLAGS) $(LINKING) -c $< -o $@ $(LINKING)
 Message.o: Message/Message.cpp Message/Message.h
-Shape.o: Shape/Shape.cpp Shape/Shape.h
+Shape.o: Shape/Shape.cpp Shape/Shape.h Constantes.h
 Gui/Gui.o: Gui/Gui.cpp Gui/Gui.h \
   Simulation/Simulation.h
 	$(CXX) $(CXXFLAGS) $(LINKING) -c $< -o $@ $(LINKING)
