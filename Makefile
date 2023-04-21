@@ -24,23 +24,33 @@ clean:
 	@echo "*** MODULES OBJETS ET EXECUTABLES EFFACES ***"
 	@/bin/rm -f *.o */*.o $(OUT)
 
-Simulation.o: Simulation/Simulation.cpp Simulation/Simulation.h \
+Simulation/Simulation.o: Simulation/Simulation.cpp Simulation/Simulation.h \
+  Robot/Robot.h \
   Constantes.h \
   Particule/Particule.h \
   Message/Message.h \
   Shape/Shape.h
-Particule.o: Particule/Particule.cpp Particule/Particule.h \
+	$(CXX) $(CXXFLAGS) $(LINKING) -c $< -o $@ $(LINKING)
+Particule/Particule.o: Particule/Particule.cpp Particule/Particule.h \
   Constantes.h \
-  Message/Message.h
-Robot.o: Robot/Robot.cpp Robot/Robot.h \
+  Message/Message.h \
+  Shape/Shape.h
+	$(CXX) $(CXXFLAGS) $(LINKING) -c $< -o $@ $(LINKING)
+Robot/Robot.o: Robot/Robot.cpp Robot/Robot.h \
   Message/Message.h \
   Particule/Particule.h \
+  Shape/Shape.h \
   Constantes.h
-Graphic.o: Graphic/Graphic.cpp Graphic/Graphic.h Graphic/GraphicGui.h
 	$(CXX) $(CXXFLAGS) $(LINKING) -c $< -o $@ $(LINKING)
-Message.o: Message/Message.cpp Message/Message.h
-Shape.o: Shape/Shape.cpp Shape/Shape.h
+Graphic/Graphic.o: Graphic/Graphic.cpp Graphic/Graphic.h
+	$(CXX) $(CXXFLAGS) $(LINKING) -c $< -o $@ $(LINKING)
+Message/Message.o: Message/Message.cpp Message/Message.h
+	$(CXX) $(CXXFLAGS) $(LINKING) -c $< -o $@ $(LINKING)
+Shape/Shape.o: Shape/Shape.cpp Shape/Shape.h \
+  Graphic/Graphic.h
+	$(CXX) $(CXXFLAGS) $(LINKING) -c $< -o $@ $(LINKING)
 Gui/Gui.o: Gui/Gui.cpp Gui/Gui.h \
+  Graphic/Graphic.h \
   Simulation/Simulation.h
 	$(CXX) $(CXXFLAGS) $(LINKING) -c $< -o $@ $(LINKING)
 Projet.o: Projet.cpp \
