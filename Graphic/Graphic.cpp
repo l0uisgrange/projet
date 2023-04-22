@@ -4,7 +4,7 @@
  Version 1.0
 **/
 
-#include "Graphic.h"
+#include "GraphicGui.h"
 #include <cmath>
 #include <iostream>
 
@@ -13,16 +13,16 @@ static const Cairo::RefPtr<Cairo::Context>* ptcr(nullptr);
 void graphic_set_context(const Cairo::RefPtr<Cairo::Context>& cr) {
     ptcr = &cr;
 }
-
+/*
 void graphic_draw_shape(const int width, const int height) {
     (*ptcr)->set_source_rgb(1.0, 1.0, 1.0);
     (*ptcr)->rectangle(0, 0, width, height);
     (*ptcr)->fill();
 }
-
+*/
 void draw_cercle(double x, double y, double rayon, Couleurs couleur) {
     rgb color(decode_couleur(couleur));
-    std::cout << "abs" << std::endl;
+    std::cout << "ptcr =" << (*ptcr) << std::endl;
     (*ptcr)->set_source_rgb(color.r, color.g, color.b);
     std::cout << "fer" << std::endl;
     (*ptcr)->set_line_width(2.0);

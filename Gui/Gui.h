@@ -4,15 +4,31 @@
  Version 1.0
 **/
 
-#include "../Graphic/Graphic.h"
+#include "../Graphic/GraphicGui.h"
 #include "../Simulation/Simulation.h"
 
 #ifndef GUI_H
 #define GUI_H
 
+struct Frame // Pour adapter afichage
+{
+    double xMin;
+    double xMax;
+    double yMin;
+    double yMax;
+    double asp; // aspect ratio
+    int height;
+    int width;
+};
+
 class Drawing : public Gtk::DrawingArea {
 public:
     Drawing();
+    virtual ~Drawing(){}; // TODO: enlever les accolades
+    void set_frame(Frame f);
+    void adjustFrame(int width, int height);
+private:
+    Frame frame_;
 protected:
     void on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int height);
 };

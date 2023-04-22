@@ -4,21 +4,105 @@
  Version 1.0
 **/
 
+static constexpr unsigned taille_dessin(500); //TODO enlever et mettre dans constantes.h
+
 #include "Gui.h"
 #include <vector>
 #include <iostream>
 using namespace std;
 
+static void orthographic_projection(const Cairo::RefPtr<Cairo::Context>& cr,
+                                    const Frame& frame);
+
+static void draw_frame(const Cairo::RefPtr<Cairo::Context>& cr, Frame frame);
+
+//TODO quelle est frame de référence ?
+static Frame default_frame = {-500., 500.,
+                              -500., 500.,
+                              1., 500, 500};
+
+
 Drawing::Drawing() {
-    set_content_width(400);
-	set_content_height(400);
+
+    set_frame(default_frame);
+    set_content_width(taille_dessin);
+	set_content_height(taille_dessin);
     set_draw_func(sigc::mem_fun(*this, &Drawing::on_draw));
 }
 
 void Drawing::on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int height) {
+    //empecher distorsion
+    adjustFrame(width, height);
+    draw_frame(cr, frame_);
+    orthographic_projection(cr,frame_);
+    //pointeur sur cr
     graphic_set_context(cr);
-    graphic_draw_shape(width, height);
+    draw_cercle(100,100, 40, ORANGE);
+    //graphic_draw_shape(width, height); TODO draw_shape encore necesAIRE?
 };
+
+void Drawing::set_frame(Frame f) {
+    if((f.xMin <= f.xMax) and (f.yMin <= f.yMax) and (f.height > 0))
+    {
+        f.asp = f.width/f.height;
+        frame_ = f;
+    }
+    else
+        exit(1); //TODO quelle erreur si mauvais affichage?
+}
+
+void Drawing::adjustFrame(int width, int height) {
+    //Prevents distorsion
+    frame_.width  = width;
+    frame_.height = height;
+
+    //reference framing as a guide to prevent distorsion
+    double new_aspect_ratio((double)width/height);
+    if( new_aspect_ratio > default_frame.asp)
+    { // garde ymax/min, adapte xmax/min
+        frame_.yMax = default_frame.yMax ;
+        frame_.yMin = default_frame.yMin ;
+
+        double delta(default_frame.xMax - default_frame.xMin);
+        double mid((default_frame.xMax + default_frame.xMin)/2);
+        // centré point-milieu selon x
+        frame_.xMax = mid + 0.5*(new_aspect_ratio/default_frame.asp)*delta ;
+        frame_.xMin = mid - 0.5*(new_aspect_ratio/default_frame.asp)*delta ;
+    }else{ // garde xmax/min, adapte ymax/min
+        frame_.xMax = default_frame.xMax ;
+        frame_.xMin = default_frame.xMin ;
+
+        double delta(default_frame.yMax - default_frame.yMin);
+        double mid((default_frame.yMax + default_frame.yMin)/2);
+        // centré point milieu selon y
+        frame_.yMax = mid + 0.5*(default_frame.asp/new_aspect_ratio)*delta ;
+        frame_.yMin = mid - 0.5*(default_frame.asp/new_aspect_ratio)*delta ;
+    }
+}
+
+static void orthographic_projection(const Cairo::RefPtr<Cairo::Context>& cr,
+                                    const Frame& frame) {
+    // déplace l'origine au centre de la fenêtre
+    cr->translate(frame.width/2, frame.height/2);
+
+    // normalise la largeur et hauteur selon default frame
+    // ET inverse la direction de l'axe Y
+    cr->scale(frame.width/(frame.xMax - frame.xMin),
+              -frame.height/(frame.yMax - frame.yMin));
+
+    // décalage au centre du cadrage
+    cr->translate(-(frame.xMin + frame.xMax)/2, -(frame.yMin + frame.yMax)/2);
+}
+
+static void draw_frame(const Cairo::RefPtr<Cairo::Context>& cr, Frame frame)
+{//TODO il y a un cadrage autour ??
+    cr->set_line_width(5.0);
+    cr->set_source_rgb(0., 0.5, 0.5);
+    cr->rectangle(0,0, frame.width, frame.height);
+    cr->stroke();
+}
+
+//FIN DE DRAWING AREA
 
 Window::Window() : exit_button_("exit"), open_button_("open"),
                    save_button_("save"), start_button_("start"),
@@ -28,7 +112,7 @@ Window::Window() : exit_button_("exit"), open_button_("open"),
                    label_ns_("0"), label_np_("0"),
                    label_nd_("0"), label_nr_("0"),
                    drawingArea_() {
-	set_default_size(753, 500);
+	set_default_size(taille_dessin, taille_dessin);
 	set_title("Mission Propre En Ordre");
     Gtk::Box fenetre(Gtk::Orientation::HORIZONTAL, 0);
     Gtk::Box menu(Gtk::Orientation::VERTICAL, 0);
@@ -94,6 +178,7 @@ Window::Window() : exit_button_("exit"), open_button_("open"),
     fenetre.append(separator2);
     fenetre.append(drawingArea_);
     set_child(fenetre);
+    drawingArea_.set_expand(); //TODO quelles autres boutons faut mettre set_expand??
 }
 
 void Window::actualiser_stats(int maj, int pa, int rs, int rr, int ns, int np, int nd, int nr) {

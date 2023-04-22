@@ -20,7 +20,4 @@ void graphic_draw_shape(int width, int height);
 void draw_cercle(double x, double y, double rayon, Couleurs couleur);
 void draw_carre(double x, double y, double cote, Couleurs couleur);
 rgb decode_couleur(Couleurs couleur);
-
-void graphic_set_context(const Cairo::RefPtr<Cairo::Context>& cr);
-
 #endif
