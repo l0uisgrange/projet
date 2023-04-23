@@ -17,16 +17,13 @@ using namespace std;
 class Robot {
 public:
     virtual void draw() const = 0;
-    //DESTRUCTEUR
     virtual ~Robot() = default;
 };
 
 class Spatial : public Robot {
 public:
-    // CONSTRUCTEUR
     Spatial() = delete;
     Spatial(S2d position, int nbUpdate, int nbNr, int nbNs, int nbNd, int nbRr, int nbRs);
-    // GETTERS
     Cercle get_forme() const { return forme_; }
     int get_update() const { return nbUpdate_; }
     int get_nbNr() const { return nbNr_; }
@@ -34,9 +31,7 @@ public:
     int get_nbNd() const { return nbNd_; }
     int get_nbRr() const { return nbRr_; }
     int get_nbRs() const { return nbRs_; }
-    //METHODES
     void draw() const override;
-    //DESTRUCTEUR
     ~Spatial() override = default;
 private:
     Cercle forme_;
@@ -46,13 +41,11 @@ private:
     int nbNd_;
     int nbRr_;
     int nbRs_;
-
 };
 
 class Mobile : public Robot {
 public:
     using Robot :: Robot;
-    //DESTRUCTEUR
     ~Mobile() override = default;
 protected:
     void draw() const override {};
@@ -60,15 +53,11 @@ protected:
 
 class Neutraliseur : public Mobile {
 public:
-    // CONSTRUCTEURS
     Neutraliseur() = delete;
     Neutraliseur(S2d position, double angle, int coordination, bool panne,
                  int k_update_panne, int nbUpdate);
-    // GETTERS
     Cercle get_forme() const { return forme_; }
-    //METHODES
     void draw() const override;
-    //DESTRUCTEUR
     virtual ~Neutraliseur() = default;
 private:
     Cercle forme_;
@@ -81,14 +70,10 @@ private:
 
 class Reparateur : public Mobile {
 public:
-    // CONSTRUCTEURS
     Reparateur() = delete;
     explicit Reparateur(S2d position);
-    // GETTERS
     Cercle get_forme() const { return forme_; }
-    //METHODES
     void draw() const override;
-    //DESTRUCTEUR
     virtual ~Reparateur() = default;
 private:
     Cercle forme_;

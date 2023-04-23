@@ -18,10 +18,8 @@ class Simulation {
 public:
     Simulation() = delete;
     explicit Simulation(int nbP);
-    // SETTERS
     void set_nbP(int value);
     void set_Spatial(Spatial& S);
-    // GETTERS
     int get_nbP() const { return nbP_; };
     vector<Cercle> get_cercles();
     vector<Carre> get_carres();
@@ -29,12 +27,11 @@ public:
     vector<Reparateur> get_reparateurs() { return reparateurs_; };
     vector<Particule> get_particules() { return particules_; };
     Spatial get_spatial() { return spatial_; };
-    //ADDERS
     void add_neutraliseur(Neutraliseur& N);
     void add_reparateur(Reparateur& R);
     void add_particule(Particule& P);
-    // FONCTIONS
     void lecture(char* fichier);
+    void draw_simulation();
 
 private:
     int nbP_;
