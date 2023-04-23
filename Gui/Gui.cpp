@@ -237,9 +237,9 @@ void Window::save_button_clicked() {
 }
 
 void Window::start_button_clicked() {
-    // TODO : sauvegarder
+    // TODO : start
 }
 
 void Window::step_button_clicked() {
-    // TODO : sauvegarder
+    // TODO : step
 }
