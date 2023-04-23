@@ -100,7 +100,7 @@ static void orthographic_projection(const Cairo::RefPtr<Cairo::Context>& cr,
     }
     cr->scale(frame.width/(axe_min_diff),
               -frame.height/(axe_min_diff));
-    // décalage au centre du cadrage
+    // décalage vers centre du cadrage
     cr->translate(-(axe_min_sum)/2, -(axe_min_sum)/2);
 }
 
