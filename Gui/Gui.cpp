@@ -38,10 +38,11 @@ void Drawing::on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int he
     //pointeur sur cr
     graphic_set_context(cr);
     draw_cercle(100,100, 40, ORANGE);
+    draw_carre(200,200,50, BLEU_CLAIR);
     //graphic_draw_shape(width, height); TODO draw_shape encore necesAIRE?
 };
 
-void Drawing::set_frame(Frame f) {
+void Drawing::set_frame(Frame f) { //TODO mettre dans graphicgui?
     if((f.xMin <= f.xMax) and (f.yMin <= f.yMax) and (f.height > 0))
     {
         f.asp = f.width/f.height;
@@ -53,12 +54,12 @@ void Drawing::set_frame(Frame f) {
 
 void Drawing::adjustFrame(int width, int height) {
     //Prevents distorsion
-    frame_.width  = width;
-    frame_.height = height;
+    frame_.width  = min(width, height);
+    frame_.height = min(width,height);
 
     //reference framing as a guide to prevent distorsion
     double new_aspect_ratio((double)width/height);
-    if( new_aspect_ratio > default_frame.asp)
+    if( new_aspect_ratio > default_frame.asp) //x > y
     { // garde ymax/min, adapte xmax/min
         frame_.yMax = default_frame.yMax ;
         frame_.yMin = default_frame.yMin ;
@@ -82,22 +83,31 @@ void Drawing::adjustFrame(int width, int height) {
 
 static void orthographic_projection(const Cairo::RefPtr<Cairo::Context>& cr,
                                     const Frame& frame) {
-    // déplace l'origine au centre de la fenêtre
-    cr->translate(frame.width/2, frame.height/2);
+    // déplace l'origine au centre du carré le plus grand possible
+    double centre_carre(min(frame.width,frame.height)/2);
+    cr->translate(centre_carre, centre_carre);
 
     // normalise la largeur et hauteur selon default frame
     // ET inverse la direction de l'axe Y
-    cr->scale(frame.width/(frame.xMax - frame.xMin),
-              -frame.height/(frame.yMax - frame.yMin));
-
+    double axe_min_diff(0.); //donne xMax-xMin ou yMax-yMin
+    double axe_min_sum(0.); // xMin+xMax ou yMin+yMin
+    if (frame.xMax > frame.yMax) {
+        axe_min_diff = frame.yMax - frame.yMin;
+        axe_min_sum =frame.yMin + frame.yMax;
+    }else{
+        axe_min_diff = frame.xMax - frame.xMin;
+        axe_min_sum = frame.xMin + frame.xMax;
+    }
+    cr->scale(frame.width/(axe_min_diff),
+              -frame.height/(axe_min_diff));
     // décalage au centre du cadrage
-    cr->translate(-(frame.xMin + frame.xMax)/2, -(frame.yMin + frame.yMax)/2);
+    cr->translate(-(axe_min_sum)/2, -(axe_min_sum)/2);
 }
 
 static void draw_frame(const Cairo::RefPtr<Cairo::Context>& cr, Frame frame)
-{//TODO il y a un cadrage autour ??
+{
     cr->set_line_width(5.0);
-    cr->set_source_rgb(0., 0.5, 0.5);
+    cr->set_source_rgb(0.5, 0.5, 0.5);
     cr->rectangle(0,0, frame.width, frame.height);
     cr->stroke();
 }
