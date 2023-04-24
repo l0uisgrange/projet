@@ -162,7 +162,6 @@ void init_Spatial(const string& line, Etat& etape, Simulation* sim) {
         nbNs >> nbNd >> nbRr >> nbRs) {
         Spatial S(position, nbUpdate, nbNr, nbNs, nbNd, nbRr, nbNs);
         sim->set_Spatial(S);
-        sim->get_spatial().draw();
         etape = REPARATEUR;
     } else {
         exit(EXIT_FAILURE);
@@ -243,9 +242,8 @@ vector<Carre> Simulation::get_carres() {
 
 Simulation::Simulation(int nbP)
     : nbP_(nbP), spatial_(Spatial(S2d(), 0, 0, 0, 0, 0, 0)) {
-    cout << "Simulation créée !" << endl;
 }
-
+ /*
 void Simulation::draw_simulation() {
     spatial_.draw();
     for(const auto& neutraliseur : neutraliseurs_) {
@@ -254,7 +252,7 @@ void Simulation::draw_simulation() {
     for(const auto& reparateur : reparateurs_) {
         reparateur.draw();
     }
-    /*for(const auto& particule : particules_) {
+    for(const auto& particule : particules_) {
         particule.draw();
     }*/
-}
+
