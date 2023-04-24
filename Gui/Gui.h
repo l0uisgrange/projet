@@ -43,6 +43,8 @@ public:
     void start_button_clicked();
     void step_button_clicked();
     void fichier_selectionne(int reponse, Gtk::FileChooserDialog* dialogue);
+    bool touche_clavier(guint keyval, guint keycode, Gdk::ModifierType state);
+
 private:
     Gtk::Button exit_button_;
     Gtk::Button open_button_;
