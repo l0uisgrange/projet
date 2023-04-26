@@ -22,7 +22,8 @@ Spatial::Spatial(S2d position, int nbUpdate, int nbNr, int nbNs, int nbNd,
 
 void Spatial::draw() const {
     draw_cercle(forme_.centre.x, forme_.centre.y, forme_.rayon, BLEU_CLAIR);
-    draw_cercle(forme_.centre.x, forme_.centre.y, 1.0, BLEU_CLAIR);
+    draw_cercle(forme_.centre.x, forme_.centre.y, 0.5, BLEU_CLAIR);
+    fill_cercle(forme_.centre.x, forme_.centre.y, 0.5, BLEU_CLAIR);
 }
 
 Neutraliseur::Neutraliseur(S2d position, double angle, int coordination, bool panne,
@@ -39,8 +40,12 @@ Neutraliseur::Neutraliseur(S2d position, double angle, int coordination, bool pa
 void Neutraliseur::draw() const {
     if(panne_) {
         draw_cercle(forme_.centre.x, forme_.centre.y, forme_.rayon, ORANGE);
+        draw_cercle(forme_.centre.x, forme_.centre.y, 0.5, ORANGE);
+        fill_cercle(forme_.centre.x, forme_.centre.y, 0.5, ORANGE);
     } else {
         draw_cercle(forme_.centre.x, forme_.centre.y, forme_.rayon, NOIR);
+        draw_cercle(forme_.centre.x, forme_.centre.y, 0.5, NOIR);
+        fill_cercle(forme_.centre.x, forme_.centre.y, 0.5, NOIR);
     }
     //TODO adapter pour la colision
 }

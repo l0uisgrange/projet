@@ -54,7 +54,7 @@ rgb decode_couleur(Couleurs couleur) {
         case BLEU_CLAIR:
             return {0.3137, 0.686, 0.918};
         case BLEU_FONCE:
-            return {0, 1, 1};
+            return {0.196, 0.45, 0.706};
         case NOIR:
             return {0, 0, 0};
         case VIOLET:
@@ -62,7 +62,7 @@ rgb decode_couleur(Couleurs couleur) {
         case ORANGE:
             return {1, 0.65, 0};
         case VERT:
-            return {0, 1, 0};
+            return {0.31, 0.68, 0.36};
     }
 }
 
