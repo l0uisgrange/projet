@@ -17,6 +17,7 @@ public:
     Particule() = delete;
     explicit Particule(Carre c);
     Carre get_forme() const { return forme_; }
+    void draw() const;
 private:
     Carre forme_;
 };
