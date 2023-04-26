@@ -30,6 +30,6 @@ void test_domaine(Carre c) {
 }
 
 void Particule::draw() const {
-    draw_carre(forme_.centre.x, forme_.centre.y, forme_.cote, ROUGE);
-    fill_carre(forme_.centre.x, forme_.centre.y, forme_.cote, GRIS);
+    fill_carre(forme_.centre.x-forme_.cote/2, forme_.centre.y-forme_.cote/2, forme_.cote, GRIS);
+    draw_carre(forme_.centre.x-forme_.cote/2, forme_.centre.y-forme_.cote/2, forme_.cote, ROUGE);
 }
