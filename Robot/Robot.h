@@ -31,6 +31,7 @@ public:
     int get_nbNd() const { return nbNd_; }
     int get_nbRr() const { return nbRr_; }
     int get_nbRs() const { return nbRs_; }
+    int get_nbNp() const { return 200; } //TODO implémenter la fonction
     void draw() const override;
     ~Spatial() override = default;
 private:

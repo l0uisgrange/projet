@@ -23,19 +23,20 @@ struct Frame // Pour adapter afichage
 
 class Drawing : public Gtk::DrawingArea {
 public:
-    Drawing();
+    explicit Drawing(Simulation &sim);
     virtual ~Drawing(){}; // TODO: enlever les accolades
     void set_frame(Frame f);
     void adjustFrame(int width, int height);
 private:
     Frame frame_;
+    Simulation sim_;
 protected:
     void on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int height);
 };
 
 class Window : public Gtk::Window {
 public:
-	Window();
+	explicit Window(Simulation &sim);
     void actualiser_stats(int maj, int p, int rs, int rr, int ns, int np, int nd, int nr);
     void exit_button_clicked();
     void open_button_clicked();
@@ -60,6 +61,7 @@ private:
     Gtk::Label label_nd_;
     Gtk::Label label_nr_;
     Drawing drawingArea_;
+    Simulation sim_;
 };
 
 #endif

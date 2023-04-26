@@ -31,7 +31,7 @@ public:
     void add_reparateur(Reparateur& R);
     void add_particule(Particule& P);
     void lecture(char* fichier);
-    //void draw_simulation();
+    void draw_simulation();
 
 private:
     int nbP_;

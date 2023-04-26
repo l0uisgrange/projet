@@ -243,16 +243,18 @@ vector<Carre> Simulation::get_carres() {
 Simulation::Simulation(int nbP)
     : nbP_(nbP), spatial_(Spatial(S2d(), 0, 0, 0, 0, 0, 0)) {
 }
- /*
+
 void Simulation::draw_simulation() {
     spatial_.draw();
-    for(const auto& neutraliseur : neutraliseurs_) {
+    for (const auto &neutraliseur: neutraliseurs_) {
         neutraliseur.draw();
     }
-    for(const auto& reparateur : reparateurs_) {
+    for (const auto &reparateur: reparateurs_) {
         reparateur.draw();
     }
-    for(const auto& particule : particules_) {
+    /*
+    for (const auto &particule: particules_) {
         particule.draw();
-    }*/
-
+    }
+     */
+}

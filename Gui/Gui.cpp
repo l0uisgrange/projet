@@ -22,8 +22,7 @@ static Frame default_frame = {-500., 500.,
                               1., 500, 500};
 
 
-Drawing::Drawing() {
-
+Drawing::Drawing(Simulation &sim) : sim_(sim) {
     set_frame(default_frame);
     set_content_width(taille_dessin);
 	set_content_height(taille_dessin);
@@ -37,9 +36,7 @@ void Drawing::on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int he
     orthographic_projection(cr,frame_);
     //pointeur sur cr
     graphic_set_context(cr);
-    draw_cercle(100,100, 40, ORANGE);
-    draw_carre(200,200,50, BLEU_CLAIR);
-    //graphic_draw_shape(width, height); TODO draw_shape encore necesAIRE?
+    sim_.draw_simulation();
 };
 
 void Drawing::set_frame(Frame f) { //TODO mettre dans graphicgui?
@@ -114,11 +111,11 @@ static void draw_frame(const Cairo::RefPtr<Cairo::Context>& cr, Frame frame)
 
 //FIN DE DRAWING AREA
 
-Window::Window() : exit_button_("exit"), open_button_("open"),
+Window::Window(Simulation &sim) : exit_button_("exit"), open_button_("open"),
                    save_button_("save"), start_button_("start"),
                    step_button_("step"), label_maj_("0"), label_pa_("0"),
                    label_rs_("0"), label_rr_("0"), label_ns_("0"), label_np_("0"),
-                   label_nd_("0"), label_nr_("0"), drawingArea_() {
+                   label_nd_("0"), label_nr_("0"), drawingArea_(sim), sim_(sim) {
 	set_default_size(taille_dessin, taille_dessin);
 	set_title("Mission Propre En Ordre");
     Gtk::Box fenetre(Gtk::Orientation::HORIZONTAL, 0);
@@ -151,6 +148,7 @@ Window::Window() : exit_button_("exit"), open_button_("open"),
     controller->signal_key_pressed().connect(
             sigc::mem_fun(*this, &Window::touche_clavier), false);
     add_controller(controller);
+
     Gtk::Label label_maj("Mises à jour");
     Gtk::Label label_pa("Particules");
     Gtk::Label label_rs("Robots réparateurs en service");
@@ -193,6 +191,10 @@ Window::Window() : exit_button_("exit"), open_button_("open"),
     fenetre.append(drawingArea_);
     set_child(fenetre);
     drawingArea_.set_expand();
+    actualiser_stats(sim.get_spatial().get_update(),sim.get_nbP(),
+             sim.get_spatial().get_nbRs(),sim.get_spatial().get_nbRr()
+             ,sim.get_spatial().get_nbNs(),sim.get_spatial().get_nbNp()
+             ,sim.get_spatial().get_nbNd(),sim.get_spatial().get_nbNr());
 }
 
 void Window::actualiser_stats(int maj, int pa, int rs, int rr, int ns, int np, int nd, int nr) {
@@ -241,13 +243,26 @@ void Window::open_button_clicked() {
     dialogue->add_button("Ouvrir", Gtk::ResponseType::OK);
     auto filter_cpp = Gtk::FileFilter::create();
     filter_cpp->set_name("Fichiers .txt");
+    //TODO les filtres sont assez? Prof a mis plus
     filter_cpp->add_mime_type("text/plain");
     dialogue->add_filter(filter_cpp);
     dialogue->show();
+
+    //TODO implémenter simulation avec le nouveau fichier + effacer l'ancienne
 }
 
 void Window::save_button_clicked() {
     // TODO : sauvegarder
+    auto dialogue = new Gtk::FileChooserDialog("Sélectionner un fichier",
+                                               Gtk::FileChooser::Action::SAVE);
+    dialogue->set_transient_for(*this);
+    dialogue->set_modal(true);
+    dialogue->signal_response().connect(sigc::bind(
+            sigc::mem_fun(*this, &Window::fichier_selectionne), dialogue));
+    dialogue->add_button("Annuler", Gtk::ResponseType::CANCEL);
+    dialogue->add_button("Sauvegarder", Gtk::ResponseType::OK);
+    dialogue->show();
+
 }
 
 void Window::start_button_clicked() {
