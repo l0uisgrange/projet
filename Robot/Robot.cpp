@@ -18,7 +18,6 @@ Spatial::Spatial(S2d position, int nbUpdate, int nbNr, int nbNs, int nbNd,
         cout << message::spatial_robot_ouside(position.x, position.y);
         exit(EXIT_FAILURE);
     }
-    cout << "Spatial créé !" << endl;
 }
 
 void Spatial::draw() const {
@@ -34,7 +33,6 @@ Neutraliseur::Neutraliseur(S2d position, double angle, int coordination, bool pa
         exit(EXIT_FAILURE);
     }
     forme_ = Cercle(position, r_neutraliseur);
-    cout << "Neutraliseur créé !" << endl;
 }
 
 void Neutraliseur::draw() const {
@@ -48,7 +46,6 @@ void Neutraliseur::draw() const {
 
 Reparateur::Reparateur(S2d position)
     : forme_(Cercle(position, r_reparateur)) {
-    cout << "Réparateur créé !" << endl;
 }
 
 void Reparateur::draw() const {
