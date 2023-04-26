@@ -30,7 +30,7 @@ public:
     void add_neutraliseur(Neutraliseur& N);
     void add_reparateur(Reparateur& R);
     void add_particule(Particule& P);
-    void lecture(char* fichier);
+    void lecture(ifstream& entree);
     void draw_simulation();
 
 private:

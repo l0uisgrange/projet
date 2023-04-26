@@ -87,9 +87,8 @@ void superposition_erreurs(Simulation* sim) {
     superposition_P_R_N(cercles, carres);
 }
 
-void Simulation::lecture(char* fichier) {
+void Simulation::lecture(ifstream& entree) {
     string line;
-    ifstream entree(fichier);
     if(!entree.fail()) {
         Etat etape(NBP);
         while(getline(entree >> ws, line)) {

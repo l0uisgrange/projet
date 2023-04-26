@@ -8,6 +8,7 @@ static constexpr unsigned taille_dessin(500);
 
 #include "Gui.h"
 #include <vector>
+#include <sstream>
 #include <iostream>
 using namespace std;
 
@@ -173,20 +174,26 @@ void Window::fichier_selectionne(int reponse, Gtk::FileChooserDialog* dialogue) 
     if(reponse == Gtk::ResponseType::OK) {
         auto fichier = dialogue->get_file()->get_path();
         dialogue->hide();
-        Simulation simulation(0);
-        //simulation.lecture(fichier);
-        actualiser_stats(simulation.get_spatial().get_update(),
-                         simulation.get_nbP(),
-                         simulation.get_spatial().get_update(),
-                         simulation.get_spatial().get_nbRr(),
-                         simulation.get_spatial().get_nbNs(),
-                         simulation.get_spatial().get_nbNd(), // TODO changer pour np
-                         simulation.get_spatial().get_nbNd(),
-                         simulation.get_spatial().get_nbNr());
+        ifstream variable(fichier);
+        Simulation sim2(0);
+        sim2.lecture(variable);
+        sim_ = sim2;
+        actualiser_stats(sim_.get_spatial().get_update(),
+                         sim_.get_nbP(),
+                         sim_.get_spatial().get_update(),
+                         sim_.get_spatial().get_nbRr(),
+                         sim_.get_spatial().get_nbNs(),
+                         sim_.get_spatial().get_nbNd(), // TODO changer pour np
+                         sim_.get_spatial().get_nbNd(),
+                         sim_.get_spatial().get_nbNr());
     } else {
         dialogue->hide();
     }
     delete dialogue;
+}
+
+void Drawing::set_sim(Simulation &sim) const{
+    //sim_.get_nbP() = sim.get_nbP();
 }
 
 void Window::exit_button_clicked() {
@@ -240,7 +247,7 @@ bool Window::touche_clavier(guint keyval, guint keycode, Gdk::ModifierType state
         case 's':
             //TODO mettre action start/stop
             std::cout << "Start/Stop" << std::endl;
-            break;
+            break; //TODO mettre return true
         case '1':
             //TODO mettre action step
             std::cout << "STEP" << std::endl;
