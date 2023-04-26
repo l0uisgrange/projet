@@ -33,7 +33,7 @@ void Drawing::on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int he
     sim_.draw_simulation();
 };
 
-void Drawing::set_frame(Frame f) { //TODO mettre dans graphicgui?
+void Drawing::set_frame(Frame f) {
     if((f.xMin <= f.xMax) and (f.yMin <= f.yMax) and (f.height > 0))
     {
         f.asp = (double)f.width/f.height;
