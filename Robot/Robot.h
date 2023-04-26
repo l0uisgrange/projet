@@ -33,6 +33,7 @@ public:
     int get_nbRs() const { return nbRs_; }
     int get_nbNp() const { return 200; } //TODO implémenter la fonction
     void draw() const override;
+    void set_update(int update);
     ~Spatial() override = default;
 private:
     Cercle forme_;

@@ -5,9 +5,25 @@
 **/
 
 #include "Simulation.h"
+#include "../Constantes.h"
+#include <random>
 #include <sstream>
 #include <vector>
 using namespace std;
+
+void Simulation::update() {
+    int nbUpdate = spatial_.get_update();
+    default_random_engine e;
+    for(auto& particule: particules_) {
+        bernoulli_distribution b(desintegration_rate/nbP_);
+        if(particule.get_forme().cote > d_particule_min + epsil_zero) {
+            if(b(e)) {
+                particule.desintegrate();
+            }
+        }
+    }
+    spatial_.set_update(nbUpdate + 1);
+}
 
 void Simulation::set_Spatial(Spatial &S) {
     spatial_ = S;

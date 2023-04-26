@@ -32,6 +32,7 @@ public:
     void add_particule(Particule& P);
     void lecture(ifstream& entree);
     void draw_simulation();
+    void update();
 
 private:
     int nbP_;

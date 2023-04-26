@@ -135,6 +135,14 @@ Window::Window(Simulation &sim) : exit_button_("exit"), open_button_("open"),
     label_np.set_halign(Gtk::Align::START);
     label_nd.set_halign(Gtk::Align::START);
     label_nr.set_halign(Gtk::Align::START);
+    label_maj_.set_halign(Gtk::Align::END);
+    label_pa_.set_halign(Gtk::Align::END);
+    label_rs_.set_halign(Gtk::Align::END);
+    label_rr_.set_halign(Gtk::Align::END);
+    label_ns_.set_halign(Gtk::Align::END);
+    label_np_.set_halign(Gtk::Align::END);
+    label_nd_.set_halign(Gtk::Align::END);
+    label_nr_.set_halign(Gtk::Align::END);
     stats.append(label_maj_);
     stats.append(label_pa_);
     stats.append(label_rs_);
@@ -153,21 +161,18 @@ Window::Window(Simulation &sim) : exit_button_("exit"), open_button_("open"),
     fenetre.append(drawingArea_);
     set_child(fenetre);
     drawingArea_.set_expand();
-    actualiser_stats(sim.get_spatial().get_update(),sim.get_nbP(),
-             sim.get_spatial().get_nbRs(),sim.get_spatial().get_nbRr()
-             ,sim.get_spatial().get_nbNs(),sim.get_spatial().get_nbNp()
-             ,sim.get_spatial().get_nbNd(),sim.get_spatial().get_nbNr());
+    actualiser_stats();
 }
 
-void Window::actualiser_stats(int maj, int pa, int rs, int rr, int ns, int np, int nd, int nr) {
-    label_maj_.set_label(to_string(maj));
-    label_pa_.set_label(to_string(pa));
-    label_rs_.set_label(to_string(rs));
-    label_rr_.set_label(to_string(rr));
-    label_ns_.set_label(to_string(ns));
-    label_np_.set_label(to_string(np));
-    label_nd_.set_label(to_string(nd));
-    label_nr_.set_label(to_string(nr));
+void Window::actualiser_stats() {
+    label_maj_.set_label(to_string(sim_.get_spatial().get_update()));
+    label_pa_.set_label(to_string(sim_.get_nbP()));
+    label_rs_.set_label(to_string(sim_.get_spatial().get_nbRs()));
+    label_rr_.set_label(to_string(sim_.get_spatial().get_nbRr()));
+    label_ns_.set_label(to_string(sim_.get_spatial().get_nbNs()));
+    label_np_.set_label(to_string(sim_.get_spatial().get_nbNs()));
+    label_nd_.set_label(to_string(sim_.get_spatial().get_nbNd()));
+    label_nr_.set_label(to_string(sim_.get_spatial().get_nbNr()));
 }
 
 void Window::fichier_selectionne(int reponse, Gtk::FileChooserDialog* dialogue) {
@@ -178,14 +183,7 @@ void Window::fichier_selectionne(int reponse, Gtk::FileChooserDialog* dialogue) 
         Simulation sim2(0);
         sim2.lecture(variable);
         sim_ = sim2;
-        actualiser_stats(sim_.get_spatial().get_update(),
-                         sim_.get_nbP(),
-                         sim_.get_spatial().get_update(),
-                         sim_.get_spatial().get_nbRr(),
-                         sim_.get_spatial().get_nbNs(),
-                         sim_.get_spatial().get_nbNd(), // TODO changer pour np
-                         sim_.get_spatial().get_nbNd(),
-                         sim_.get_spatial().get_nbNr());
+        actualiser_stats();
     } else {
         dialogue->hide();
     }
@@ -238,7 +236,8 @@ void Window::start_button_clicked() {
 }
 
 void Window::step_button_clicked() {
-    // TODO : step
+    sim_.update();
+    actualiser_stats();
 }
 
 bool Window::touche_clavier(guint keyval, guint keycode, Gdk::ModifierType state) {
@@ -249,8 +248,15 @@ bool Window::touche_clavier(guint keyval, guint keycode, Gdk::ModifierType state
             std::cout << "Start/Stop" << std::endl;
             break; //TODO mettre return true
         case '1':
-            //TODO mettre action step
+            sim_.update();
             std::cout << "STEP" << std::endl;
     }
     return false;
+}
+
+bool Window::on_timeout() {
+	int nbUpdate = sim_.get_spatial().get_update();
+	label_maj_.set_text(std::to_string(nbUpdate));
+	sim_.get_spatial().set_update(nbUpdate++);
+	return true;
 }

@@ -59,4 +59,7 @@ void Reparateur::draw() const {
     draw_cercle(forme_.centre.x, forme_.centre.y, forme_.rayon, BLEU_FONCE);
 }
 
+void Spatial::set_update(int update) {
+    nbUpdate_ = update;
+}
 
