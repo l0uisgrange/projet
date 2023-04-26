@@ -17,8 +17,8 @@ static void orthographic_projection(const Cairo::RefPtr<Cairo::Context>& cr,
 static void draw_frame(const Cairo::RefPtr<Cairo::Context>& cr, Frame frame);
 
 //TODO quelle est frame de référence ?
-static Frame default_frame = {-500., 500.,
-                              -500., 500.,
+static Frame default_frame = {-250., 250.,
+                              -250., 250.,
                               1., 500, 500};
 
 
@@ -42,7 +42,7 @@ void Drawing::on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int he
 void Drawing::set_frame(Frame f) { //TODO mettre dans graphicgui?
     if((f.xMin <= f.xMax) and (f.yMin <= f.yMax) and (f.height > 0))
     {
-        f.asp = float(f.width)/float(f.height);
+        f.asp = (double)f.width/f.height;
         frame_ = f;
     }
     else
@@ -81,7 +81,7 @@ void Drawing::adjustFrame(int width, int height) {
 static void orthographic_projection(const Cairo::RefPtr<Cairo::Context>& cr,
                                     const Frame& frame) {
     // déplace l'origine au centre du carré le plus grand possible
-    double centre_carre(float(min(frame.width, frame.height))/2.0);
+    double centre_carre(double(min(frame.width, frame.height))/2.0);
     cr->translate(centre_carre, centre_carre);
 
     // normalise la largeur et hauteur selon default frame
@@ -95,8 +95,8 @@ static void orthographic_projection(const Cairo::RefPtr<Cairo::Context>& cr,
         axe_min_diff = frame.xMax - frame.xMin;
         axe_min_sum = frame.xMin + frame.xMax;
     }
-    cr->scale(float(frame.width)/float(axe_min_diff),
-              float(-frame.height)/float(axe_min_diff));
+    cr->scale((double)frame.width/axe_min_diff,
+              (double)-frame.height/axe_min_diff);
     // décalage vers centre du cadrage
     cr->translate(-(axe_min_sum)/2, -(axe_min_sum)/2);
 }
