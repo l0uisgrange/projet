@@ -31,7 +31,7 @@ Drawing::Drawing(Simulation &sim) : sim_(sim) {
 
 void Drawing::on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int height) {
     //empecher distorsion
-    adjustFrame(width, height);
+    adjust_frame(width, height);
     draw_frame(cr, frame_);
     orthographic_projection(cr,frame_);
     //pointeur sur cr
@@ -49,15 +49,14 @@ void Drawing::set_frame(Frame f) { //TODO mettre dans graphicgui?
         exit(1); //TODO quelle erreur si mauvais affichage?
 }
 
-void Drawing::adjustFrame(int width, int height) {
+void Drawing::adjust_frame(int width, int height) {
     //Prevents distorsion
     frame_.width  = min(width, height);
     frame_.height = min(width,height);
 
     //reference framing as a guide to prevent distorsion
     double new_aspect_ratio((double)width/height);
-    if( new_aspect_ratio > default_frame.asp) //x > y
-    { // garde ymax/min, adapte xmax/min
+    if( new_aspect_ratio > default_frame.asp) { // garde ymax/min, adapte xmax/min
         frame_.yMax = default_frame.yMax ;
         frame_.yMin = default_frame.yMin ;
 
@@ -66,7 +65,7 @@ void Drawing::adjustFrame(int width, int height) {
         // centré point-milieu selon x
         frame_.xMax = mid + 0.5*(new_aspect_ratio/default_frame.asp)*delta ;
         frame_.xMin = mid - 0.5*(new_aspect_ratio/default_frame.asp)*delta ;
-    }else{ // garde xmax/min, adapte ymax/min
+    } else { // garde xmax/min, adapte ymax/min
         frame_.xMax = default_frame.xMax ;
         frame_.xMin = default_frame.xMin ;
 

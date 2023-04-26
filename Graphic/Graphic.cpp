@@ -13,18 +13,11 @@ static const Cairo::RefPtr<Cairo::Context>* ptcr(nullptr);
 void graphic_set_context(const Cairo::RefPtr<Cairo::Context>& cr) {
     ptcr = &cr;
 }
-/*
-void graphic_draw_shape(const int width, const int height) {
-    (*ptcr)->set_source_rgb(1.0, 1.0, 1.0);
-    (*ptcr)->rectangle(0, 0, width, height);
-    (*ptcr)->fill();
-}
-*/
+
 void draw_cercle(double x, double y, double rayon, Couleurs couleur) {
     rgb color(decode_couleur(couleur));
-    std::cout << "ptcr =" << (*ptcr) << std::endl;
     (*ptcr)->set_source_rgb(color.r, color.g, color.b);
-    (*ptcr)->set_line_width(4.0);
+    (*ptcr)->set_line_width(1.0);
     (*ptcr)->arc(x, y, rayon, 0.0, 2*M_PI);
     (*ptcr)->stroke();
 }
@@ -32,7 +25,7 @@ void draw_cercle(double x, double y, double rayon, Couleurs couleur) {
 void draw_carre(double x, double y, double cote, Couleurs couleur){
     rgb color(decode_couleur(couleur));
     (*ptcr)->set_source_rgb(color.r, color.g, color.b);
-    (*ptcr)->set_line_width(4.0);
+    (*ptcr)->set_line_width(1.0);
     (*ptcr)->rectangle(x, y, cote, cote);
     (*ptcr)->stroke();
 }

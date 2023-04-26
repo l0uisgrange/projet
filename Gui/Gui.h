@@ -26,7 +26,7 @@ public:
     explicit Drawing(Simulation &sim);
     virtual ~Drawing(){}; // TODO: enlever les accolades
     void set_frame(Frame f);
-    void adjustFrame(int width, int height);
+    void adjust_frame(int width, int height);
 private:
     Frame frame_;
     Simulation sim_;

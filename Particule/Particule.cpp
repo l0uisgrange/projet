@@ -30,5 +30,5 @@ void test_domaine(Carre c) {
 }
 
 void Particule::draw() const {
-    draw_cercle(forme_.centre.x, forme_.centre.y, forme_.cote, ROUGE);
+    draw_carre(forme_.centre.x, forme_.centre.y, forme_.cote, ROUGE);
 }
