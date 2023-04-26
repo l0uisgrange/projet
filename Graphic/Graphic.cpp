@@ -5,7 +5,7 @@
 **/
 
 #include <cmath>
-#include <iostream>
+#include "Graphic.h"
 
 static const Cairo::RefPtr<Cairo::Context>* ptcr(nullptr);
 
@@ -16,17 +16,33 @@ void graphic_set_context(const Cairo::RefPtr<Cairo::Context>& cr) {
 void draw_cercle(double x, double y, double rayon, Couleurs couleur) {
     rgb color(decode_couleur(couleur));
     (*ptcr)->set_source_rgb(color.r, color.g, color.b);
-    (*ptcr)->set_line_width(1.0);
+    (*ptcr)->set_line_width(2.5);
     (*ptcr)->arc(x, y, rayon, 0.0, 2*M_PI);
     (*ptcr)->stroke();
 }
 
-void draw_carre(double x, double y, double cote, Couleurs couleur){
+void fill_cercle(double x, double y, double rayon, Couleurs couleur) {
     rgb color(decode_couleur(couleur));
     (*ptcr)->set_source_rgb(color.r, color.g, color.b);
-    (*ptcr)->set_line_width(1.0);
+    (*ptcr)->set_line_width(2.5);
+    (*ptcr)->arc(x, y, rayon, 0.0, 2*M_PI);
+    (*ptcr)->fill();
+}
+
+void draw_carre(double x, double y, double cote, Couleurs couleur) {
+    rgb color(decode_couleur(couleur));
+    (*ptcr)->set_source_rgb(color.r, color.g, color.b);
+    (*ptcr)->set_line_width(2.5);
     (*ptcr)->rectangle(x, y, cote, cote);
     (*ptcr)->stroke();
+}
+
+void fill_carre(double x, double y, double cote, Couleurs couleur) {
+    rgb color(decode_couleur(couleur));
+    (*ptcr)->set_source_rgb(color.r, color.g, color.b);
+    (*ptcr)->set_line_width(2.5);
+    (*ptcr)->rectangle(x, y, cote, cote);
+    (*ptcr)->fill();
 }
 
 rgb decode_couleur(Couleurs couleur) {
@@ -34,10 +50,12 @@ rgb decode_couleur(Couleurs couleur) {
         case BLANC:
             return {0,0,0};
         case GRIS:
-            return {0.5, 0.5, 0.5};
+            return {0.808, 0.808, 0.808};
         case ROUGE:
             return {1, 0, 0};
         case BLEU_CLAIR:
+            return {0.3137, 0.686, 0.918};
+        case BLEU_FONCE:
             return {0, 1, 1};
         case NOIR:
             return {0, 0, 0};
@@ -52,10 +70,10 @@ rgb decode_couleur(Couleurs couleur) {
 
 rgb::rgb(double r, double g, double b) : r(r), g(g), b(b) {};
 
-static void orthographic_projection(const Cairo::RefPtr<Cairo::Context>& cr,
+void orthographic_projection(const Cairo::RefPtr<Cairo::Context>& cr,
                                     const Frame& frame) {
     // déplace l'origine au centre du carré le plus grand possible
-    double centre_carre(double(min(frame.width, frame.height))/2.0);
+    double centre_carre(std::min(frame.width, frame.height)/2.0);
     cr->translate(centre_carre, centre_carre);
 
     // normalise la largeur et hauteur selon default frame
@@ -75,7 +93,7 @@ static void orthographic_projection(const Cairo::RefPtr<Cairo::Context>& cr,
     cr->translate(-(axe_min_sum)/2, -(axe_min_sum)/2);
 }
 
-static void draw_frame(const Cairo::RefPtr<Cairo::Context>& cr, Frame frame)
+void draw_frame(const Cairo::RefPtr<Cairo::Context>& cr, Frame frame)
 {
     cr->set_line_width(2.0);
     cr->set_source_rgb(0.5, 0.5, 0.5);
