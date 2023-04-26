@@ -50,7 +50,8 @@ Reparateur::Reparateur(S2d position)
 }
 
 void Reparateur::draw() const {
-    draw_cercle(forme_.centre.x, forme_.centre.y, forme_.rayon, NOIR);
+    fill_cercle(forme_.centre.x, forme_.centre.y, forme_.rayon, VERT);
+    draw_cercle(forme_.centre.x, forme_.centre.y, forme_.rayon, BLEU_FONCE);
 }
 
 

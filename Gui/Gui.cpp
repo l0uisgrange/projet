@@ -4,7 +4,7 @@
  Version 1.0
 **/
 
-static constexpr unsigned taille_dessin(400); //TODO enlever et mettre dans constantes.h
+static constexpr unsigned taille_dessin(500);
 
 #include "Gui.h"
 #include <vector>
@@ -12,9 +12,9 @@ static constexpr unsigned taille_dessin(400); //TODO enlever et mettre dans cons
 using namespace std;
 
 //TODO quelle est frame de référence ?
-static Frame default_frame = {-250., 250.,
-                              -250., 250.,
-                              1., 200, 200};
+static Frame default_frame = {-125., 125.,
+                              -125., 125.,
+                              1., 500, 500};
 
 Drawing::Drawing(Simulation &sim) : sim_(sim) {
     set_frame(default_frame);

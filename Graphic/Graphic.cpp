@@ -16,7 +16,7 @@ void graphic_set_context(const Cairo::RefPtr<Cairo::Context>& cr) {
 void draw_cercle(double x, double y, double rayon, Couleurs couleur) {
     rgb color(decode_couleur(couleur));
     (*ptcr)->set_source_rgb(color.r, color.g, color.b);
-    (*ptcr)->set_line_width(2.5);
+    (*ptcr)->set_line_width(1);
     (*ptcr)->arc(x, y, rayon, 0.0, 2*M_PI);
     (*ptcr)->stroke();
 }
@@ -24,7 +24,6 @@ void draw_cercle(double x, double y, double rayon, Couleurs couleur) {
 void fill_cercle(double x, double y, double rayon, Couleurs couleur) {
     rgb color(decode_couleur(couleur));
     (*ptcr)->set_source_rgb(color.r, color.g, color.b);
-    (*ptcr)->set_line_width(2.5);
     (*ptcr)->arc(x, y, rayon, 0.0, 2*M_PI);
     (*ptcr)->fill();
 }
@@ -32,7 +31,7 @@ void fill_cercle(double x, double y, double rayon, Couleurs couleur) {
 void draw_carre(double x, double y, double cote, Couleurs couleur) {
     rgb color(decode_couleur(couleur));
     (*ptcr)->set_source_rgb(color.r, color.g, color.b);
-    (*ptcr)->set_line_width(2.5);
+    (*ptcr)->set_line_width(1);
     (*ptcr)->rectangle(x, y, cote, cote);
     (*ptcr)->stroke();
 }
@@ -40,7 +39,6 @@ void draw_carre(double x, double y, double cote, Couleurs couleur) {
 void fill_carre(double x, double y, double cote, Couleurs couleur) {
     rgb color(decode_couleur(couleur));
     (*ptcr)->set_source_rgb(color.r, color.g, color.b);
-    (*ptcr)->set_line_width(2.5);
     (*ptcr)->rectangle(x, y, cote, cote);
     (*ptcr)->fill();
 }
