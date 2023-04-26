@@ -25,12 +25,13 @@ struct Frame {
 };
 
 enum Couleurs { BLANC, GRIS, ROUGE, BLEU_CLAIR, BLEU_FONCE, NOIR, VIOLET, ORANGE, VERT };
+rgb decode_couleur(Couleurs couleur);
 
 void draw_cercle(double x, double y, double rayon, Couleurs couleur);
 void fill_cercle(double x, double y, double rayon, Couleurs couleur);
 void draw_carre(double x, double y, double cote, Couleurs couleur);
 void fill_carre(double x, double y, double cote, Couleurs couleur);
-rgb decode_couleur(Couleurs couleur);
+void draw_line(double x_start, double y_start, double x_stop, double y_stop, Couleurs couleur);
 
 void graphic_set_context(const Cairo::RefPtr<Cairo::Context>& cr);
 void draw_frame(const Cairo::RefPtr<Cairo::Context>& cr, Frame frame);

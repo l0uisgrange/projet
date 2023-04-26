@@ -43,6 +43,15 @@ void fill_carre(double x, double y, double cote, Couleurs couleur) {
     (*ptcr)->fill();
 }
 
+void draw_line(double x_start, double y_start, double x_stop, double y_stop, Couleurs couleur) {
+    rgb color(decode_couleur(couleur));
+    (*ptcr)->set_source_rgb(color.r, color.g, color.b);
+    (*ptcr)->set_line_width(1);
+    (*ptcr)->move_to(x_start, y_start);
+    (*ptcr)->line_to(x_stop, y_stop);
+    (*ptcr)->stroke();
+}
+
 rgb decode_couleur(Couleurs couleur) {
     switch(couleur) {
         case BLANC:

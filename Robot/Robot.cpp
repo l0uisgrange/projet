@@ -38,16 +38,16 @@ Neutraliseur::Neutraliseur(S2d position, double angle, int coordination, bool pa
 }
 
 void Neutraliseur::draw() const {
+    Couleurs couleur(NOIR);
     if(panne_) {
-        draw_cercle(forme_.centre.x, forme_.centre.y, forme_.rayon, ORANGE);
-        draw_cercle(forme_.centre.x, forme_.centre.y, 0.5, ORANGE);
-        fill_cercle(forme_.centre.x, forme_.centre.y, 0.5, ORANGE);
-    } else {
-        draw_cercle(forme_.centre.x, forme_.centre.y, forme_.rayon, NOIR);
-        draw_cercle(forme_.centre.x, forme_.centre.y, 0.5, NOIR);
-        fill_cercle(forme_.centre.x, forme_.centre.y, 0.5, NOIR);
+        couleur = ORANGE;
     }
-    //TODO adapter pour la colision
+    double x_stop = forme_.centre.x + std::cos(angle_) * r_neutraliseur;
+    double y_stop = forme_.centre.y + std::sin(angle_) * r_neutraliseur;
+    draw_line(forme_.centre.x, forme_.centre.y, x_stop, y_stop, VERT);
+    draw_cercle(forme_.centre.x, forme_.centre.y, forme_.rayon, couleur);
+    draw_cercle(forme_.centre.x, forme_.centre.y, 0.5, couleur);
+    fill_cercle(forme_.centre.x, forme_.centre.y, 0.5, couleur);
 }
 
 Reparateur::Reparateur(S2d position)
