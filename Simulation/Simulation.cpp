@@ -252,9 +252,7 @@ void Simulation::draw_simulation() {
     for (const auto &reparateur: reparateurs_) {
         reparateur.draw();
     }
-    /*
     for (const auto &particule: particules_) {
         particule.draw();
     }
-     */
 }

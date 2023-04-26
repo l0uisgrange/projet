@@ -8,7 +8,6 @@
 #include <sstream>
 using namespace std;
 
-
 Particule::Particule(Carre c) {
     if (c.cote >= d_particule_min) {
         forme_ = c;
@@ -28,4 +27,8 @@ void test_domaine(Carre c) {
         cout << message::particle_outside(c.centre.x, c.centre.y, c.cote);
         exit(EXIT_FAILURE);
     }
+}
+
+void Particule::draw() const {
+    draw_cercle(forme_.centre.x, forme_.centre.y, forme_.cote, ROUGE);
 }
