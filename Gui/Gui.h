@@ -6,6 +6,7 @@
 
 #include "../Graphic/Graphic.h"
 #include "../Simulation/Simulation.h"
+#include <memory>
 
 #ifndef GUI_H
 #define GUI_H
@@ -16,7 +17,8 @@ public:
     virtual ~Drawing(){}; // TODO: enlever les accolades
     void set_frame(Frame f);
     void adjust_frame(int width, int height);
-    void set_sim(Simulation& sim) const;
+    Simulation get_sim() const;
+    void set_sim(Simulation& sim);
 private:
     Frame frame_;
     Simulation sim_;
@@ -52,7 +54,7 @@ private:
     Gtk::Label label_nd_;
     Gtk::Label label_nr_;
     Drawing drawingArea_;
-    Simulation sim_;
+    //Simulation sim_;
 };
 
 #endif

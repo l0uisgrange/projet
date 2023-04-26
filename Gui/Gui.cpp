@@ -25,13 +25,12 @@ Drawing::Drawing(Simulation &sim) : sim_(sim) {
 }
 
 void Drawing::on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int height) {
-    //empecher distorsion
     adjust_frame(width, height);
     draw_frame(cr, frame_);
     orthographic_projection(cr,frame_);
-    //pointeur sur cr
     graphic_set_context(cr);
     sim_.draw_simulation();
+    queue_draw();
 };
 
 void Drawing::set_frame(Frame f) {
@@ -72,11 +71,18 @@ void Drawing::adjust_frame(int width, int height) {
     }
 }
 
+Simulation Drawing::get_sim() const {
+    return sim_;
+}
+
+void Drawing::set_sim(Simulation &sim) {
+    sim_ = sim;
+}
 Window::Window(Simulation &sim) : exit_button_("exit"), open_button_("open"),
                    save_button_("save"), start_button_("start"),
                    step_button_("step"), label_maj_("0"), label_pa_("0"),
                    label_rs_("0"), label_rr_("0"), label_ns_("0"), label_np_("0"),
-                   label_nd_("0"), label_nr_("0"), drawingArea_(sim), sim_(sim) {
+                   label_nd_("0"), label_nr_("0"), drawingArea_(sim) {
 	set_default_size(taille_dessin, taille_dessin);
 	set_title("Mission Propre En Ordre");
     Gtk::Box fenetre(Gtk::Orientation::HORIZONTAL, 0);
@@ -164,15 +170,16 @@ Window::Window(Simulation &sim) : exit_button_("exit"), open_button_("open"),
     actualiser_stats();
 }
 
+
 void Window::actualiser_stats() {
-    label_maj_.set_label(to_string(sim_.get_spatial().get_update()));
-    label_pa_.set_label(to_string(sim_.get_nbP()));
-    label_rs_.set_label(to_string(sim_.get_spatial().get_nbRs()));
-    label_rr_.set_label(to_string(sim_.get_spatial().get_nbRr()));
-    label_ns_.set_label(to_string(sim_.get_spatial().get_nbNs()));
-    label_np_.set_label(to_string(sim_.get_spatial().get_nbNs()));
-    label_nd_.set_label(to_string(sim_.get_spatial().get_nbNd()));
-    label_nr_.set_label(to_string(sim_.get_spatial().get_nbNr()));
+    label_maj_.set_label(to_string(drawingArea_.get_sim().get_spatial().get_update()));
+    label_pa_.set_label(to_string(drawingArea_.get_sim().get_nbP()));
+    label_rs_.set_label(to_string(drawingArea_.get_sim().get_spatial().get_nbRs()));
+    label_rr_.set_label(to_string(drawingArea_.get_sim().get_spatial().get_nbRr()));
+    label_ns_.set_label(to_string(drawingArea_.get_sim().get_spatial().get_nbNs()));
+    label_np_.set_label(to_string(drawingArea_.get_sim().get_spatial().get_nbNs()));
+    label_nd_.set_label(to_string(drawingArea_.get_sim().get_spatial().get_nbNd()));
+    label_nr_.set_label(to_string(drawingArea_.get_sim().get_spatial().get_nbNr()));
 }
 
 void Window::fichier_selectionne(int reponse, Gtk::FileChooserDialog* dialogue) {
@@ -182,16 +189,13 @@ void Window::fichier_selectionne(int reponse, Gtk::FileChooserDialog* dialogue) 
         ifstream variable(fichier);
         Simulation sim2(0);
         sim2.lecture(variable);
-        sim_ = sim2;
+        drawingArea_.set_sim(sim2);
         actualiser_stats();
+        drawingArea_.queue_draw();
     } else {
         dialogue->hide();
     }
     delete dialogue;
-}
-
-void Drawing::set_sim(Simulation &sim) const{
-    //sim_.get_nbP() = sim.get_nbP();
 }
 
 void Window::exit_button_clicked() {
@@ -213,8 +217,6 @@ void Window::open_button_clicked() {
     filter_cpp->add_mime_type("text/plain");
     dialogue->add_filter(filter_cpp);
     dialogue->show();
-
-    //TODO implémenter simulation avec le nouveau fichier + effacer l'ancienne
 }
 
 void Window::save_button_clicked() {
@@ -236,7 +238,7 @@ void Window::start_button_clicked() {
 }
 
 void Window::step_button_clicked() {
-    sim_.update();
+    drawingArea_.get_sim().update();
     actualiser_stats();
 }
 
@@ -248,15 +250,15 @@ bool Window::touche_clavier(guint keyval, guint keycode, Gdk::ModifierType state
             std::cout << "Start/Stop" << std::endl;
             break; //TODO mettre return true
         case '1':
-            sim_.update();
+            drawingArea_.get_sim().update();
             std::cout << "STEP" << std::endl;
     }
     return false;
 }
 
 bool Window::on_timeout() {
-	int nbUpdate = sim_.get_spatial().get_update();
+	int nbUpdate = drawingArea_.get_sim().get_spatial().get_update();
 	label_maj_.set_text(std::to_string(nbUpdate));
-	sim_.get_spatial().set_update(nbUpdate++);
+	drawingArea_.get_sim().get_spatial().set_update(nbUpdate++);
 	return true;
 }
