@@ -71,10 +71,6 @@ void Drawing::adjust_frame(int width, int height) {
     }
 }
 
-Simulation Drawing::get_sim() const {
-    return sim_;
-}
-
 void Drawing::set_sim(Simulation &sim) {
     sim_ = sim;
 }
