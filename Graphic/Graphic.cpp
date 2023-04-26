@@ -48,7 +48,7 @@ void fill_carre(double x, double y, double cote, Couleurs couleur) {
 rgb decode_couleur(Couleurs couleur) {
     switch(couleur) {
         case BLANC:
-            return {0,0,0};
+            return {1,1,1};
         case GRIS:
             return {0.808, 0.808, 0.808};
         case ROUGE:
@@ -93,10 +93,12 @@ void orthographic_projection(const Cairo::RefPtr<Cairo::Context>& cr,
     cr->translate(-(axe_min_sum)/2, -(axe_min_sum)/2);
 }
 
-void draw_frame(const Cairo::RefPtr<Cairo::Context>& cr, Frame frame)
-{
+void draw_frame(const Cairo::RefPtr<Cairo::Context>& cr, Frame frame) {
     cr->set_line_width(2.0);
-    cr->set_source_rgb(0.5, 0.5, 0.5);
+    cr->set_source_rgb(1, 1, 1);
     cr->rectangle(0,0, frame.width, frame.height);
+    cr->fill();
+    cr->rectangle(0,0, frame.width, frame.height);
+    cr->set_source_rgb(0.847, 0.8314, 0.8157);
     cr->stroke();
 }

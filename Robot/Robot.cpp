@@ -22,6 +22,7 @@ Spatial::Spatial(S2d position, int nbUpdate, int nbNr, int nbNs, int nbNd,
 
 void Spatial::draw() const {
     draw_cercle(forme_.centre.x, forme_.centre.y, forme_.rayon, BLEU_CLAIR);
+    draw_cercle(forme_.centre.x, forme_.centre.y, 1.0, BLEU_CLAIR);
 }
 
 Neutraliseur::Neutraliseur(S2d position, double angle, int coordination, bool panne,

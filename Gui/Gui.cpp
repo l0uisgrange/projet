@@ -4,19 +4,17 @@
  Version 1.0
 **/
 
-static constexpr unsigned taille_dessin(500); //TODO enlever et mettre dans constantes.h
+static constexpr unsigned taille_dessin(400); //TODO enlever et mettre dans constantes.h
 
 #include "Gui.h"
 #include <vector>
 #include <iostream>
 using namespace std;
 
-
 //TODO quelle est frame de référence ?
 static Frame default_frame = {-250., 250.,
                               -250., 250.,
-                              1., 500, 500};
-
+                              1., 200, 200};
 
 Drawing::Drawing(Simulation &sim) : sim_(sim) {
     set_frame(default_frame);
@@ -73,8 +71,6 @@ void Drawing::adjust_frame(int width, int height) {
     }
 }
 
-//FIN DE DRAWING AREA
-
 Window::Window(Simulation &sim) : exit_button_("exit"), open_button_("open"),
                    save_button_("save"), start_button_("start"),
                    step_button_("step"), label_maj_("0"), label_pa_("0"),
@@ -92,6 +88,7 @@ Window::Window(Simulation &sim) : exit_button_("exit"), open_button_("open"),
     Gtk::Box boutons(Gtk::Orientation::VERTICAL, 5);
     boutons.set_margin(10);
     texte.set_margin(10);
+    drawingArea_.set_margin(10);
     boutons.append(exit_button_);
     boutons.append(open_button_);
     boutons.append(save_button_);
