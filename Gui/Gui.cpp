@@ -11,10 +11,6 @@ static constexpr unsigned taille_dessin(500); //TODO enlever et mettre dans cons
 #include <iostream>
 using namespace std;
 
-static void orthographic_projection(const Cairo::RefPtr<Cairo::Context>& cr,
-                                    const Frame& frame);
-
-static void draw_frame(const Cairo::RefPtr<Cairo::Context>& cr, Frame frame);
 
 //TODO quelle est frame de référence ?
 static Frame default_frame = {-250., 250.,
@@ -75,37 +71,6 @@ void Drawing::adjust_frame(int width, int height) {
         frame_.yMax = mid + 0.5*(default_frame.asp/new_aspect_ratio)*delta ;
         frame_.yMin = mid - 0.5*(default_frame.asp/new_aspect_ratio)*delta ;
     }
-}
-
-static void orthographic_projection(const Cairo::RefPtr<Cairo::Context>& cr,
-                                    const Frame& frame) {
-    // déplace l'origine au centre du carré le plus grand possible
-    double centre_carre(double(min(frame.width, frame.height))/2.0);
-    cr->translate(centre_carre, centre_carre);
-
-    // normalise la largeur et hauteur selon default frame
-    // ET inverse la direction de l'axe Y
-    double axe_min_diff(0.); //donne xMax-xMin ou yMax-yMin
-    double axe_min_sum(0.); // xMin+xMax ou yMin+yMin
-    if (frame.xMax > frame.yMax) {
-        axe_min_diff = frame.yMax - frame.yMin;
-        axe_min_sum =frame.yMin + frame.yMax;
-    }else{
-        axe_min_diff = frame.xMax - frame.xMin;
-        axe_min_sum = frame.xMin + frame.xMax;
-    }
-    cr->scale((double)frame.width/axe_min_diff,
-              (double)-frame.height/axe_min_diff);
-    // décalage vers centre du cadrage
-    cr->translate(-(axe_min_sum)/2, -(axe_min_sum)/2);
-}
-
-static void draw_frame(const Cairo::RefPtr<Cairo::Context>& cr, Frame frame)
-{
-    cr->set_line_width(5.0);
-    cr->set_source_rgb(0.5, 0.5, 0.5);
-    cr->rectangle(0,0, frame.width, frame.height);
-    cr->stroke();
 }
 
 //FIN DE DRAWING AREA

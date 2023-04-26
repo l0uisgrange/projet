@@ -50,7 +50,7 @@ Shape/Shape.o: Shape/Shape.cpp Shape/Shape.h \
   Graphic/Graphic.h
 	$(CXX) $(CXXFLAGS) $(LINKING) -c $< -o $@ $(LINKING)
 Gui/Gui.o: Gui/Gui.cpp Gui/Gui.h \
-  Graphic/GraphicGui.h \
+  Graphic/Graphic.h \
   Simulation/Simulation.h
 	$(CXX) $(CXXFLAGS) $(LINKING) -c $< -o $@ $(LINKING)
 Projet.o: Projet.cpp \

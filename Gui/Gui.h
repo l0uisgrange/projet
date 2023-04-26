@@ -4,22 +4,11 @@
  Version 1.0
 **/
 
-#include "../Graphic/GraphicGui.h"
+#include "../Graphic/Graphic.h"
 #include "../Simulation/Simulation.h"
 
 #ifndef GUI_H
 #define GUI_H
-
-struct Frame // Pour adapter afichage
-{
-    double xMin;
-    double xMax;
-    double yMin;
-    double yMax;
-    double asp; // aspect ratio
-    int height;
-    int width;
-};
 
 class Drawing : public Gtk::DrawingArea {
 public:
