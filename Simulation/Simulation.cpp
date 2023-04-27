@@ -18,12 +18,9 @@ void Simulation::update() {
     vector<Particule> nouvelle_liste;
     for(auto& particule: particules_) {
         bernoulli_distribution b(desintegration_rate/nbP_);
-        cout << "Nouvelle particule :";
         if(particule.get_forme().cote/2.0 - 2*epsil_zero >= d_particule_min + epsil_zero) {
             if(b(e)) {
-                cout << " oui" << endl;
                 double rayon = sqrt(2*pow(particule.get_forme().cote/4, 2));
-                cout << "Rayon : " << rayon << endl;
                 for(int i=0; i<4; i++) {
                     Carre c;
                     double angle = (90*i+45)*3.14159/180;
@@ -31,15 +28,10 @@ void Simulation::update() {
                     c.centre.y = particule.get_forme().centre.y + rayon*sin(angle);
                     double cote = particule.get_forme().cote;
                     c.cote = cote/2.0 - 2*epsil_zero;
-                    cout << "Particule à (" << particule.get_forme().centre.x << ", " << particule.get_forme().centre.y << ") de côté " << particule.get_forme().cote << endl;
-                    cout << "-- Particule à (" << c.centre.x << ", " << c.centre.y << ") de côté " << c.cote << endl;
                     Particule new_p(c);
                     nouvelle_liste.push_back(new_p);
-                    cout << "-> Particule à (" << particule.get_forme().centre.x << ", " << particule.get_forme().centre.y << ") de côté " << particule.get_forme().cote << endl;
                 }
-                cout << "Fin de procédure" << endl;
             } else {
-                cout << " non, chance" << endl;
                 nouvelle_liste.push_back(particule);
             }
         } else {
