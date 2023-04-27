@@ -26,9 +26,18 @@ void Spatial::draw() const {
     fill_cercle(forme_.centre.x, forme_.centre.y, 0.5, BLEU_CLAIR);
 }
 
+string Spatial::get_info() const {
+    string info;
+    info= to_string(forme_.centre.x) +" "+ to_string(forme_.centre.y) + " "
+            + to_string(nbUpdate_) +" "+ to_string(nbNr_) +" "+ to_string(nbNs_) +" "
+            + to_string(nbRr_) +" "+ to_string(nbRs_);
+    return info;
+}
+
 Neutraliseur::Neutraliseur(S2d position, double angle, int coordination, bool panne,
                            int k_update_panne, int nbUpdate)
-    : angle_(angle), panne_(panne), coordination_(coordination) {
+    : angle_(angle), panne_(panne), coordination_(coordination),
+    k_update_panne_(k_update_panne) {
     if(k_update_panne > nbUpdate) {
         cout << message::invalid_k_update(position.x, position.y, k_update_panne,
                                           nbUpdate);
@@ -48,6 +57,14 @@ void Neutraliseur::draw() const {
     draw_cercle(forme_.centre.x, forme_.centre.y, forme_.rayon, couleur);
     draw_cercle(forme_.centre.x, forme_.centre.y, 0.5, couleur);
     fill_cercle(forme_.centre.x, forme_.centre.y, 0.5, couleur);
+}
+
+string Neutraliseur::get_info() const {
+    string info;
+    info = to_string(forme_.centre.x) +" "+ to_string(forme_.centre.y) +" "
+            + to_string(angle_) +" "+ to_string(coordination_) +" "
+            + to_string(panne_) +" "+ to_string(k_update_panne_);
+    return info;
 }
 
 Reparateur::Reparateur(S2d position)

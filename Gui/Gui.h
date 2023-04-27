@@ -54,7 +54,6 @@ private:
     Gtk::Label label_nd_;
     Gtk::Label label_nr_;
     Drawing drawingArea_;
-    //Simulation sim_;
 };
 
 #endif

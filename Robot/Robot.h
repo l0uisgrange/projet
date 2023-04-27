@@ -32,6 +32,7 @@ public:
     int get_nbRr() const { return nbRr_; }
     int get_nbRs() const { return nbRs_; }
     int get_nbNp() const { return 200; } //TODO implémenter la fonction
+    string get_info() const;
     void draw() const override;
     void set_update(int update);
     ~Spatial() override = default;
@@ -61,6 +62,7 @@ public:
     Cercle get_forme() const { return forme_; }
     void draw() const override;
     virtual ~Neutraliseur() = default;
+    string get_info() const;
 private:
     Cercle forme_;
     double angle_;
@@ -68,6 +70,7 @@ private:
     int coordination_;
     double vrot_ = 0;
     double vtran_ = 0;
+    int k_update_panne_; //TODO mettre à jour dans la fonction lecture
 };
 
 class Reparateur : public Mobile {

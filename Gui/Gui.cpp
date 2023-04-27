@@ -179,7 +179,7 @@ void Window::actualiser_stats() {
 }
 
 void Window::fichier_selectionne(int reponse, Gtk::FileChooserDialog* dialogue) {
-    if(reponse == Gtk::ResponseType::OK) {
+    if(reponse == 1) {
         auto fichier = dialogue->get_file()->get_path();
         dialogue->hide();
         ifstream variable(fichier);
@@ -188,6 +188,28 @@ void Window::fichier_selectionne(int reponse, Gtk::FileChooserDialog* dialogue) 
         drawingArea_.set_sim(sim2);
         actualiser_stats();
         drawingArea_.queue_draw();
+    } else if (reponse == 2) {
+        ofstream fw(dialogue->get_file()->get_path(), std::ofstream::out);
+        if (fw.is_open()) {
+            fw << drawingArea_.get_sim().get_nbP() << endl;
+            for (auto P : drawingArea_.get_sim().get_particules()) {
+                fw << "\t" << P.get_forme().centre.x << " " << P.get_forme().centre.y;
+                fw << " " << P.get_forme().cote << endl;
+            }
+            fw << endl;
+            fw << drawingArea_.get_sim().get_spatial().get_info() << endl;
+            for (auto R : drawingArea_.get_sim().get_reparateurs()) {
+                fw << "\t" << R.get_forme().centre.x << " ";
+                fw << R.get_forme().centre.y << endl;
+            }
+            fw << endl;
+            for (auto N : drawingArea_.get_sim().get_neutraliseurs()) {
+                fw << "\t" << N.get_info() << endl;
+            }
+            fw.close();
+        } else {
+            cout << "PROBLEME OUVERTURE FICHIER" << endl;
+        }
     } else {
         dialogue->hide();
     }
@@ -206,10 +228,9 @@ void Window::open_button_clicked() {
     dialogue->signal_response().connect(sigc::bind(
             sigc::mem_fun(*this, &Window::fichier_selectionne), dialogue));
     dialogue->add_button("Annuler", Gtk::ResponseType::CANCEL);
-    dialogue->add_button("Ouvrir", Gtk::ResponseType::OK);
+    dialogue->add_button("Ouvrir", 1);
     auto filter_cpp = Gtk::FileFilter::create();
     filter_cpp->set_name("Fichiers .txt");
-    //TODO les filtres sont assez? Prof a mis plus
     filter_cpp->add_mime_type("text/plain");
     dialogue->add_filter(filter_cpp);
     dialogue->show();
@@ -224,7 +245,7 @@ void Window::save_button_clicked() {
     dialogue->signal_response().connect(sigc::bind(
             sigc::mem_fun(*this, &Window::fichier_selectionne), dialogue));
     dialogue->add_button("Annuler", Gtk::ResponseType::CANCEL);
-    dialogue->add_button("Sauvegarder", Gtk::ResponseType::OK);
+    dialogue->add_button("Sauvegarder", 2);
     dialogue->show();
 
 }
