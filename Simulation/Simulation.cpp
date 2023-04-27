@@ -9,11 +9,13 @@
 #include <random>
 #include <sstream>
 #include <vector>
+#include <cmath>
 using namespace std;
 
 void Simulation::update() {
     spatial_.set_update(spatial_.get_update() + 1);
     default_random_engine e;
+    vector<Particule> nouvelle_liste;
     for(auto& particule: particules_) {
         bernoulli_distribution b(desintegration_rate/nbP_);
         cout << "Nouvelle particule :";
@@ -23,21 +25,27 @@ void Simulation::update() {
                 double rayon = sqrt(2*pow(particule.get_forme().cote, 2));
                 for(int i=0; i<4; i++) {
                     Carre c;
-                    c.centre.x = particule.get_forme().centre.x+rayon*cos(90*i+45);
-                    c.centre.y = particule.get_forme().centre.y+rayon*sin(90*i+45);
-                    cout << "Particule à " << particule.get_forme().centre.x << " de côté " << particule.get_forme().cote << endl;
-                    c.cote = particule.get_forme().cote/2.0-2*epsil_zero;
+                    double angle = (90*i+45)*3.14159/180;
+                    c.centre.x = particule.get_forme().centre.x + rayon*cos(angle);
+                    c.centre.y = particule.get_forme().centre.y + rayon*sin(angle);
+                    double cote = particule.get_forme().cote;
+                    c.cote = cote/2.0 - 2*epsil_zero;
+                    cout << "Particule à (" << particule.get_forme().centre.x << ", " << particule.get_forme().centre.y << ") de côté " << particule.get_forme().cote << endl;
+                    cout << "-- Particule à (" << c.centre.x << ", " << c.centre.y << ") de côté " << c.cote << endl;
                     Particule new_p(c);
-                    particules_.push_back(new_p);
+                    nouvelle_liste.push_back(new_p);
+                    cout << "-> Particule à (" << particule.get_forme().centre.x << ", " << particule.get_forme().centre.y << ") de côté " << particule.get_forme().cote << endl;
                 }
-                supp_particule(particule);
+                cout << "Fin de procédure" << endl;
             } else {
                 cout << " non, chance" << endl;
+                nouvelle_liste.push_back(particule);
             }
         } else {
-            cout << " non, petite" << endl;
+            nouvelle_liste.push_back(particule);
         }
     }
+    particules_ = nouvelle_liste;
 }
 
 void Simulation::supp_particule(Particule particule) {
