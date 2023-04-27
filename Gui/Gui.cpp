@@ -13,8 +13,8 @@ static constexpr unsigned taille_dessin(500);
 using namespace std;
 
 //TODO quelle est frame de référence ?
-static Frame default_frame = {-125., 125.,
-                              -125., 125.,
+static Frame default_frame = {-128., 128.,
+                              -128., 128.,
                               1., 500, 500};
 
 Drawing::Drawing(Simulation &sim) : sim_(sim) {
@@ -256,7 +256,6 @@ void Window::start_button_clicked() {
 
 void Window::step_button_clicked() {
     drawingArea_.get_sim().update();
-    cout << drawingArea_.get_sim().get_spatial().get_update() << endl;
     actualiser_stats();
     drawingArea_.queue_draw();
 }
