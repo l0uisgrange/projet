@@ -9,7 +9,7 @@
 using namespace std;
 
 Particule::Particule(Carre c) {
-    if (c.cote >= d_particule_min) {
+    if(c.cote >= d_particule_min) {
         forme_ = c;
     } else {
         cout << message::particle_too_small(c.centre.x, c.centre.y, c.cote);

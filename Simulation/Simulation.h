@@ -26,11 +26,12 @@ public:
     vector<Neutraliseur> get_neutraliseurs() { return neutraliseurs_; };
     vector<Reparateur> get_reparateurs() { return reparateurs_; };
     vector<Particule> get_particules() { return particules_; };
-    Spatial get_spatial() { return spatial_; };
+    Spatial& get_spatial() { return spatial_; };
     void add_neutraliseur(Neutraliseur& N);
     void add_reparateur(Reparateur& R);
     void add_particule(Particule& P);
     void lecture(ifstream& entree);
+    void supp_particule(Particule particule);
     void draw_simulation();
     void update();
 

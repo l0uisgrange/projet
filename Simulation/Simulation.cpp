@@ -12,17 +12,43 @@
 using namespace std;
 
 void Simulation::update() {
-    int nbUpdate = spatial_.get_update();
+    spatial_.set_update(spatial_.get_update() + 1);
     default_random_engine e;
     for(auto& particule: particules_) {
         bernoulli_distribution b(desintegration_rate/nbP_);
+        cout << "Nouvelle particule :";
         if(particule.get_forme().cote > d_particule_min + epsil_zero) {
             if(b(e)) {
-                particule.desintegrate();
+                cout << " oui" << endl;
+                double rayon = sqrt(2*pow(particule.get_forme().cote, 2));
+                for(int i=0; i<4; i++) {
+                    Carre c;
+                    c.centre.x = particule.get_forme().centre.x+rayon*cos(90*i+45);
+                    c.centre.y = particule.get_forme().centre.y+rayon*sin(90*i+45);
+                    cout << "Particule à " << particule.get_forme().centre.x << " de côté " << particule.get_forme().cote << endl;
+                    c.cote = particule.get_forme().cote/2.0-2*epsil_zero;
+                    Particule new_p(c);
+                    particules_.push_back(new_p);
+                }
+                supp_particule(particule);
+            } else {
+                cout << " non, chance" << endl;
             }
+        } else {
+            cout << " non, petite" << endl;
         }
     }
-    spatial_.set_update(nbUpdate + 1);
+}
+
+void Simulation::supp_particule(Particule particule) {
+    vector<Particule> nouvelle_liste;
+    for(auto& part: particules_) {
+        if(part.get_forme().centre.x != particule.get_forme().centre.x and
+        part.get_forme().centre.y != particule.get_forme().centre.y) {
+            nouvelle_liste.push_back(part);
+        }
+    }
+    particules_ = nouvelle_liste;
 }
 
 void Simulation::set_Spatial(Spatial &S) {

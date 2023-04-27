@@ -256,7 +256,9 @@ void Window::start_button_clicked() {
 
 void Window::step_button_clicked() {
     drawingArea_.get_sim().update();
+    cout << drawingArea_.get_sim().get_spatial().get_update() << endl;
     actualiser_stats();
+    drawingArea_.queue_draw();
 }
 
 bool Window::touche_clavier(guint keyval, guint keycode, Gdk::ModifierType state) {
@@ -276,6 +278,5 @@ bool Window::touche_clavier(guint keyval, guint keycode, Gdk::ModifierType state
 bool Window::on_timeout() {
 	int nbUpdate = drawingArea_.get_sim().get_spatial().get_update();
 	label_maj_.set_text(std::to_string(nbUpdate));
-	drawingArea_.get_sim().get_spatial().set_update(nbUpdate++);
 	return true;
 }
