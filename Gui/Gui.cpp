@@ -158,7 +158,7 @@ Window::Window(Simulation &sim) : exit_button_("exit"), open_button_("open"),
 
 void Window::actualiser_stats() {
     label_maj_.set_label(to_string(drawingArea_.get_sim().get_spatial().get_update()));
-    label_pa_.set_label(to_string(drawingArea_.get_sim().get_neutraliseurs().size()));
+    label_pa_.set_label(to_string(drawingArea_.get_sim().get_particules().size()));
     label_rs_.set_label(to_string(drawingArea_.get_sim().get_spatial().get_nbRs()));
     label_rr_.set_label(to_string(drawingArea_.get_sim().get_spatial().get_nbRr()));
     label_ns_.set_label(to_string(drawingArea_.get_sim().get_spatial().get_nbNs()));
