@@ -139,7 +139,9 @@ void Simulation::lecture(ifstream& entree) {
         this->erreurs_construction();
         superposition_erreurs(this);
         e.seed(1);
-        cout << message::success();
+        if (this->get_dessiner()) {
+            cout << message::success();
+        }
     } else {
         exit(0);
     }

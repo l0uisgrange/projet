@@ -10,7 +10,11 @@ using namespace std;
 Spatial::Spatial(S2d position, int nbUpdate, int nbNr, int nbNs, int nbNd,
                  int nbRr, int nbRs)
         : nbUpdate_(nbUpdate), nbNr_(nbNr), nbNs_(nbNs), nbNd_(nbNd),
-          nbRr_(nbRr), nbRs_(nbRs) {}
+          nbRr_(nbRr), nbRs_(nbRs) {
+    forme_.centre.x = position.x;
+    forme_.centre.y = position.y;
+    forme_.rayon = r_spatial;
+}
 
 void Spatial::draw() const {
     draw_cercle(forme_.centre.x, forme_.centre.y, forme_.rayon, BLEU_CLAIR);
@@ -38,7 +42,11 @@ bool Spatial::hors_domaine() {
 Neutraliseur::Neutraliseur(S2d position, double angle, int coordination, bool panne,
                            int k_update_panne, int nbUpdate)
     : angle_(angle), panne_(panne), coordination_(coordination),
-    k_update_panne_(k_update_panne), nbUpdate_(nbUpdate) {}
+    k_update_panne_(k_update_panne), nbUpdate_(nbUpdate) {
+    forme_.centre.x = position.x;
+    forme_.centre.y = position.y;
+    forme_.rayon = r_neutraliseur;
+}
 
 void Neutraliseur::draw() const {
     Couleurs couleur(NOIR);
