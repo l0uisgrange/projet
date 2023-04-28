@@ -12,12 +12,13 @@
 #include <cmath>
 using namespace std;
 
+static default_random_engine e;
+
 void Simulation::update() {
     spatial_.set_update(spatial_.get_update() + 1);
-    default_random_engine e;
     vector<Particule> nouvelle_liste;
+    bernoulli_distribution b(desintegration_rate/nbP_);
     for(auto& particule: particules_) {
-        bernoulli_distribution b(desintegration_rate/nbP_);
         if(particule.get_forme().cote/2.0 - 2*epsil_zero >= d_particule_min + epsil_zero) {
             if(b(e)) {
                 double rayon = sqrt(2*pow(particule.get_forme().cote/4, 2));
@@ -38,7 +39,7 @@ void Simulation::update() {
             nouvelle_liste.push_back(particule);
         }
     }
-    //nbP_ = int(nouvelle_liste.size()); TODO : corriger nbP_
+    nbP_ = int(nouvelle_liste.size());
     particules_ = nouvelle_liste;
 }
 
@@ -143,6 +144,7 @@ void Simulation::lecture(ifstream& entree) {
         }
         entree.close();
         superposition_erreurs(this);
+        e.seed(1);
         cout << message::success();
     } else {
         exit(0);

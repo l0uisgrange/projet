@@ -70,7 +70,7 @@ Window::Window(Simulation &sim) : exit_button_("exit"), open_button_("open"),
                    save_button_("save"), start_button_("start"),
                    step_button_("step"), label_maj_("0"), label_pa_("0"),
                    label_rs_("0"), label_rr_("0"), label_ns_("0"), label_np_("0"),
-                   label_nd_("0"), label_nr_("0"), drawingArea_(sim) {
+                   label_nd_("0"), label_nr_("0"), drawingArea_(sim), minuteur_(false) {
 	set_default_size(taille_dessin, taille_dessin);
 	set_title("Mission Propre En Ordre");
     Gtk::Box fenetre(Gtk::Orientation::HORIZONTAL, 0);
@@ -240,7 +240,16 @@ void Window::save_button_clicked() {
 }
 
 void Window::start_button_clicked() {
-    // TODO : start
+    if(minuteur_) {
+        minuteur_ = false;
+        start_button_.set_label("start");
+    } else {
+        minuteur_ = true;
+        sigc::slot<bool()> my_slot = sigc::bind(sigc::mem_fun(*this,
+                                                              &Window::on_timeout));
+        auto conn = Glib::signal_timeout().connect(my_slot, int(delta_t*1000));
+        start_button_.set_label("stop");
+    }
 }
 
 void Window::step_button_clicked() {
@@ -263,7 +272,12 @@ bool Window::touche_clavier(guint keyval, guint keycode, Gdk::ModifierType state
 }
 
 bool Window::on_timeout() {
-	int nbUpdate = drawingArea_.get_sim().get_spatial().get_update();
-	label_maj_.set_text(std::to_string(nbUpdate));
-	return true;
+    if(minuteur_) {
+        drawingArea_.get_sim().update();
+        actualiser_stats();
+        drawingArea_.queue_draw();
+        return true;
+    } else {
+        return false;
+    }
 }

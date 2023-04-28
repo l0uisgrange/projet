@@ -54,6 +54,7 @@ private:
     Gtk::Label label_nd_;
     Gtk::Label label_nr_;
     Drawing drawingArea_;
+    bool minuteur_;
 };
 
 #endif
