@@ -27,11 +27,16 @@ void Spatial::draw() const {
 }
 
 string Spatial::get_info() const {
-    string info;
+    ostringstream info;
+    info << forme_.centre.x << " " << forme_.centre.y << " " << nbUpdate_ << " ";
+    info << nbNr_ << " " << nbNs_ << " " << nbNd_ << " " << nbRr_ << " " << nbRs_;
+    /*
     info= to_string(forme_.centre.x) +" "+ to_string(forme_.centre.y) + " "
             + to_string(nbUpdate_) +" "+ to_string(nbNr_) +" "+ to_string(nbNs_) +" "
             + to_string(nbRr_) +" "+ to_string(nbRs_);
-    return info;
+            */
+
+    return info.str();
 }
 
 Neutraliseur::Neutraliseur(S2d position, double angle, int coordination, bool panne,
@@ -60,11 +65,22 @@ void Neutraliseur::draw() const {
 }
 
 string Neutraliseur::get_info() const {
-    string info;
+    string panne;
+    if (panne_) {
+        panne = "true";
+    } else {
+        panne = "false";
+    }
+    ostringstream info;
+    info << forme_.centre.x << " " << forme_.centre.y << " " << angle_ << " ";
+    info << coordination_ << " " << panne << " " << k_update_panne_;
+    /*
     info = to_string(forme_.centre.x) +" "+ to_string(forme_.centre.y) +" "
             + to_string(angle_) +" "+ to_string(coordination_) +" "
             + to_string(panne_) +" "+ to_string(k_update_panne_);
-    return info;
+            */
+
+    return info.str();
 }
 
 Reparateur::Reparateur(S2d position)

@@ -70,7 +70,7 @@ private:
     int coordination_;
     double vrot_ = 0;
     double vtran_ = 0;
-    int k_update_panne_; //TODO mettre à jour dans la fonction lecture
+    int k_update_panne_;
 };
 
 class Reparateur : public Mobile {

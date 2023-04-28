@@ -21,7 +21,6 @@ Particule::Particule(Carre c) {
 void test_domaine(Carre c) {
     if(abs(c.centre.x) >= (dmax - c.cote/2)) {
         cout << message::particle_outside(c.centre.x, c.centre.y, c.cote);
-        exit(EXIT_FAILURE);
     }
     if(abs(c.centre.y) >= (dmax - c.cote/2)) {
         cout << message::particle_outside(c.centre.x, c.centre.y, c.cote);

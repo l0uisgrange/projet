@@ -177,7 +177,7 @@ void Window::fichier_selectionne(int reponse, Gtk::FileChooserDialog* dialogue) 
         drawingArea_.set_sim(sim2);
         actualiser_stats();
         drawingArea_.queue_draw();
-    } else if (reponse == 2) {
+    } else if (reponse == 2) { //
         ofstream fw(dialogue->get_file()->get_path(), std::ofstream::out);
         if (fw.is_open()) {
             fw << drawingArea_.get_sim().get_nbP() << endl;
@@ -226,7 +226,6 @@ void Window::open_button_clicked() {
 }
 
 void Window::save_button_clicked() {
-    // TODO : sauvegarder
     auto dialogue = new Gtk::FileChooserDialog("Sélectionner un fichier",
                                                Gtk::FileChooser::Action::SAVE);
     dialogue->set_transient_for(*this);
