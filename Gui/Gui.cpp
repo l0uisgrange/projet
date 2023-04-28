@@ -261,12 +261,11 @@ void Window::step_button_clicked() {
 bool Window::touche_clavier(guint keyval, guint keycode, Gdk::ModifierType state) {
     switch(gdk_keyval_to_unicode(keyval)) {
         case 's':
-            //TODO mettre action start/stop
-            std::cout << "Start/Stop" << std::endl;
-            break; //TODO mettre return true
+            start_button_clicked();
+            return true;
+            break;
         case '1':
-            drawingArea_.get_sim().update();
-            std::cout << "STEP" << std::endl;
+            step_button_clicked();
     }
     return false;
 }
