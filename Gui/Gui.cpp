@@ -12,10 +12,9 @@ static constexpr unsigned taille_dessin(500);
 #include <iostream>
 using namespace std;
 
-//TODO quelle est frame de référence ?
-static Frame default_frame = {-128., 128.,
-                              -128., 128.,
-                              1., 500, 500};
+static Frame default_frame = {-dmax, dmax,
+                              -dmax, dmax,
+                              1., taille_dessin, taille_dessin};
 
 Drawing::Drawing(Simulation &sim) : sim_(sim) {
     set_frame(default_frame);
@@ -34,38 +33,30 @@ void Drawing::on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int he
 };
 
 void Drawing::set_frame(Frame f) {
-    if((f.xMin <= f.xMax) and (f.yMin <= f.yMax) and (f.height > 0))
-    {
+    if((f.xMin <= f.xMax) and (f.yMin <= f.yMax) and (f.height > 0)) {
         f.asp = (double)f.width/f.height;
         frame_ = f;
-    }
-    else
+    } else {
         exit(1); //TODO quelle erreur si mauvais affichage?
+    }
 }
 
 void Drawing::adjust_frame(int width, int height) {
-    //Prevents distorsion
     frame_.width  = min(width, height);
     frame_.height = min(width,height);
-
-    //reference framing as a guide to prevent distorsion
     double new_aspect_ratio((double)width/height);
-    if( new_aspect_ratio > default_frame.asp) { // garde ymax/min, adapte xmax/min
+    if( new_aspect_ratio > default_frame.asp) {
         frame_.yMax = default_frame.yMax ;
         frame_.yMin = default_frame.yMin ;
-
         double delta(default_frame.xMax - default_frame.xMin);
         double mid((default_frame.xMax + default_frame.xMin)/2);
-        // centré point-milieu selon x
         frame_.xMax = mid + 0.5*(new_aspect_ratio/default_frame.asp)*delta ;
         frame_.xMin = mid - 0.5*(new_aspect_ratio/default_frame.asp)*delta ;
-    } else { // garde xmax/min, adapte ymax/min
+    } else {
         frame_.xMax = default_frame.xMax ;
         frame_.xMin = default_frame.xMin ;
-
         double delta(default_frame.yMax - default_frame.yMin);
         double mid((default_frame.yMax + default_frame.yMin)/2);
-        // centré point milieu selon y
         frame_.yMax = mid + 0.5*(default_frame.asp/new_aspect_ratio)*delta ;
         frame_.yMin = mid - 0.5*(default_frame.asp/new_aspect_ratio)*delta ;
     }
@@ -74,6 +65,7 @@ void Drawing::adjust_frame(int width, int height) {
 void Drawing::set_sim(Simulation &sim) {
     sim_ = sim;
 }
+
 Window::Window(Simulation &sim) : exit_button_("exit"), open_button_("open"),
                    save_button_("save"), start_button_("start"),
                    step_button_("step"), label_maj_("0"), label_pa_("0"),
@@ -107,12 +99,10 @@ Window::Window(Simulation &sim) : exit_button_("exit"), open_button_("open"),
                                 &Window::start_button_clicked));
     step_button_.signal_clicked().connect(sigc::mem_fun(*this,
                                 &Window::step_button_clicked));
-    //Clavier
     auto controller = Gtk::EventControllerKey::create();
     controller->signal_key_pressed().connect(
             sigc::mem_fun(*this, &Window::touche_clavier), false);
     add_controller(controller);
-
     Gtk::Label label_maj("Mises à jour");
     Gtk::Label label_pa("Particules");
     Gtk::Label label_rs("Robots réparateurs en service");
@@ -166,10 +156,9 @@ Window::Window(Simulation &sim) : exit_button_("exit"), open_button_("open"),
     actualiser_stats();
 }
 
-
 void Window::actualiser_stats() {
     label_maj_.set_label(to_string(drawingArea_.get_sim().get_spatial().get_update()));
-    label_pa_.set_label(to_string(drawingArea_.get_sim().get_nbP()));
+    label_pa_.set_label(to_string(drawingArea_.get_sim().get_neutraliseurs().size()));
     label_rs_.set_label(to_string(drawingArea_.get_sim().get_spatial().get_nbRs()));
     label_rr_.set_label(to_string(drawingArea_.get_sim().get_spatial().get_nbRr()));
     label_ns_.set_label(to_string(drawingArea_.get_sim().get_spatial().get_nbNs()));
@@ -208,7 +197,7 @@ void Window::fichier_selectionne(int reponse, Gtk::FileChooserDialog* dialogue) 
             }
             fw.close();
         } else {
-            cout << "PROBLEME OUVERTURE FICHIER" << endl;
+            cout << "PROBLEME OUVERTURE FICHIER" << endl; // TODO erreur
         }
     } else {
         dialogue->hide();
@@ -261,8 +250,7 @@ void Window::step_button_clicked() {
 }
 
 bool Window::touche_clavier(guint keyval, guint keycode, Gdk::ModifierType state) {
-    switch(gdk_keyval_to_unicode(keyval))
-    {
+    switch(gdk_keyval_to_unicode(keyval)) {
         case 's':
             //TODO mettre action start/stop
             std::cout << "Start/Stop" << std::endl;

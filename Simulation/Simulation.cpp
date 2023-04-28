@@ -38,6 +38,7 @@ void Simulation::update() {
             nouvelle_liste.push_back(particule);
         }
     }
+    //nbP_ = int(nouvelle_liste.size()); TODO : corriger nbP_
     particules_ = nouvelle_liste;
 }
 
