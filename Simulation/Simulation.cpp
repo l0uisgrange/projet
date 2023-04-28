@@ -16,6 +16,10 @@ static default_random_engine e;
 
 void Simulation::update() {
     spatial_.set_update(spatial_.get_update() + 1);
+    update_particules();
+}
+
+void Simulation::update_particules() {
     vector<Particule> nouvelle_liste;
     bernoulli_distribution b(desintegration_rate/nbP_);
     for(auto& particule: particules_) {
@@ -40,17 +44,6 @@ void Simulation::update() {
         }
     }
     nbP_ = int(nouvelle_liste.size());
-    particules_ = nouvelle_liste;
-}
-
-void Simulation::supp_particule(Particule particule) {
-    vector<Particule> nouvelle_liste;
-    for(auto& part: particules_) {
-        if(part.get_forme().centre.x != particule.get_forme().centre.x and
-        part.get_forme().centre.y != particule.get_forme().centre.y) {
-            nouvelle_liste.push_back(part);
-        }
-    }
     particules_ = nouvelle_liste;
 }
 

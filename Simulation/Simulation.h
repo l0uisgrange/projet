@@ -31,7 +31,7 @@ public:
     void add_reparateur(Reparateur& R);
     void add_particule(Particule& P);
     void lecture(ifstream& entree);
-    void supp_particule(Particule particule);
+    void update_particules();
     void draw_simulation();
     void update();
 
