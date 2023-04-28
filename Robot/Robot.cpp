@@ -10,15 +10,7 @@ using namespace std;
 Spatial::Spatial(S2d position, int nbUpdate, int nbNr, int nbNs, int nbNd,
                  int nbRr, int nbRs)
         : nbUpdate_(nbUpdate), nbNr_(nbNr), nbNs_(nbNs), nbNd_(nbNd),
-          nbRr_(nbRr), nbRs_(nbRs) {
-    if(abs(position.x) < dmax - r_spatial
-       and abs(position.y) < dmax - r_spatial) {
-        forme_ = Cercle(position, r_spatial);
-    } else {
-        cout << message::spatial_robot_ouside(position.x, position.y);
-        exit(EXIT_FAILURE);
-    }
-}
+          nbRr_(nbRr), nbRs_(nbRs) {}
 
 void Spatial::draw() const {
     draw_cercle(forme_.centre.x, forme_.centre.y, forme_.rayon, BLEU_CLAIR);
@@ -30,26 +22,23 @@ string Spatial::get_info() const {
     ostringstream info;
     info << forme_.centre.x << " " << forme_.centre.y << " " << nbUpdate_ << " ";
     info << nbNr_ << " " << nbNs_ << " " << nbNd_ << " " << nbRr_ << " " << nbRs_;
-    /*
-    info= to_string(forme_.centre.x) +" "+ to_string(forme_.centre.y) + " "
-            + to_string(nbUpdate_) +" "+ to_string(nbNr_) +" "+ to_string(nbNs_) +" "
-            + to_string(nbRr_) +" "+ to_string(nbRs_);
-            */
-
     return info.str();
+}
+
+bool Spatial::hors_domaine() {
+    if(abs(forme_.centre.x) < dmax - r_spatial
+       and abs(forme_.centre.y) < dmax - r_spatial) {
+        return false;
+    } else {
+        cout << message::spatial_robot_ouside(forme_.centre.x, forme_.centre.y);
+        return true;
+    }
 }
 
 Neutraliseur::Neutraliseur(S2d position, double angle, int coordination, bool panne,
                            int k_update_panne, int nbUpdate)
     : angle_(angle), panne_(panne), coordination_(coordination),
-    k_update_panne_(k_update_panne) {
-    if(k_update_panne > nbUpdate) {
-        cout << message::invalid_k_update(position.x, position.y, k_update_panne,
-                                          nbUpdate);
-        exit(EXIT_FAILURE);
-    }
-    forme_ = Cercle(position, r_neutraliseur);
-}
+    k_update_panne_(k_update_panne), nbUpdate_(nbUpdate) {}
 
 void Neutraliseur::draw() const {
     Couleurs couleur(NOIR);
@@ -74,18 +63,11 @@ string Neutraliseur::get_info() const {
     ostringstream info;
     info << forme_.centre.x << " " << forme_.centre.y << " " << angle_ << " ";
     info << coordination_ << " " << panne << " " << k_update_panne_;
-    /*
-    info = to_string(forme_.centre.x) +" "+ to_string(forme_.centre.y) +" "
-            + to_string(angle_) +" "+ to_string(coordination_) +" "
-            + to_string(panne_) +" "+ to_string(k_update_panne_);
-            */
-
     return info.str();
 }
 
 Reparateur::Reparateur(S2d position)
-    : forme_(Cercle(position, r_reparateur)) {
-}
+    : forme_(Cercle(position, r_reparateur)) {}
 
 void Reparateur::draw() const {
     fill_cercle(forme_.centre.x, forme_.centre.y, forme_.rayon, VERT);

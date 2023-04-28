@@ -8,24 +8,27 @@
 #include <sstream>
 using namespace std;
 
-Particule::Particule(Carre c) {
-    if(c.cote >= d_particule_min) { // TODO adapter les conditions
-        forme_ = c;
-    } else {
-        cout << message::particle_too_small(c.centre.x, c.centre.y, c.cote);
-        exit(EXIT_FAILURE);
+Particule::Particule(Carre c) : forme_(c) {}
+
+bool Particule::too_small() {
+    if(forme_.cote < d_particule_min) { // TODO adapter les conditions
+        cout << message::particle_too_small(forme_.centre.x, forme_.centre.y,
+                                            forme_.cote);
+        return true;
     }
-    test_domaine(c);
+    return false;
 }
 
-void test_domaine(Carre c) {
-    if(abs(c.centre.x) >= (dmax - c.cote/2)) {
-        cout << message::particle_outside(c.centre.x, c.centre.y, c.cote);
+bool Particule::hors_domaine() {
+    if(abs(forme_.centre.x) >= (dmax - forme_.cote/2)) {
+        cout << message::particle_outside(forme_.centre.x, forme_.centre.y, forme_.cote);
+        return true;
     }
-    if(abs(c.centre.y) >= (dmax - c.cote/2)) {
-        cout << message::particle_outside(c.centre.x, c.centre.y, c.cote);
-        exit(EXIT_FAILURE);
+    if(abs(forme_.centre.y) >= (dmax - forme_.cote/2)) {
+        cout << message::particle_outside(forme_.centre.x, forme_.centre.y, forme_.cote);
+        return true;
     }
+    return false;
 }
 
 void Particule::draw() const {

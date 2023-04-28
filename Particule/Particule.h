@@ -17,11 +17,11 @@ public:
     Particule() = delete;
     explicit Particule(Carre c);
     Carre get_forme() const { return forme_; }
+    bool too_small();
+    bool hors_domaine();
     void draw() const;
     void desintegrate();
 private:
     Carre forme_;
 };
-
-void test_domaine(Carre c);
 #endif

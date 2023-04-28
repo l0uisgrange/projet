@@ -136,6 +136,7 @@ void Simulation::lecture(ifstream& entree) {
             decodage_ligne(line, etape, this);
         }
         entree.close();
+        this->erreurs_construction();
         superposition_erreurs(this);
         e.seed(1);
         cout << message::success();
@@ -171,6 +172,27 @@ void decodage_ligne(const string& line, Etat& etape, Simulation* simulation) {
             break;
     }
 }
+
+void Simulation::erreurs_construction() {
+    dessiner_ = true;
+    for (auto P : particules_) {
+        if (P.too_small() or P.hors_domaine()) {
+            dessiner_ = false;
+        }
+    }
+    if (spatial_.hors_domaine()) {
+        dessiner_ = false;
+    }
+    for (auto N : neutraliseurs_) {
+        if (N.get_k_update_panne() > N.get_nbUpdate()) {
+            cout << message::invalid_k_update(N.get_forme().centre.x,
+                              N.get_forme().centre.y,
+                              N.get_k_update_panne(), N.get_nbUpdate());
+            dessiner_ = false;
+        }
+    }
+}
+
 
 void Simulation::set_nbP(int value) {
     if(value >= 0) {
@@ -279,8 +301,7 @@ vector<Carre> Simulation::get_carres() {
 }
 
 Simulation::Simulation(int nbP)
-    : nbP_(nbP), spatial_(Spatial(S2d(), 0, 0, 0, 0, 0, 0)) {
-}
+    : nbP_(nbP), spatial_(Spatial(S2d(), 0, 0, 0, 0, 0, 0)), dessiner_(false) {}
 
 void Simulation::draw_simulation() {
     spatial_.draw();
@@ -293,4 +314,5 @@ void Simulation::draw_simulation() {
     for (const auto &particule: particules_) {
         particule.draw();
     }
+
 }

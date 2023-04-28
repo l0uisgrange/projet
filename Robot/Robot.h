@@ -33,6 +33,7 @@ public:
     int get_nbRs() const { return nbRs_; }
     int get_nbNp() const { return 200; } //TODO implémenter la fonction
     string get_info() const;
+    bool hors_domaine();
     void draw() const override;
     void set_update(int update);
     ~Spatial() override = default;
@@ -60,9 +61,13 @@ public:
     Neutraliseur(S2d position, double angle, int coordination, bool panne,
                  int k_update_panne, int nbUpdate);
     Cercle get_forme() const { return forme_; }
+    int get_k_update_panne() const { return k_update_panne_; }
+    int get_nbUpdate() const { return nbUpdate_; }
     void draw() const override;
-    virtual ~Neutraliseur() = default;
     string get_info() const;
+    virtual ~Neutraliseur() = default;
+
+
 private:
     Cercle forme_;
     double angle_;
@@ -71,6 +76,7 @@ private:
     double vrot_ = 0;
     double vtran_ = 0;
     int k_update_panne_;
+    int nbUpdate_;
 };
 
 class Reparateur : public Mobile {

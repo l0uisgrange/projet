@@ -24,12 +24,13 @@ Drawing::Drawing(Simulation &sim) : sim_(sim) {
 }
 
 void Drawing::on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int height) {
-    adjust_frame(width, height);
-    draw_frame(cr, frame_);
-    orthographic_projection(cr,frame_);
-    graphic_set_context(cr);
-    sim_.draw_simulation();
-    queue_draw();
+    if (sim_.get_dessiner()) {
+        adjust_frame(width, height);
+        draw_frame(cr, frame_);
+        orthographic_projection(cr,frame_);
+        graphic_set_context(cr);
+        sim_.draw_simulation();
+    } // TODO faut rien afficher dans les labels!
 };
 
 void Drawing::set_frame(Frame f) {
@@ -37,7 +38,7 @@ void Drawing::set_frame(Frame f) {
         f.asp = (double)f.width/f.height;
         frame_ = f;
     } else {
-        exit(1); //TODO quelle erreur si mauvais affichage?
+        exit(1);
     }
 }
 
@@ -177,28 +178,25 @@ void Window::fichier_selectionne(int reponse, Gtk::FileChooserDialog* dialogue) 
         drawingArea_.set_sim(sim2);
         actualiser_stats();
         drawingArea_.queue_draw();
-    } else if (reponse == 2) { //
+    } else if (reponse == 2) {
         ofstream fw(dialogue->get_file()->get_path(), std::ofstream::out);
-        if (fw.is_open()) {
-            fw << drawingArea_.get_sim().get_nbP() << endl;
-            for (auto P : drawingArea_.get_sim().get_particules()) {
-                fw << "\t" << P.get_forme().centre.x << " " << P.get_forme().centre.y;
-                fw << " " << P.get_forme().cote << endl;
-            }
-            fw << endl;
-            fw << drawingArea_.get_sim().get_spatial().get_info() << endl;
-            for (auto R : drawingArea_.get_sim().get_reparateurs()) {
-                fw << "\t" << R.get_forme().centre.x << " ";
-                fw << R.get_forme().centre.y << endl;
-            }
-            fw << endl;
-            for (auto N : drawingArea_.get_sim().get_neutraliseurs()) {
-                fw << "\t" << N.get_info() << endl;
-            }
-            fw.close();
-        } else {
-            cout << "PROBLEME OUVERTURE FICHIER" << endl; // TODO erreur
+        fw.is_open();
+        fw << drawingArea_.get_sim().get_nbP() << endl;
+        for (auto P : drawingArea_.get_sim().get_particules()) {
+            fw << "\t" << P.get_forme().centre.x << " " << P.get_forme().centre.y;
+            fw << " " << P.get_forme().cote << endl;
         }
+        fw << endl;
+        fw << drawingArea_.get_sim().get_spatial().get_info() << endl;
+        for (auto R : drawingArea_.get_sim().get_reparateurs()) {
+            fw << "\t" << R.get_forme().centre.x << " ";
+            fw << R.get_forme().centre.y << endl;
+        }
+        fw << endl;
+        for (auto N : drawingArea_.get_sim().get_neutraliseurs()) {
+            fw << "\t" << N.get_info() << endl;
+        }
+        fw.close();
     } else {
         dialogue->hide();
     }

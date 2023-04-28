@@ -21,6 +21,7 @@ public:
     void set_nbP(int value);
     void set_Spatial(Spatial& S);
     int get_nbP() const { return nbP_; };
+    bool get_dessiner() const { return dessiner_; }
     vector<Cercle> get_cercles();
     vector<Carre> get_carres();
     vector<Neutraliseur> get_neutraliseurs() { return neutraliseurs_; };
@@ -31,6 +32,7 @@ public:
     void add_reparateur(Reparateur& R);
     void add_particule(Particule& P);
     void lecture(ifstream& entree);
+    void erreurs_construction();
     void update_particules();
     void draw_simulation();
     void update();
@@ -41,6 +43,7 @@ private:
     vector<Reparateur> reparateurs_;
     vector<Particule> particules_;
     Spatial spatial_;
+    bool dessiner_;
 };
 
 void decodage_ligne(const string &line, Etat &etape, Simulation* Sim);
