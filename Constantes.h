@@ -20,7 +20,7 @@ constexpr double vtran_max(4.); // par seconde
 constexpr double vrot_max(0.125); // rad/s
 constexpr double epsil_alignement(0.01); // rad
 
-constexpr double desintegration_rate(0.9); // TODO COrriger valeur
+constexpr double desintegration_rate(0.002);
 constexpr double risk_factor(3.);
 constexpr double d_particule_min(8*epsil_zero);
 
