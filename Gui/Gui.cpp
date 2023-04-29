@@ -163,7 +163,7 @@ void Window::actualiser_stats() {
     label_rs_.set_label(to_string(drawingArea_.get_sim().get_spatial().get_nbRs()));
     label_rr_.set_label(to_string(drawingArea_.get_sim().get_spatial().get_nbRr()));
     label_ns_.set_label(to_string(drawingArea_.get_sim().get_spatial().get_nbNs()));
-    label_np_.set_label(to_string(drawingArea_.get_sim().get_spatial().get_nbNs()));
+    label_np_.set_label(to_string(drawingArea_.get_sim().get_nbNp()));
     label_nd_.set_label(to_string(drawingArea_.get_sim().get_spatial().get_nbNd()));
     label_nr_.set_label(to_string(drawingArea_.get_sim().get_spatial().get_nbNr()));
 }

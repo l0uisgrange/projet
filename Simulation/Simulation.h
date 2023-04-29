@@ -21,6 +21,7 @@ public:
     void set_nbP(int value);
     void set_Spatial(Spatial& S);
     int get_nbP() const { return nbP_; };
+    int get_nbNp(); //TODO implémenter la fonction
     bool get_dessiner() const { return dessiner_; }
     void set_dessiner(bool dessin);
     vector<Cercle> get_cercles();
@@ -55,6 +56,5 @@ void init_Neutraliseur(const string& ligne, Simulation* sim);
 void superposition_R_N(vector<Cercle>& tab1, Simulation* sim);
 void superposition_P(vector<Carre>& tab1, Simulation* sim);
 void superposition_P_R_N(vector<Cercle>& tab1, vector<Carre>& tab2, Simulation* sim);
-void superposition_erreurs(Simulation* sim);
 
 #endif

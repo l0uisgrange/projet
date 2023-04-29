@@ -14,7 +14,7 @@
 class Drawing : public Gtk::DrawingArea {
 public:
     explicit Drawing(Simulation &sim);
-    virtual ~Drawing(){}; // TODO: enlever les accolades
+    virtual ~Drawing(){};
     void set_frame(Frame f);
     void adjust_frame(int width, int height);
     void set_sim(Simulation& sim);

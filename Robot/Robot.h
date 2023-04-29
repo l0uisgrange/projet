@@ -31,7 +31,6 @@ public:
     int get_nbNd() const { return nbNd_; }
     int get_nbRr() const { return nbRr_; }
     int get_nbRs() const { return nbRs_; }
-    int get_nbNp() const { return 200; } //TODO implémenter la fonction
     string get_info() const;
     bool hors_domaine();
     void draw() const override;
@@ -63,6 +62,7 @@ public:
     Cercle get_forme() const { return forme_; }
     int get_k_update_panne() const { return k_update_panne_; }
     int get_nbUpdate() const { return nbUpdate_; }
+    bool get_panne() const { return panne_; }
     void draw() const override;
     string get_info() const;
     virtual ~Neutraliseur() = default;

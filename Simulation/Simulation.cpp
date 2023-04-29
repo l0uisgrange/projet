@@ -288,6 +288,16 @@ void Simulation::add_neutraliseur(Neutraliseur& N) {
     neutraliseurs_.push_back(N);
 }
 
+int Simulation::get_nbNp(){
+    int nbNp(0);
+    for (auto& N: neutraliseurs_) {
+        if (N.get_panne()) {
+            nbNp++;
+        }
+    }
+    return nbNp;
+}
+
 vector<Cercle> Simulation::get_cercles() {
     vector<Cercle> tab;
     for(const auto& neutraliseur : neutraliseurs_) {
