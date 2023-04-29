@@ -8,15 +8,12 @@
 #include <cmath>
 #include "../Graphic/Graphic.h"
 
-using namespace std;
-
 #ifndef SHAPE_H
 #define SHAPE_H
 
 constexpr double epsil_zero(0.125);
 
 enum Etat { NBP, PARTICULE, SPATIAL, REPARATEUR, NEUTRALISEUR };
-enum Type_robot { ROBOT_S, ROBOT_N, ROBOT_R };
 
 struct S2d {
     double x = 0.;
@@ -35,13 +32,8 @@ struct Cercle {
     double rayon = 0.;
 };
 
-
 bool superposition(Carre const& carre_1, Carre const& carre_2, bool epsil = false);
 bool superposition(Cercle const& cercle_1, Cercle const& cercle_2, bool epsil = false);
 bool superposition(Carre const& carre, Cercle const& cercle, bool epsil = false);
-//void envoyer_cercle(Cercle c, Couleur color);
-//void envoyer_carre(Carre c, Couleur color);
-
-
 
 #endif

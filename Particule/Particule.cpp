@@ -35,7 +35,3 @@ void Particule::draw() const {
     fill_carre(forme_.centre.x-forme_.cote/2, forme_.centre.y-forme_.cote/2, forme_.cote, GRIS);
     draw_carre(forme_.centre.x-forme_.cote/2, forme_.centre.y-forme_.cote/2, forme_.cote, ROUGE);
 }
-
-void Particule::desintegrate() {
-    delete this;
-};
