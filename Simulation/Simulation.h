@@ -22,6 +22,7 @@ public:
     void set_Spatial(Spatial& S);
     int get_nbP() const { return nbP_; };
     bool get_dessiner() const { return dessiner_; }
+    void set_dessiner(bool dessin);
     vector<Cercle> get_cercles();
     vector<Carre> get_carres();
     vector<Neutraliseur> get_neutraliseurs() { return neutraliseurs_; };
@@ -33,10 +34,10 @@ public:
     void add_particule(Particule& P);
     void lecture(ifstream& entree);
     void erreurs_construction();
+    void erreurs_superposition();
     void update_particules();
     void draw_simulation();
     void update();
-
 private:
     int nbP_;
     vector<Neutraliseur> neutraliseurs_;
@@ -46,14 +47,14 @@ private:
     bool dessiner_;
 };
 
-void decodage_ligne(const string &line, Etat &etape, Simulation* Sim);
-void init_Particule(const string& ligne, Etat& etape, Simulation* Sim);
-void init_Spatial(const string& ligne, Etat& etape, Simulation* Sim);
-void init_Reparateur(const string& ligne, Etat& etape, Simulation* Sim);
-void init_Neutraliseur(const string& ligne, Simulation* Sim);
-void superposition_R_N(vector<Cercle>& tab1);
-void superposition_P(vector<Carre>& tab1);
-void superposition_P_R_N(vector<Cercle>& tab1, vector<Carre>& tab2);
+void decodage_ligne(const string &line, Etat &etape, Simulation* sim);
+void init_Particule(const string& ligne, Etat& etape, Simulation* sim);
+void init_Spatial(const string& ligne, Etat& etape, Simulation* sim);
+void init_Reparateur(const string& ligne, Etat& etape, Simulation* sim);
+void init_Neutraliseur(const string& ligne, Simulation* sim);
+void superposition_R_N(vector<Cercle>& tab1, Simulation* sim);
+void superposition_P(vector<Carre>& tab1, Simulation* sim);
+void superposition_P_R_N(vector<Cercle>& tab1, vector<Carre>& tab2, Simulation* sim);
 void superposition_erreurs(Simulation* sim);
 
 #endif

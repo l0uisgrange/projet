@@ -51,37 +51,33 @@ void Simulation::set_Spatial(Spatial &S) {
     spatial_ = S;
 }
 
-void superposition_R_N(vector<Cercle>& tab1) {
+void superposition_R_N(vector<Cercle>& tab1, Simulation* sim) {
     for(int i(0); i<tab1.size(); ++i) {
         for(int j(0); j<tab1.size(); ++j) {
             if(superposition(tab1[i],tab1[j]) and i!=j) {
                 if((tab1[i].rayon == r_neutraliseur) and
                 (tab1[j].rayon == r_neutraliseur)) {
                     cout << message::neutralizers_superposition(tab1[i].centre.x,
-                                                        tab1[i].centre.y,
-                                                        tab1[j].centre.x,
-                                                        tab1[j].centre.y);
-                    exit(EXIT_FAILURE);
+                            tab1[i].centre.y, tab1[j].centre.x, tab1[j].centre.y);
+                    sim->set_dessiner(false);
+                    return;
                 } else if((tab1[i].rayon == r_reparateur) and
                         (tab1[j].rayon == r_reparateur)) {
                     cout << message::repairers_superposition(tab1[i].centre.x,
-                                                     tab1[i].centre.y,
-                                                     tab1[j].centre.x,
-                                                     tab1[j].centre.y);
-                    exit(EXIT_FAILURE);
+                            tab1[i].centre.y, tab1[j].centre.x, tab1[j].centre.y);
+                    sim->set_dessiner(false);
+                    return;
                 } else {
                     if(tab1[i].rayon == r_neutraliseur) {
                         cout << message::repairer_neutralizer_superposition(tab1[j].centre.x,
-                                                                    tab1[j].centre.y,
-                                                                    tab1[i].centre.x,
-                                                                    tab1[i].centre.y);
-                        exit(EXIT_FAILURE);
+                            tab1[j].centre.y, tab1[i].centre.x, tab1[i].centre.y);
+                        sim->set_dessiner(false);
+                        return;
                     } else {
                         cout << message::repairer_neutralizer_superposition(tab1[i].centre.x,
-                                                                    tab1[i].centre.y,
-                                                                    tab1[j].centre.x,
-                                                                    tab1[j].centre.y);
-                        exit(EXIT_FAILURE);
+                            tab1[i].centre.y, tab1[j].centre.x, tab1[j].centre.y);
+                        sim->set_dessiner(false);
+                        return;
                     }
                 }
             }
@@ -89,40 +85,43 @@ void superposition_R_N(vector<Cercle>& tab1) {
     }
 }
 
-void superposition_P(vector<Carre>& tab1) {
+void superposition_P(vector<Carre>& tab1, Simulation* sim) {
     for(int i(0); i<tab1.size() ; ++i) {
         for(int j(0); j<tab1.size() ; ++j) {
             if((superposition(tab1[i],tab1[j])) and (i!=j)) {
                 cout << message::particle_superposition(tab1[i].centre.x,
-                                                        tab1[i].centre.y,
-                                                        tab1[j].centre.x,
-                                                        tab1[j].centre.y);
-                exit(EXIT_FAILURE);
+                            tab1[i].centre.y, tab1[j].centre.x, tab1[j].centre.y);
+                sim->set_dessiner(false);
+                return;
             }
         }
     }
 }
 
-void superposition_P_R_N(vector<Cercle>& tab1, vector<Carre>& tab2) {
+void superposition_P_R_N(vector<Cercle>& tab1, vector<Carre>& tab2, Simulation* sim) {
     for(auto& i : tab1) {
         for(auto& j : tab2) {
             if(superposition(j,i)) {
                 cout << message::particle_robot_superposition(j.centre.x, j.centre.y,
-                                                      j.cote, i.centre.x, i.centre.y,
-                                                      i.rayon);
-                exit(EXIT_FAILURE);
+                                            j.cote, i.centre.x, i.centre.y, i.rayon);
+                sim->set_dessiner(false);
+                return;
             }
         }
     }
 }
 
-void superposition_erreurs(Simulation* sim) {
-    vector<Cercle> cercles(sim->get_cercles());
-    vector<Carre> carres(sim->get_carres());
-    superposition_P(carres);
-    superposition_R_N(cercles);
-    cercles.push_back(sim->get_spatial().get_forme());
-    superposition_P_R_N(cercles, carres);
+void Simulation::erreurs_superposition() {
+    vector<Cercle> cercles(get_cercles());
+    vector<Carre> carres(get_carres());
+    superposition_P(carres, this);
+    if (dessiner_) {
+        superposition_R_N(cercles, this);
+        if (dessiner_) {
+            cercles.push_back(get_spatial().get_forme());
+            superposition_P_R_N(cercles, carres, this);
+        }
+    }
 }
 
 void Simulation::lecture(ifstream& entree) {
@@ -136,14 +135,16 @@ void Simulation::lecture(ifstream& entree) {
             decodage_ligne(line, etape, this);
         }
         entree.close();
-        this->erreurs_construction();
-        superposition_erreurs(this);
+        erreurs_construction();
+        if (dessiner_){
+            erreurs_superposition();
+        }
         e.seed(1);
         if (this->get_dessiner()) {
             cout << message::success();
         }
     } else {
-        exit(0);
+        set_dessiner(false);
     }
 }
 
@@ -156,7 +157,7 @@ void decodage_ligne(const string& line, Etat& etape, Simulation* simulation) {
                 simulation->set_nbP(nbP);
                 etape = PARTICULE;
             } else {
-                exit(EXIT_FAILURE);
+                simulation->set_dessiner(false);
             }
             break;
         }
@@ -202,6 +203,10 @@ void Simulation::set_nbP(int value) {
     }
 }
 
+void Simulation::set_dessiner(bool dessin) {
+    dessiner_ = dessin;
+}
+
 void init_Particule(const string& line, Etat& etape, Simulation* sim) {
     istringstream ligne(line);
     Carre c;
@@ -212,7 +217,7 @@ void init_Particule(const string& line, Etat& etape, Simulation* sim) {
             etape = SPATIAL;
         }
     } else {
-        exit(EXIT_FAILURE);
+        sim->set_dessiner(false);
     }
 }
 
@@ -226,7 +231,7 @@ void init_Spatial(const string& line, Etat& etape, Simulation* sim) {
         sim->set_Spatial(S);
         etape = REPARATEUR;
     } else {
-        exit(EXIT_FAILURE);
+        sim->set_dessiner(false);
     }
 }
 
@@ -240,7 +245,7 @@ void init_Reparateur(const string& line, Etat& etape, Simulation* sim) {
             etape = NEUTRALISEUR;
         }
     } else {
-        exit(EXIT_FAILURE);
+        sim->set_dessiner(false);
     }
 }
 
@@ -257,7 +262,8 @@ void init_Neutraliseur(const string& line, Simulation* sim) {
         } else if(h == "true") {
             panne = true;
         } else {
-            exit(EXIT_FAILURE);
+            sim->set_dessiner(false);
+            return;
         }
         if(sim->get_neutraliseurs().size() < sim->get_spatial().get_nbNs()) {
             Neutraliseur N(position, a1, c_n, panne,
@@ -266,7 +272,7 @@ void init_Neutraliseur(const string& line, Simulation* sim) {
             sim->add_neutraliseur(N);
         }
     } else {
-        exit(EXIT_FAILURE);
+        sim->set_dessiner(false);
     }
 }
 
