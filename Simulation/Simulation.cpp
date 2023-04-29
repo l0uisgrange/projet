@@ -177,15 +177,15 @@ void decodage_ligne(const string& line, Etat& etape, Simulation* simulation) {
 
 void Simulation::erreurs_construction() {
     dessiner_ = true;
-    for (auto P : particules_) {
-        if (P.too_small() or P.hors_domaine()) {
+    for(auto P : particules_) {
+        if(P.too_small() or P.hors_domaine()) {
             dessiner_ = false;
         }
     }
-    if (spatial_.hors_domaine()) {
+    if(spatial_.hors_domaine()) {
         dessiner_ = false;
     }
-    for (auto N : neutraliseurs_) {
+    for(auto N : neutraliseurs_) {
         if (N.get_k_update_panne() > N.get_nbUpdate()) {
             cout << message::invalid_k_update(N.get_forme().centre.x,
                               N.get_forme().centre.y,
@@ -307,13 +307,13 @@ Simulation::Simulation(int nbP)
 
 void Simulation::draw_simulation() {
     spatial_.draw();
-    for (const auto &neutraliseur: neutraliseurs_) {
+    for(const auto &neutraliseur: neutraliseurs_) {
         neutraliseur.draw();
     }
-    for (const auto &reparateur: reparateurs_) {
+    for(const auto &reparateur: reparateurs_) {
         reparateur.draw();
     }
-    for (const auto &particule: particules_) {
+    for(const auto &particule: particules_) {
         particule.draw();
     }
 

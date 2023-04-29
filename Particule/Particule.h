@@ -20,7 +20,6 @@ public:
     bool too_small();
     bool hors_domaine();
     void draw() const;
-    void desintegrate();
 private:
     Carre forme_;
 };
