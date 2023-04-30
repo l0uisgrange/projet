@@ -21,7 +21,7 @@ public:
     void set_nbP(int value);
     void set_Spatial(Spatial& S);
     int get_nbP() const { return nbP_; };
-    int get_nbNp(); //TODO implémenter la fonction
+    int get_nbNp();
     bool get_dessiner() const { return dessiner_; }
     void set_dessiner(bool dessin);
     vector<Cercle> get_cercles();
@@ -39,6 +39,7 @@ public:
     void update_particules();
     void draw_simulation();
     void update();
+    void clear();
 private:
     int nbP_;
     vector<Neutraliseur> neutraliseurs_;

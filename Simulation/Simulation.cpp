@@ -126,6 +126,7 @@ void Simulation::erreurs_superposition() {
 
 void Simulation::lecture(ifstream& entree) {
     string line;
+    e.seed(1);
     if(!entree.fail()) {
         Etat etape(NBP);
         while(getline(entree >> ws, line)) {
@@ -136,16 +137,25 @@ void Simulation::lecture(ifstream& entree) {
         }
         entree.close();
         erreurs_construction();
-        if (dessiner_){
+        if(dessiner_) {
             erreurs_superposition();
         }
-        e.seed(1);
-        if (this->get_dessiner()) {
+        if(dessiner_) {
             cout << message::success();
+        } else {
+            clear();
         }
     } else {
-        set_dessiner(false);
+        dessiner_ = false;
     }
+}
+
+void Simulation::clear() {
+    nbP_ = 0;
+    neutraliseurs_.clear();
+    reparateurs_.clear();
+    particules_.clear();
+    spatial_.clear();
 }
 
 void decodage_ligne(const string& line, Etat& etape, Simulation* simulation) {

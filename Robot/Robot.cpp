@@ -16,6 +16,15 @@ Spatial::Spatial(S2d position, int nbUpdate, int nbNr, int nbNs, int nbNd,
     forme_.rayon = r_spatial;
 }
 
+void Spatial::clear() {
+    nbUpdate_ = 0;
+    nbNr_ = 0;
+    nbNd_ = 0;
+    nbRs_ = 0;
+    nbRr_ = 0;
+    nbNs_ = 0;
+}
+
 void Spatial::draw() const {
     draw_cercle(forme_.centre.x, forme_.centre.y, forme_.rayon, BLEU_CLAIR);
     draw_cercle(forme_.centre.x, forme_.centre.y, 0.5, BLEU_CLAIR);

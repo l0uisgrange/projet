@@ -34,6 +34,7 @@ public:
     string get_info() const;
     bool hors_domaine();
     void draw() const override;
+    void clear();
     void set_update(int update);
     ~Spatial() override = default;
 private:
