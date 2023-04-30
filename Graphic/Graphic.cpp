@@ -1,8 +1,9 @@
 /**
  Graphic.cpp
  Louis Grange et Daniel Ataide
- Version 1.0
+ Version 1.3
 **/
+
 #include "Graphic.h"
 #include <cmath>
 
@@ -72,6 +73,8 @@ rgb decode_couleur(Couleurs couleur) {
             return {1, 0.65, 0};
         case VERT:
             return {0.31, 0.68, 0.36};
+        case default:
+            return {0, 0, 0};
     }
 }
 
