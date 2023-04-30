@@ -1,7 +1,7 @@
 /**
  Simulation.h
  Louis Grange et Daniel Ataide
- Version 1.1
+ Version 1.2
 **/
 
 #include "../Particule/Particule.h"
@@ -9,7 +9,6 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
-using namespace std;
 
 #ifndef SIMULATION_H
 #define SIMULATION_H
@@ -49,11 +48,11 @@ private:
     bool dessiner_;
 };
 
-void decodage_ligne(const string &line, Etat &etape, Simulation* sim);
-void init_Particule(const string& ligne, Etat& etape, Simulation* sim);
-void init_Spatial(const string& ligne, Etat& etape, Simulation* sim);
-void init_Reparateur(const string& ligne, Etat& etape, Simulation* sim);
-void init_Neutraliseur(const string& ligne, Simulation* sim);
+void decodage_ligne(const std::string &line, Etat &etape, Simulation* sim);
+void init_Particule(const std::string& ligne, Etat& etape, Simulation* sim);
+void init_Spatial(const std::string& ligne, Etat& etape, Simulation* sim);
+void init_Reparateur(const std::string& ligne, Etat& etape, Simulation* sim);
+void init_Neutraliseur(const std::string& ligne, Simulation* sim);
 void superposition_R_N(vector<Cercle>& tab1, Simulation* sim);
 void superposition_P(vector<Carre>& tab1, Simulation* sim);
 void superposition_P_R_N(vector<Cercle>& tab1, vector<Carre>& tab2, Simulation* sim);
