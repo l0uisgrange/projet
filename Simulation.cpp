@@ -278,7 +278,7 @@ void init_Neutraliseur(const string& line, Simulation* sim) {
             sim->set_dessiner(false);
             return;
         }
-        if(sim->get_neutraliseurs().size() < sim->get_spatial().get_nbNs()) {
+        if(int(sim->get_neutraliseurs().size()) < sim->get_spatial().get_nbNs()) {
             Neutraliseur N(position, a1, c_n, panne,
                            k_update_panne,
                            sim->get_spatial().get_update());
