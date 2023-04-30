@@ -53,8 +53,8 @@ void Simulation::set_Spatial(Spatial &S) {
 }
 
 void superposition_R_N(vector<Cercle>& tab1, Simulation* sim) {
-    for(int i(0); i<tab1.size(); ++i) {
-        for(int j(0); j<tab1.size(); ++j) {
+    for(int i(0); i<int(tab1.size()); ++i) {
+        for(int j(0); j<int(tab1.size()); ++j) {
             if(superposition(tab1[i],tab1[j]) and i!=j) {
                 if((tab1[i].rayon == r_neutraliseur) and
                 (tab1[j].rayon == r_neutraliseur)) {
