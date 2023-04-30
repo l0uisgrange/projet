@@ -1,7 +1,7 @@
 /**
  Robot.h
  Louis Grange et Daniel Ataide
- Version 1.2
+ Version 1.4
 **/
 
 #include <vector>
@@ -9,7 +9,6 @@
 #include "../Message/Message.h"
 #include "../Shape/Shape.h"
 #include "../Particule/Particule.h"
-using namespace std;
 
 #ifndef ROBOT_H
 #define ROBOT_H
@@ -32,7 +31,7 @@ public:
     int get_nbNd() const { return nbNd_; }
     int get_nbRr() const { return nbRr_; }
     int get_nbRs() const { return nbRs_; }
-    string get_info() const;
+    std::string get_info() const;
     bool hors_domaine();
     void draw() const override;
     void clear();
@@ -66,7 +65,7 @@ public:
     int get_nbUpdate() const { return nbUpdate_; }
     bool get_panne() const { return panne_; }
     void draw() const override;
-    string get_info() const;
+    std::string get_info() const;
     virtual ~Neutraliseur() = default;
 
 
