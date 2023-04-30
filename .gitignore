@@ -1,7 +1,0 @@
-# Project exclude paths
-*.o
-*/*.o
-projet
-/cmake-build-debug/
-.idea
-.idea/.gitignore

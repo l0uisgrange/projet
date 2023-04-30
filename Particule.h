@@ -5,9 +5,9 @@
 **/
 
 #include <iostream>
-#include "../Shape/Shape.h"
-#include "../Message/Message.h"
-#include "../Constantes.h"
+#include "Shape.h"
+#include "Message.h"
+#include "Constantes.h"
 
 #ifndef PARTICULE_H
 #define PARTICULE_H

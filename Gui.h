@@ -4,8 +4,8 @@
  Version 1.0
 **/
 
-#include "../Graphic/Graphic.h"
-#include "../Simulation/Simulation.h"
+#include "Graphic.h"
+#include "Simulation.h"
 #include <memory>
 
 #ifndef GUI_H

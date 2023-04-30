@@ -9,11 +9,11 @@ CXX = g++
 CXXFLAGS = -Wall -std=c++17
 LINKING = `pkg-config --cflags gtkmm-4.0`
 LDLIBS = `pkg-config --libs gtkmm-4.0`
-CXXFILES = Projet.cpp Simulation/Simulation.cpp \
-	Particule/Particule.cpp Robot/Robot.cpp Message/Message.cpp \
-	Shape/Shape.cpp Gui/Gui.cpp Graphic/Graphic.cpp
-OFILES = Projet.o Simulation/Simulation.o Particule/Particule.o \
-	Robot/Robot.o Message/Message.o Shape/Shape.o Gui/Gui.o Graphic/Graphic.o
+CXXFILES = Projet.cpp Simulation.cpp \
+	Particule.cpp Robot.cpp Message.cpp \
+	Shape.cpp Gui.cpp Graphic.cpp
+OFILES = Projet.o Simulation.o Particule.o \
+	Robot.o Message.o Shape.o Gui.o Graphic.o
 
 all: $(OUT)
 
@@ -24,36 +24,36 @@ clean:
 	@echo "*** MODULES OBJETS ET EXECUTABLES EFFACES ***"
 	@/bin/rm -f *.o */*.o $(OUT)
 
-Simulation/Simulation.o: Simulation/Simulation.cpp Simulation/Simulation.h \
-  Robot/Robot.h \
+Simulation.o: Simulation.cpp Simulation.h \
+  Robot.h \
   Constantes.h \
-  Particule/Particule.h \
-  Message/Message.h \
-  Shape/Shape.h
+  Particule.h \
+  Message.h \
+  Shape.h
 	$(CXX) $(CXXFLAGS) $(LINKING) -c $< -o $@ $(LINKING)
-Particule/Particule.o: Particule/Particule.cpp Particule/Particule.h \
+Particule.o: Particule.cpp Particule.h \
   Constantes.h \
-  Message/Message.h \
-  Shape/Shape.h
+  Message.h \
+  Shape.h
 	$(CXX) $(CXXFLAGS) $(LINKING) -c $< -o $@ $(LINKING)
-Robot/Robot.o: Robot/Robot.cpp Robot/Robot.h \
-  Message/Message.h \
-  Particule/Particule.h \
-  Shape/Shape.h \
+Robot.o: Robot.cpp Robot.h \
+  Message.h \
+  Particule.h \
+  Shape.h \
   Constantes.h
 	$(CXX) $(CXXFLAGS) $(LINKING) -c $< -o $@ $(LINKING)
-Graphic/Graphic.o: Graphic/Graphic.cpp Graphic/Graphic.h
+Graphic.o: Graphic.cpp Graphic.h
 	$(CXX) $(CXXFLAGS) $(LINKING) -c $< -o $@ $(LINKING)
-Message/Message.o: Message/Message.cpp Message/Message.h
+Message.o: Message.cpp Message.h
 	$(CXX) $(CXXFLAGS) $(LINKING) -c $< -o $@ $(LINKING)
-Shape/Shape.o: Shape/Shape.cpp Shape/Shape.h \
-  Graphic/Graphic.h
+Shape.o: Shape.cpp Shape.h \
+  Graphic.h
 	$(CXX) $(CXXFLAGS) $(LINKING) -c $< -o $@ $(LINKING)
-Gui/Gui.o: Gui/Gui.cpp Gui/Gui.h \
-  Graphic/Graphic.h \
-  Simulation/Simulation.h
+Gui.o: Gui.cpp Gui.h \
+  Graphic.h \
+  Simulation.h
 	$(CXX) $(CXXFLAGS) $(LINKING) -c $< -o $@ $(LINKING)
 Projet.o: Projet.cpp \
-  Simulation/Simulation.h \
-  Gui/Gui.h
+  Simulation.h \
+  Gui.h
 	$(CXX) $(CXXFLAGS) $(LINKING) -c $< -o $@ $(LINKING)

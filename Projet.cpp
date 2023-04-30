@@ -4,8 +4,8 @@
  Version 1.0
 **/
 
-#include "Simulation/Simulation.h"
-#include "Gui/Gui.h"
+#include "Simulation.h"
+#include "Gui.h"
 using namespace std;
 
 int main(int argc, char *argv[]) {

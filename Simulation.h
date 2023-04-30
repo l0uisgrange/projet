@@ -4,8 +4,8 @@
  Version 1.2
 **/
 
-#include "../Particule/Particule.h"
-#include "../Robot/Robot.h"
+#include "Particule.h"
+#include "Robot.h"
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -23,16 +23,16 @@ public:
     int get_nbNp();
     bool get_dessiner() const { return dessiner_; }
     void set_dessiner(bool dessin);
-    vector<Cercle> get_cercles();
-    vector<Carre> get_carres();
-    vector<Neutraliseur> get_neutraliseurs() { return neutraliseurs_; };
-    vector<Reparateur> get_reparateurs() { return reparateurs_; };
-    vector<Particule> get_particules() { return particules_; };
+    std::vector<Cercle> get_cercles();
+    std::vector<Carre> get_carres();
+    std::vector<Neutraliseur> get_neutraliseurs() { return neutraliseurs_; };
+    std::vector<Reparateur> get_reparateurs() { return reparateurs_; };
+    std::vector<Particule> get_particules() { return particules_; };
     Spatial& get_spatial() { return spatial_; };
     void add_neutraliseur(Neutraliseur& N);
     void add_reparateur(Reparateur& R);
     void add_particule(Particule& P);
-    void lecture(ifstream& entree);
+    void lecture(std::ifstream& entree);
     void erreurs_construction();
     void erreurs_superposition();
     void update_particules();
@@ -41,9 +41,9 @@ public:
     void clear();
 private:
     int nbP_;
-    vector<Neutraliseur> neutraliseurs_;
-    vector<Reparateur> reparateurs_;
-    vector<Particule> particules_;
+    std::vector<Neutraliseur> neutraliseurs_;
+    std::vector<Reparateur> reparateurs_;
+    std::vector<Particule> particules_;
     Spatial spatial_;
     bool dessiner_;
 };
@@ -53,8 +53,8 @@ void init_Particule(const std::string& ligne, Etat& etape, Simulation* sim);
 void init_Spatial(const std::string& ligne, Etat& etape, Simulation* sim);
 void init_Reparateur(const std::string& ligne, Etat& etape, Simulation* sim);
 void init_Neutraliseur(const std::string& ligne, Simulation* sim);
-void superposition_R_N(vector<Cercle>& tab1, Simulation* sim);
-void superposition_P(vector<Carre>& tab1, Simulation* sim);
-void superposition_P_R_N(vector<Cercle>& tab1, vector<Carre>& tab2, Simulation* sim);
+void superposition_R_N(std::vector<Cercle>& tab1, Simulation* sim);
+void superposition_P(std::vector<Carre>& tab1, Simulation* sim);
+void superposition_P_R_N(std::vector<Cercle>& tab1, std::vector<Carre>& tab2, Simulation* sim);
 
 #endif

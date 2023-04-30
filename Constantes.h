@@ -4,7 +4,7 @@
  Version 1.0
 **/
 
-#include "Shape/Shape.h"
+#include "Shape.h"
 
 #ifndef CONSTANTES_H
 #define CONSTANTES_H

@@ -5,10 +5,10 @@
 **/
 
 #include <vector>
-#include "../Constantes.h"
-#include "../Message/Message.h"
-#include "../Shape/Shape.h"
-#include "../Particule/Particule.h"
+#include "Constantes.h"
+#include "Message.h"
+#include "Shape.h"
+#include "Particule.h"
 
 #ifndef ROBOT_H
 #define ROBOT_H

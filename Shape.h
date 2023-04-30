@@ -6,7 +6,7 @@
 
 #include <iostream>
 #include <cmath>
-#include "../Graphic/Graphic.h"
+#include "Graphic.h"
 
 #ifndef SHAPE_H
 #define SHAPE_H
