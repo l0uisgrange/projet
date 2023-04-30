@@ -29,6 +29,8 @@ protected:
 class Window : public Gtk::Window {
 public:
 	explicit Window(Simulation &sim);
+    Gtk::Box append_boutons();
+    Gtk::Box append_labels();
     void actualiser_stats();
     void exit_button_clicked();
     void open_button_clicked();
@@ -38,7 +40,6 @@ public:
     void fichier_selectionne(int reponse, Gtk::FileChooserDialog* dialogue);
     bool touche_clavier(guint keyval, guint keycode, Gdk::ModifierType state);
     bool on_timeout();
-
 private:
     Gtk::Button exit_button_;
     Gtk::Button open_button_;

@@ -5,7 +5,6 @@
 **/
 #include "Graphic.h"
 #include <cmath>
-#include "Graphic.h"
 
 static const Cairo::RefPtr<Cairo::Context>* ptcr(nullptr);
 
@@ -43,7 +42,8 @@ void fill_carre(double x, double y, double cote, Couleurs couleur) {
     (*ptcr)->fill();
 }
 
-void draw_line(double x_start, double y_start, double x_stop, double y_stop, Couleurs couleur) {
+void draw_line(double x_start, double y_start, double x_stop, double y_stop,
+               Couleurs couleur) {
     rgb color(decode_couleur(couleur));
     (*ptcr)->set_source_rgb(color.r, color.g, color.b);
     (*ptcr)->set_line_width(1);

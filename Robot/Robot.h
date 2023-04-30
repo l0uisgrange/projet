@@ -23,7 +23,8 @@ public:
 class Spatial : public Robot {
 public:
     Spatial() = delete;
-    Spatial(S2d position, int nbUpdate, int nbNr, int nbNs, int nbNd, int nbRr, int nbRs);
+    Spatial(S2d position, int nbUpdate, int nbNr, int nbNs, int nbNd,
+            int nbRr, int nbRs);
     Cercle get_forme() const { return forme_; }
     int get_update() const { return nbUpdate_; }
     int get_nbNr() const { return nbNr_; }

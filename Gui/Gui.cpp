@@ -23,7 +23,8 @@ Drawing::Drawing(Simulation &sim) : sim_(sim) {
     set_draw_func(sigc::mem_fun(*this, &Drawing::on_draw));
 }
 
-void Drawing::on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int height) {
+void Drawing::on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width,
+                      int height) {
     if(sim_.get_dessiner()) {
         adjust_frame(width, height);
         draw_frame(cr, frame_);
@@ -76,25 +77,20 @@ Window::Window(Simulation &sim) : exit_button_("exit"), open_button_("open"),
                    save_button_("save"), start_button_("start"),
                    step_button_("step"), label_maj_("0"), label_pa_("0"),
                    label_rs_("0"), label_rr_("0"), label_ns_("0"), label_np_("0"),
-                   label_nd_("0"), label_nr_("0"), drawingArea_(sim), minuteur_(false) {
+                   label_nd_("0"), label_nr_("0"), drawingArea_(sim),
+                   minuteur_(false) {
 	set_default_size(taille_dessin, taille_dessin);
 	set_title("Mission Propre En Ordre");
     Gtk::Box fenetre(Gtk::Orientation::HORIZONTAL, 0);
     Gtk::Box menu(Gtk::Orientation::VERTICAL, 0);
     Gtk::Box texte(Gtk::Orientation::HORIZONTAL, 50);
-    Gtk::Box labels(Gtk::Orientation::VERTICAL, 7);
+    Gtk::Box labels(append_labels());
     Gtk::Box stats(Gtk::Orientation::VERTICAL, 7);
     Gtk::Separator separator1;
     Gtk::Separator separator2;
-    Gtk::Box boutons(Gtk::Orientation::VERTICAL, 5);
-    boutons.set_margin(10);
+    Gtk::Box boutons(append_boutons());
     texte.set_margin(10);
     drawingArea_.set_margin(10);
-    boutons.append(exit_button_);
-    boutons.append(open_button_);
-    boutons.append(save_button_);
-    boutons.append(start_button_);
-    boutons.append(step_button_);
     exit_button_.signal_clicked().connect(sigc::mem_fun(*this,
                                 &Window::exit_button_clicked));
     open_button_.signal_clicked().connect(sigc::mem_fun(*this,
@@ -109,30 +105,6 @@ Window::Window(Simulation &sim) : exit_button_("exit"), open_button_("open"),
     controller->signal_key_pressed().connect(
             sigc::mem_fun(*this, &Window::touche_clavier), false);
     add_controller(controller);
-    Gtk::Label label_maj("Mises à jour");
-    Gtk::Label label_pa("Particules");
-    Gtk::Label label_rs("Robots réparateurs en service");
-    Gtk::Label label_rr("Robots réparateurs en réserve");
-    Gtk::Label label_ns("Robots neutraliseurs en service");
-    Gtk::Label label_np("Robots neutraliseurs en panne");
-    Gtk::Label label_nd("Robots neutraliseurs détruits");
-    Gtk::Label label_nr("Robots neutraliseurs en réserve");
-    labels.append(label_maj);
-    labels.append(label_pa);
-    labels.append(label_rs);
-    labels.append(label_rr);
-    labels.append(label_ns);
-    labels.append(label_np);
-    labels.append(label_nd);
-    labels.append(label_nr);
-    label_maj.set_halign(Gtk::Align::START);
-    label_pa.set_halign(Gtk::Align::START);
-    label_rs.set_halign(Gtk::Align::START);
-    label_rr.set_halign(Gtk::Align::START);
-    label_ns.set_halign(Gtk::Align::START);
-    label_np.set_halign(Gtk::Align::START);
-    label_nd.set_halign(Gtk::Align::START);
-    label_nr.set_halign(Gtk::Align::START);
     label_maj_.set_halign(Gtk::Align::END);
     label_pa_.set_halign(Gtk::Align::END);
     label_rs_.set_halign(Gtk::Align::END);
@@ -162,8 +134,49 @@ Window::Window(Simulation &sim) : exit_button_("exit"), open_button_("open"),
     actualiser_stats();
 }
 
+Gtk::Box Window::append_boutons() {
+    Gtk::Box boutons(Gtk::Orientation::VERTICAL, 5);
+    boutons.set_margin(10);
+    boutons.append(exit_button_);
+    boutons.append(open_button_);
+    boutons.append(save_button_);
+    boutons.append(start_button_);
+    boutons.append(step_button_);
+    return boutons;
+}
+
+Gtk::Box Window::append_labels() {
+    Gtk::Box labels(Gtk::Orientation::VERTICAL, 7);
+    Gtk::Label label_maj("Mises à jour");
+    Gtk::Label label_pa("Particules");
+    Gtk::Label label_rs("Robots réparateurs en service");
+    Gtk::Label label_rr("Robots réparateurs en réserve");
+    Gtk::Label label_ns("Robots neutraliseurs en service");
+    Gtk::Label label_np("Robots neutraliseurs en panne");
+    Gtk::Label label_nd("Robots neutraliseurs détruits");
+    Gtk::Label label_nr("Robots neutraliseurs en réserve");
+    labels.append(label_maj);
+    labels.append(label_pa);
+    labels.append(label_rs);
+    labels.append(label_rr);
+    labels.append(label_ns);
+    labels.append(label_np);
+    labels.append(label_nd);
+    labels.append(label_nr);
+    label_maj.set_halign(Gtk::Align::START);
+    label_pa.set_halign(Gtk::Align::START);
+    label_rs.set_halign(Gtk::Align::START);
+    label_rr.set_halign(Gtk::Align::START);
+    label_ns.set_halign(Gtk::Align::START);
+    label_np.set_halign(Gtk::Align::START);
+    label_nd.set_halign(Gtk::Align::START);
+    label_nr.set_halign(Gtk::Align::START);
+    return labels;
+}
+
 void Window::actualiser_stats() {
-    label_maj_.set_label(to_string(drawingArea_.get_sim().get_spatial().get_update()));
+    label_maj_.set_label(to_string(
+            drawingArea_.get_sim().get_spatial().get_update()));
     label_pa_.set_label(to_string(drawingArea_.get_sim().get_particules().size()));
     label_rs_.set_label(to_string(drawingArea_.get_sim().get_spatial().get_nbRs()));
     label_rr_.set_label(to_string(drawingArea_.get_sim().get_spatial().get_nbRr()));

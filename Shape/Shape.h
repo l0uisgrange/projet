@@ -33,7 +33,8 @@ struct Cercle {
 };
 
 bool superposition(Carre const& carre_1, Carre const& carre_2, bool epsil = false);
-bool superposition(Cercle const& cercle_1, Cercle const& cercle_2, bool epsil = false);
+bool superposition(Cercle const& cercle_1, Cercle const& cercle_2,
+                   bool epsil = false);
 bool superposition(Carre const& carre, Cercle const& cercle, bool epsil = false);
 
 #endif

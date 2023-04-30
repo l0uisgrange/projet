@@ -23,7 +23,8 @@ void Simulation::update_particules() {
     vector<Particule> nouvelle_liste;
     bernoulli_distribution b(desintegration_rate/nbP_);
     for(auto& particule: particules_) {
-        if(particule.get_forme().cote/2.0 - 2*epsil_zero >= d_particule_min + epsil_zero) {
+        if(particule.get_forme().cote/2.0 - 2*epsil_zero >=
+        d_particule_min + epsil_zero) {
             if(b(e)) {
                 double rayon = sqrt(2*pow(particule.get_forme().cote/4, 2));
                 for(int i=0; i<4; i++) {
@@ -69,13 +70,15 @@ void superposition_R_N(vector<Cercle>& tab1, Simulation* sim) {
                     return;
                 } else {
                     if(tab1[i].rayon == r_neutraliseur) {
-                        cout << message::repairer_neutralizer_superposition(tab1[j].centre.x,
-                            tab1[j].centre.y, tab1[i].centre.x, tab1[i].centre.y);
+                        cout << message::repairer_neutralizer_superposition(
+                                tab1[j].centre.x,tab1[j].centre.y,
+                                tab1[i].centre.x, tab1[i].centre.y);
                         sim->set_dessiner(false);
                         return;
                     } else {
-                        cout << message::repairer_neutralizer_superposition(tab1[i].centre.x,
-                            tab1[i].centre.y, tab1[j].centre.x, tab1[j].centre.y);
+                        cout << message::repairer_neutralizer_superposition(
+                                tab1[i].centre.x, tab1[i].centre.y,
+                                tab1[j].centre.x, tab1[j].centre.y);
                         sim->set_dessiner(false);
                         return;
                     }
@@ -103,7 +106,7 @@ void superposition_P_R_N(vector<Cercle>& tab1, vector<Carre>& tab2, Simulation* 
         for(auto& j : tab2) {
             if(superposition(j,i)) {
                 cout << message::particle_robot_superposition(j.centre.x, j.centre.y,
-                                            j.cote, i.centre.x, i.centre.y, i.rayon);
+                                        j.cote, i.centre.x, i.centre.y, i.rayon);
                 sim->set_dessiner(false);
                 return;
             }

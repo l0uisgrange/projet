@@ -21,17 +21,21 @@ bool Particule::too_small() {
 
 bool Particule::hors_domaine() {
     if(abs(forme_.centre.x) >= (dmax - forme_.cote/2)) {
-        cout << message::particle_outside(forme_.centre.x, forme_.centre.y, forme_.cote);
+        cout << message::particle_outside(forme_.centre.x, forme_.centre.y,
+                                          forme_.cote);
         return true;
     }
     if(abs(forme_.centre.y) >= (dmax - forme_.cote/2)) {
-        cout << message::particle_outside(forme_.centre.x, forme_.centre.y, forme_.cote);
+        cout << message::particle_outside(forme_.centre.x, forme_.centre.y,
+                                          forme_.cote);
         return true;
     }
     return false;
 }
 
 void Particule::draw() const {
-    fill_carre(forme_.centre.x-forme_.cote/2, forme_.centre.y-forme_.cote/2, forme_.cote, GRIS);
-    draw_carre(forme_.centre.x-forme_.cote/2, forme_.centre.y-forme_.cote/2, forme_.cote, ROUGE);
+    fill_carre(forme_.centre.x-forme_.cote/2, forme_.centre.y-forme_.cote/2,
+               forme_.cote, GRIS);
+    draw_carre(forme_.centre.x-forme_.cote/2, forme_.centre.y-forme_.cote/2,
+               forme_.cote, ROUGE);
 }

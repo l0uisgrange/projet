@@ -74,5 +74,3 @@ bool superposition(Carre const& c1, Cercle const& c2, bool epsil) {
     }
     return false;
 }
-
-
