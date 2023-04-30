@@ -30,7 +30,11 @@ void Drawing::on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int he
         orthographic_projection(cr,frame_);
         graphic_set_context(cr);
         sim_.draw_simulation();
-    } // TODO faut rien afficher dans les labels!
+    } else {
+        adjust_frame(width, height);
+        draw_frame(cr, frame_);
+        orthographic_projection(cr,frame_);
+    }// TODO faut rien afficher dans les labels!
 };
 
 void Drawing::set_frame(Frame f) {
