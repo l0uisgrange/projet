@@ -226,7 +226,7 @@ void init_Particule(const string& line, Etat& etape, Simulation* sim) {
     if(ligne >> c.centre.x >> c.centre.y >> c.cote) {
         Particule P(c);
         sim->add_particule(P);
-        if(sim->get_particules().size() == sim->get_nbP()) {
+        if(int(sim->get_particules().size()) == sim->get_nbP()) {
             etape = SPATIAL;
         }
     } else {
@@ -254,7 +254,7 @@ void init_Reparateur(const string& line, Etat& etape, Simulation* sim) {
     if(ligne >> position.x >> position.y) {
         Reparateur R(position);
         sim->add_reparateur(R);
-        if(sim->get_reparateurs().size() == sim->get_spatial().get_nbRs()) {
+        if(int(sim->get_reparateurs().size()) == sim->get_spatial().get_nbRs()) {
             etape = NEUTRALISEUR;
         }
     } else {
