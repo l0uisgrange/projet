@@ -72,7 +72,7 @@ void Neutraliseur::draw() const {
 
 string Neutraliseur::get_info() const {
     string panne;
-    if (panne_) {
+    if(panne_) {
         panne = "true";
     } else {
         panne = "false";
