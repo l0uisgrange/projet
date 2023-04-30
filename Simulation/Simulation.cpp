@@ -89,8 +89,8 @@ void superposition_R_N(vector<Cercle>& tab1, Simulation* sim) {
 }
 
 void superposition_P(vector<Carre>& tab1, Simulation* sim) {
-    for(int i(0); i<tab1.size() ; ++i) {
-        for(int j(0); j<tab1.size() ; ++j) {
+    for(int i(0); i<int(tab1.size()) ; ++i) {
+        for(int j(0); j<int(tab1.size()) ; ++j) {
             if((superposition(tab1[i],tab1[j])) and (i!=j)) {
                 cout << message::particle_superposition(tab1[i].centre.x,
                             tab1[i].centre.y, tab1[j].centre.x, tab1[j].centre.y);
@@ -118,9 +118,9 @@ void Simulation::erreurs_superposition() {
     vector<Cercle> cercles(get_cercles());
     vector<Carre> carres(get_carres());
     superposition_P(carres, this);
-    if (dessiner_) {
+    if(dessiner_) {
         superposition_R_N(cercles, this);
-        if (dessiner_) {
+        if(dessiner_) {
             cercles.push_back(get_spatial().get_forme());
             superposition_P_R_N(cercles, carres, this);
         }
@@ -200,7 +200,7 @@ void Simulation::erreurs_construction() {
         dessiner_ = false;
     }
     for(auto N : neutraliseurs_) {
-        if (N.get_k_update_panne() > N.get_nbUpdate()) {
+        if(N.get_k_update_panne() > N.get_nbUpdate()) {
             cout << message::invalid_k_update(N.get_forme().centre.x,
                               N.get_forme().centre.y,
                               N.get_k_update_panne(), N.get_nbUpdate());
@@ -303,7 +303,7 @@ void Simulation::add_neutraliseur(Neutraliseur& N) {
 
 int Simulation::get_nbNp(){
     int nbNp(0);
-    for (auto& N: neutraliseurs_) {
+    for(auto& N: neutraliseurs_) {
         if (N.get_panne()) {
             nbNp++;
         }
