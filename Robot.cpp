@@ -114,7 +114,8 @@ int Spatial::assigner_cible(const vector<Neutraliseur>& neutraliseurs, const Par
     int index = 0;
     int i = 0;
     for(auto& neutraliseur: neutraliseurs) {
-        double distance = particule.get_forme() - neutraliseur.get_forme();
+        S2d vec = particule.get_forme().centre - neutraliseur.get_forme().centre;
+        double distance = sqrt(pow(vec.x,2)+ pow(vec.y, 2));
         if(distance < petite_distance) {
             petite_distance = distance;
             index = i;

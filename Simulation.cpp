@@ -67,7 +67,6 @@ std::vector<Particule> tri_particules(std::vector<Particule>& p) {
 
 void Simulation::update_neutraliseurs() {
     vector<Neutraliseur> neutraliseurs = neutraliseurs_;
-    // ordonner liste particules_
     for(auto& particule: particules_) {
         int cible = Spatial::assigner_cible(neutraliseurs, particule);
         neutraliseurs[cible].move(particule.get_forme());

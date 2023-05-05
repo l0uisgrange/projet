@@ -34,10 +34,6 @@ struct Cercle {
 };
 
 struct Carre {
-    double operator-(Cercle c) const {
-        S2d vecteur;
-        return 2.0;
-    }
     S2d centre;
     double cote = 0.;
 };
