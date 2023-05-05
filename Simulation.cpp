@@ -170,6 +170,7 @@ void Simulation::lecture(ifstream& entree) {
         if(dessiner_) {
             erreurs_superposition();
         }
+        // AVANT CA
         if(dessiner_) {
             cout << message::success();
         } else {
@@ -192,6 +193,7 @@ void decodage_ligne(const string& line, Etat& etape, Simulation* simulation) {
     istringstream ligne(line);
     switch(etape) {
         case NBP: {
+            cout << "NBP" << endl;
             int nbP(0);
             if(ligne >> nbP) {
                 simulation->set_nbP(nbP);
@@ -202,15 +204,19 @@ void decodage_ligne(const string& line, Etat& etape, Simulation* simulation) {
             break;
         }
         case PARTICULE:
+            cout << "P" << endl;
             init_Particule(line, etape, simulation);
             break;
         case SPATIAL:
+            cout << "S" << endl;
             init_Spatial(line, etape, simulation);
             break;
         case REPARATEUR:
+            cout << "R" << endl;
             init_Reparateur(line, etape, simulation);
             break;
         case NEUTRALISEUR:
+            cout << "N" << endl;
             init_Neutraliseur(line, simulation);
             break;
     }
@@ -297,6 +303,7 @@ void init_Neutraliseur(const string& line, Simulation* sim) {
     bool panne;
     string h;
     if(ligne >> position.x >> position.y >> a1 >> c_n >> h >> k_update_panne) {
+        cout << "Before" << endl;
         if(h == "false") {
             panne = false;
         } else if(h == "true") {
@@ -306,11 +313,13 @@ void init_Neutraliseur(const string& line, Simulation* sim) {
             return;
         }
         if(int(sim->get_neutraliseurs().size()) < sim->get_spatial().get_nbNs()) {
+            cout << "X" << endl;
             Neutraliseur N(position, a1, c_n, panne,
                            k_update_panne,
                            sim->get_spatial().get_update());
             sim->add_neutraliseur(N);
         }
+        cout << "After" << endl;
     } else {
         sim->set_dessiner(false);
     }

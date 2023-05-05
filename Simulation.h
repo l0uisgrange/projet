@@ -25,9 +25,9 @@ public:
     void set_dessiner(bool dessin);
     std::vector<Cercle> get_cercles();
     std::vector<Carre> get_carres();
-    std::vector<Neutraliseur> get_neutraliseurs() { return neutraliseurs_; };
-    std::vector<Reparateur> get_reparateurs() { return reparateurs_; };
-    std::vector<Particule> get_particules() { return particules_; };
+    std::vector<Neutraliseur>& get_neutraliseurs() { return neutraliseurs_; };
+    std::vector<Reparateur>& get_reparateurs() { return reparateurs_; };
+    std::vector<Particule>& get_particules() { return particules_; };
     Spatial& get_spatial() { return spatial_; };
     void add_neutraliseur(Neutraliseur& N);
     void add_reparateur(Reparateur& R);
