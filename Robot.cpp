@@ -91,11 +91,11 @@ void Reparateur::draw() const {
     draw_cercle(forme_.centre.x, forme_.centre.y, forme_.rayon, NOIR);
 }
 
-void Reparateur::move() {
+void Reparateur::move(Cercle cible) {
 
 }
 
-void Neutraliseur::move() {
+void Neutraliseur::move(Carre cible) {
 
 }
 
@@ -103,3 +103,17 @@ void Spatial::set_update(int update) {
     nbUpdate_ = update;
 }
 
+int Spatial::assigner_cible(const vector<Neutraliseur>& neutraliseurs, const Particule& particule) {
+    double petite_distance = 4 * dmax;
+    int index = 0;
+    int i = 0;
+    for(auto& neutraliseur: neutraliseurs) {
+        double distance = particule.get_forme().centre - neutraliseur.get_forme().centre;
+        if(distance < petite_distance) {
+            petite_distance = distance;
+            index = i;
+        }
+        ++i;
+    }
+    return index;
+}

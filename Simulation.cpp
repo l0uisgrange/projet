@@ -17,6 +17,7 @@ static default_random_engine e;
 void Simulation::update() {
     spatial_.set_update(spatial_.get_update() + 1);
     update_particules();
+    update_neutraliseurs();
 }
 
 void Simulation::update_particules() {
@@ -48,27 +49,12 @@ void Simulation::update_particules() {
     particules_ = nouvelle_liste;
 }
 
-int assigner_cible(const vector<Neutraliseur>& neutraliseurs, const Particule& particule) {
-    double petite_distance = 4 * dmax;
-    int index = 0;
-    int i = 0;
-    for(auto& neutraliseur: neutraliseurs) {
-        double distance = particule.get_forme().centre - neutraliseur.get_forme().centre;
-        if(distance < petite_distance) {
-            petite_distance = distance;
-            index = i;
-        }
-        ++i;
-    }
-    return index;
-}
-
 void Simulation::update_neutraliseurs() {
     vector<Neutraliseur> neutraliseurs = neutraliseurs_;
     // ordonner liste particules_
     for(auto& particule: particules_) {
-        int cible = assigner_cible(neutraliseurs, particule);
-        neutraliseurs[cible].move();
+        int cible = Spatial::assigner_cible(neutraliseurs, particule);
+        neutraliseurs[cible].move(particule.get_forme());
         //neutraliseurs.erase(cible, cible);
     }
 }

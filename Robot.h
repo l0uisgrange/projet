@@ -19,41 +19,12 @@ public:
     virtual ~Robot() = default;
 };
 
-class Spatial : public Robot {
-public:
-    Spatial() = delete;
-    Spatial(S2d position, int nbUpdate, int nbNr, int nbNs, int nbNd,
-            int nbRr, int nbRs);
-    Cercle get_forme() const { return forme_; }
-    int get_update() const { return nbUpdate_; }
-    int get_nbNr() const { return nbNr_; }
-    int get_nbNs() const { return nbNs_; }
-    int get_nbNd() const { return nbNd_; }
-    int get_nbRr() const { return nbRr_; }
-    int get_nbRs() const { return nbRs_; }
-    std::string get_info() const;
-    bool hors_domaine();
-    void draw() const override;
-    void clear();
-    void set_update(int update);
-    ~Spatial() override = default;
-private:
-    Cercle forme_;
-    int nbUpdate_;
-    int nbNr_;
-    int nbNs_;
-    int nbNd_;
-    int nbRr_;
-    int nbRs_;
-};
-
 class Mobile : public Robot {
 public:
     using Robot :: Robot;
     ~Mobile() override = default;
 protected:
     void draw() const override {};
-    virtual void move() = 0;
 };
 
 class Neutraliseur : public Mobile {
@@ -66,7 +37,7 @@ public:
     int get_nbUpdate() const { return nbUpdate_; }
     bool get_panne() const { return panne_; }
     void draw() const override;
-    void move() override;
+    void move(Carre cible);
     std::string get_info() const;
     virtual ~Neutraliseur() = default;
 private:
@@ -86,10 +57,39 @@ public:
     explicit Reparateur(S2d position);
     Cercle get_forme() const { return forme_; }
     void draw() const override;
-    void move() override;
+    void move(Cercle cible);
     virtual ~Reparateur() = default;
 private:
     Cercle forme_;
+};
+
+class Spatial : public Robot {
+public:
+    Spatial() = delete;
+    Spatial(S2d position, int nbUpdate, int nbNr, int nbNs, int nbNd,
+            int nbRr, int nbRs);
+    Cercle get_forme() const { return forme_; }
+    int get_update() const { return nbUpdate_; }
+    int get_nbNr() const { return nbNr_; }
+    int get_nbNs() const { return nbNs_; }
+    int get_nbNd() const { return nbNd_; }
+    int get_nbRr() const { return nbRr_; }
+    int get_nbRs() const { return nbRs_; }
+    std::string get_info() const;0
+    bool hors_domaine();
+    static int assigner_cible(const std::vector<Neutraliseur>& neutraliseurs, const Particule& particule);
+    void draw() const override;
+    void clear();
+    void set_update(int update);
+    ~Spatial() override = default;
+private:
+    Cercle forme_;
+    int nbUpdate_;
+    int nbNr_;
+    int nbNs_;
+    int nbNd_;
+    int nbRr_;
+    int nbRs_;
 };
 
 #endif
