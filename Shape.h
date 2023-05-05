@@ -22,6 +22,9 @@ struct S2d {
         vecteur.y = y-p.y;
         return vecteur;
     }
+    double norme() const {
+        return sqrt(pow(x,2)+pow(y,2));
+    }
     double x = 0.;
     double y = 0.;
 };

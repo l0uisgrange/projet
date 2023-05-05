@@ -66,11 +66,16 @@ std::vector<Particule> tri_particules(std::vector<Particule>& p) {
 }
 
 void Simulation::update_neutraliseurs() {
-    vector<Neutraliseur> neutraliseurs = neutraliseurs_;
     for(auto& particule: particules_) {
-        int cible = Spatial::assigner_cible(neutraliseurs, particule);
-        neutraliseurs[cible].move(particule.get_forme());
-        //neutraliseurs.erase(cible, cible);
+        int cible = Spatial::assigner_cible(neutraliseurs_, particule);
+        cout << neutraliseurs_.size() << endl;
+        if(!neutraliseurs_.empty()) {
+            neutraliseurs_[cible].move(particule.get_forme());
+            Neutraliseur dernier = neutraliseurs_[neutraliseurs_.size()];
+            neutraliseurs_[neutraliseurs_.size()] = neutraliseurs_[cible];
+            neutraliseurs_[cible] = dernier;
+            neutraliseurs_.set_job(true);
+        }
     }
 }
 

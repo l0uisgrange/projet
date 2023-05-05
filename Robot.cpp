@@ -99,8 +99,12 @@ void Neutraliseur::move(Carre cible) {
     switch(coordination_) {
         default: {
             S2d direction = cible.centre - forme_.centre;
-            forme_.centre.x += direction.x * vtran_ * delta_t;
-            forme_.centre.y += direction.y * vtran_ * delta_t;
+            S2d direction_normalisee;
+            direction_normalisee.x = direction.x / direction.norme();
+            direction_normalisee.y = direction.y / direction.norme();
+            forme_.centre.x += direction_normalisee.x*vtran_*delta_t;
+            cout << direction_normalisee.x*vtran_*delta_t << " à " << forme_.centre.x << endl;
+            forme_.centre.y += direction_normalisee.y*vtran_*delta_t;
         }
     }
 }
