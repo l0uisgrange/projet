@@ -40,7 +40,8 @@ public:
     void move(Carre cible);
     std::string get_info() const;
     virtual ~Neutraliseur() = default;
-    void set_job(bool b) { job = b; }
+    void set_job(bool b) { job_ = b; }
+    bool has_job() const { return job_; }
 private:
     Cercle forme_;
     double angle_;
@@ -50,7 +51,7 @@ private:
     double vtran_ = vtran_max;
     int k_update_panne_;
     int nbUpdate_;
-    bool job = false;
+    bool job_;
 };
 
 class Reparateur : public Mobile {

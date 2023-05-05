@@ -51,7 +51,7 @@ bool Spatial::hors_domaine() {
 Neutraliseur::Neutraliseur(S2d position, double angle, int coordination, bool panne,
                            int k_update_panne, int nbUpdate)
     : angle_(angle), panne_(panne), coordination_(coordination),
-    k_update_panne_(k_update_panne), nbUpdate_(nbUpdate) {
+    k_update_panne_(k_update_panne), nbUpdate_(nbUpdate), job_(false) {
     forme_.centre.x = position.x;
     forme_.centre.y = position.y;
     forme_.rayon = r_neutraliseur;
@@ -59,7 +59,7 @@ Neutraliseur::Neutraliseur(S2d position, double angle, int coordination, bool pa
 
 void Neutraliseur::draw() const {
     Couleurs couleur(NOIR);
-    if (panne_) {
+    if(panne_) {
         couleur = ORANGE;
     }
     double x_stop = forme_.centre.x + std::cos(angle_) * r_neutraliseur;
@@ -118,11 +118,13 @@ int Spatial::assigner_cible(const vector<Neutraliseur>& neutraliseurs, const Par
     int index = 0;
     int i = 0;
     for(auto& neutraliseur: neutraliseurs) {
-        S2d vec = particule.get_forme().centre - neutraliseur.get_forme().centre;
-        double distance = sqrt(pow(vec.x,2)+ pow(vec.y, 2));
-        if(distance < petite_distance) {
-            petite_distance = distance;
-            index = i;
+        if(!neutraliseur.has_job()) {
+            S2d vec = particule.get_forme().centre - neutraliseur.get_forme().centre;
+            double distance = sqrt(pow(vec.x, 2) + pow(vec.y, 2));
+            if(distance < petite_distance) {
+                petite_distance = distance;
+                index = i;
+            }
         }
         ++i;
     }
