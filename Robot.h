@@ -53,6 +53,7 @@ public:
     ~Mobile() override = default;
 protected:
     void draw() const override {};
+    virtual void move() = 0;
 };
 
 class Neutraliseur : public Mobile {
@@ -65,10 +66,9 @@ public:
     int get_nbUpdate() const { return nbUpdate_; }
     bool get_panne() const { return panne_; }
     void draw() const override;
+    void move() override;
     std::string get_info() const;
     virtual ~Neutraliseur() = default;
-
-
 private:
     Cercle forme_;
     double angle_;
@@ -86,6 +86,7 @@ public:
     explicit Reparateur(S2d position);
     Cercle get_forme() const { return forme_; }
     void draw() const override;
+    void move() override;
     virtual ~Reparateur() = default;
 private:
     Cercle forme_;

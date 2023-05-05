@@ -59,7 +59,7 @@ Neutraliseur::Neutraliseur(S2d position, double angle, int coordination, bool pa
 
 void Neutraliseur::draw() const {
     Couleurs couleur(NOIR);
-    if(panne_) {
+    if (panne_) {
         couleur = ORANGE;
     }
     double x_stop = forme_.centre.x + std::cos(angle_) * r_neutraliseur;
@@ -89,6 +89,14 @@ Reparateur::Reparateur(S2d position)
 void Reparateur::draw() const {
     fill_cercle(forme_.centre.x, forme_.centre.y, forme_.rayon, VERT);
     draw_cercle(forme_.centre.x, forme_.centre.y, forme_.rayon, NOIR);
+}
+
+void Reparateur::move() {
+
+}
+
+void Neutraliseur::move() {
+
 }
 
 void Spatial::set_update(int update) {

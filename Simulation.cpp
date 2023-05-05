@@ -48,6 +48,12 @@ void Simulation::update_particules() {
     particules_ = nouvelle_liste;
 }
 
+void Simulation::update_neutraliseurs() {
+    for(auto& neutraliseur: neutraliseurs_) {
+        neutraliseur.move();
+    }
+}
+
 void Simulation::set_Spatial(Spatial &S) {
     spatial_ = S;
 }
