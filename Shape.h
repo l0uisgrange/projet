@@ -16,6 +16,9 @@ constexpr double epsil_zero(0.125);
 enum Etat { NBP, PARTICULE, SPATIAL, REPARATEUR, NEUTRALISEUR };
 
 struct S2d {
+    double operator-(S2d p) const {
+        return sqrt(pow(p.x-x, 2)+pow(p.y-y, 2));
+    }
     double x = 0.;
     double y = 0.;
 };

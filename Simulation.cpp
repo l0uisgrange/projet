@@ -48,9 +48,24 @@ void Simulation::update_particules() {
     particules_ = nouvelle_liste;
 }
 
+int assigner_cible(const vector<Neutraliseur>& neutraliseurs, const Particule& particule) {
+    double petite_distance = 4*dmax;
+    Particule proche_cible;
+    for(auto& neutraliseur: neutraliseurs) {
+        double distance = particule.get_forme().centre - particule.get_forme().centre;
+        if(distance < petite_distance) {
+
+        }
+    }
+}
+
 void Simulation::update_neutraliseurs() {
-    for(auto& neutraliseur: neutraliseurs_) {
-        neutraliseur.move();
+    vector<Neutraliseur> neutraliseurs = neutraliseurs_;
+    // ordonner liste particules_
+    for(auto& particule: particules_) {
+        int cible = assigner_cible(neutraliseurs, particule);
+
+        neutraliseurs.erase(cible, cible);
     }
 }
 
