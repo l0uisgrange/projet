@@ -96,7 +96,13 @@ void Reparateur::move(Cercle cible) {
 }
 
 void Neutraliseur::move(Carre cible) {
-
+    switch(coordination_) {
+        default: {
+            S2d direction = cible.centre - forme_.centre;
+            forme_.centre.x += direction.x * vtran_ * delta_t;
+            forme_.centre.y += direction.y * vtran_ * delta_t;
+        }
+    }
 }
 
 void Spatial::set_update(int update) {
@@ -108,7 +114,7 @@ int Spatial::assigner_cible(const vector<Neutraliseur>& neutraliseurs, const Par
     int index = 0;
     int i = 0;
     for(auto& neutraliseur: neutraliseurs) {
-        double distance = particule.get_forme().centre - neutraliseur.get_forme().centre;
+        double distance = particule.get_forme() - neutraliseur.get_forme();
         if(distance < petite_distance) {
             petite_distance = distance;
             index = i;

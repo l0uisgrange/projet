@@ -16,16 +16,14 @@ constexpr double epsil_zero(0.125);
 enum Etat { NBP, PARTICULE, SPATIAL, REPARATEUR, NEUTRALISEUR };
 
 struct S2d {
-    double operator-(S2d p) const {
-        return sqrt(pow(p.x-x, 2)+pow(p.y-y, 2));
+    S2d operator-(S2d p) const {
+        S2d vecteur;
+        vecteur.x = x-p.x;
+        vecteur.y = y-p.y;
+        return vecteur;
     }
     double x = 0.;
     double y = 0.;
-};
-
-struct Carre {
-    S2d centre;
-    double cote = 0.;
 };
 
 struct Cercle {
@@ -33,6 +31,15 @@ struct Cercle {
     Cercle(S2d p, double r);
     S2d centre;
     double rayon = 0.;
+};
+
+struct Carre {
+    double operator-(Cercle c) const {
+        S2d vecteur;
+        return 2.0;
+    }
+    S2d centre;
+    double cote = 0.;
 };
 
 bool superposition(Carre const& carre_1, Carre const& carre_2, bool epsil = false);
