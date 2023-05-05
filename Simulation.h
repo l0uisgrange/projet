@@ -56,6 +56,8 @@ void init_Reparateur(const std::string& ligne, Etat& etape, Simulation* sim);
 void init_Neutraliseur(const std::string& ligne, Simulation* sim);
 void superposition_R_N(std::vector<Cercle>& tab1, Simulation* sim);
 void superposition_P(std::vector<Carre>& tab1, Simulation* sim);
-void superposition_P_R_N(std::vector<Cercle>& tab1, std::vector<Carre>& tab2, Simulation* sim);
+void superposition_P_R_N(std::vector<Cercle>& tab1, std::vector<Carre>& tab2,
+                         Simulation* sim);
+std::vector<Particule> tri_particules(std::vector<Particule>& particules);
 
 #endif

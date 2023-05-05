@@ -46,7 +46,23 @@ void Simulation::update_particules() {
         }
     }
     nbP_ = int(nouvelle_liste.size());
-    particules_ = nouvelle_liste;
+    particules_ = tri_particules(nouvelle_liste);
+}
+
+std::vector<Particule> tri_particules(std::vector<Particule>& p) {
+    Carre c;
+    Particule tmp(c);
+    int j;
+    for(int pos(1); pos<p.size(); ++pos) {
+        tmp = p[pos];
+        j = pos;
+        while((j >= 1) and (tmp.get_forme().cote > p[j-1].get_forme().cote)) {
+            p[j] = p[j-1];
+            --j;
+        }
+        p[j] = tmp;
+    }
+    return p;
 }
 
 void Simulation::update_neutraliseurs() {
