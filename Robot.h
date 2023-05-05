@@ -75,7 +75,7 @@ public:
     int get_nbNd() const { return nbNd_; }
     int get_nbRr() const { return nbRr_; }
     int get_nbRs() const { return nbRs_; }
-    std::string get_info() const;0
+    std::string get_info() const;
     bool hors_domaine();
     static int assigner_cible(const std::vector<Neutraliseur>& neutraliseurs, const Particule& particule);
     void draw() const override;
