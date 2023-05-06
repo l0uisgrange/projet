@@ -83,6 +83,10 @@ string Neutraliseur::get_info() const {
     return info.str();
 }
 
+void Neutraliseur::set_k_update_panne(int update) {
+    k_update_panne_ = update;
+}
+
 Reparateur::Reparateur(S2d position)
     : forme_(Cercle(position, r_reparateur)) {}
 
@@ -115,7 +119,7 @@ void Spatial::set_update(int update) {
 
 int Spatial::assigner_cible(const vector<Neutraliseur>& neutraliseurs, const Particule& particule) {
     double petite_distance = 4 * dmax;
-    int index = 0;
+    int index = -1;
     int i = 0;
     for(auto& neutraliseur: neutraliseurs) {
         if(!neutraliseur.has_job()) {

@@ -38,6 +38,17 @@ void Simulation::update_particules() {
                     Particule new_p(c);
                     nouvelle_liste.push_back(new_p);
                 }
+                Carre explosion;
+                explosion = particule.get_forme();
+                explosion.cote *= risk_factor;
+                for (auto N : neutraliseurs_) {
+                    if(superposition(explosion, N.get_forme())){
+                        //TODO faut metre set job = false?
+                        //TODO nbupdate de N est mis à jour auto?
+                        N.set_panne(true);
+                        N.set_k_update_panne(spatial_.get_update());
+                    }
+                }
             } else {
                 nouvelle_liste.push_back(particule);
             }
@@ -68,10 +79,15 @@ std::vector<Particule> tri_particules(std::vector<Particule>& p) {
 void Simulation::update_neutraliseurs() {
     for(auto& particule: particules_) {
         int cible = Spatial::assigner_cible(neutraliseurs_, particule);
-        if(!neutraliseurs_.empty()) {
-            neutraliseurs_[cible].move(particule.get_forme());
-            neutraliseurs_[cible].set_job(true);
+        if(cible != -1) { //empêche de cibler d'autres particules si tous les N sont pris
+            if (!neutraliseurs_.empty()) {
+                neutraliseurs_[cible].move(particule.get_forme());
+                neutraliseurs_[cible].set_job(true);
+            }
         }
+    }
+    for(auto& N : neutraliseurs_) {
+        N.set_job(false);
     }
 }
 

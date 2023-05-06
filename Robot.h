@@ -39,9 +39,11 @@ public:
     void draw() const override;
     void move(Carre cible);
     std::string get_info() const;
-    virtual ~Neutraliseur() = default;
+    void set_panne(bool panne) {panne_ = panne;}
+    void set_k_update_panne(int update);
     void set_job(bool b) { job_ = b; }
     bool has_job() const { return job_; }
+    virtual ~Neutraliseur() = default;
 private:
     Cercle forme_;
     double angle_;
