@@ -36,12 +36,15 @@ public:
     int get_k_update_panne() const { return k_update_panne_; }
     int get_nbUpdate() const { return nbUpdate_; }
     bool get_panne() const { return panne_; }
+    double get_angle() const { return angle_; }
     void draw() const override;
     void turn(Carre cible);
     void move();
     std::string get_info() const;
     void set_panne(bool panne) {panne_ = panne;}
     void set_k_update_panne(int update);
+    void set_forme(Cercle c) { forme_ = c; }
+    void set_angle(double angle) { angle_ = angle; }
     void set_job(bool b) { job_ = b; }
     bool has_job() const { return job_; }
     virtual ~Neutraliseur() = default;
