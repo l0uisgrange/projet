@@ -37,6 +37,7 @@ public:
     void erreurs_superposition();
     void update_particules();
     void update_neutraliseurs();
+    void destroy_neutraliseurs();
     void draw_simulation();
     void update();
     void clear();
