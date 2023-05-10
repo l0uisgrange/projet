@@ -120,7 +120,7 @@ void Simulation::update_neutraliseurs() {
                     }
                 }
                 neutraliseurs_[id_n].turn(particules_[id_p].get_forme());
-                neutraliseurs_[id_n].move();
+                neutraliseurs_[id_n].move(particules_[id_p].get_forme());
                 neutraliseurs_[id_n].set_job(true);
                 particules_[id_p].set_target(true);
                 if(id_p != p) {

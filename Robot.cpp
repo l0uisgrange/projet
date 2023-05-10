@@ -101,22 +101,49 @@ void Reparateur::move(Cercle cible) {
 
 void Neutraliseur::turn(Carre cible) {
     S2d direction = cible.centre - forme_.centre;
-    if((forme_.centre.diff_angle(direction)) > 0) {
-        angle_ -= vrot_*delta_t;
+    double angle_direction(atan2(direction.y, direction.x));
+    double delta_angle(angle_direction - angle_);
+    if(delta_angle > M_PI) {
+        delta_angle -= M_PI;
+        delta_angle *= -1;
+    } else if(delta_angle < -M_PI){
+        delta_angle += M_PI;
+        delta_angle *= -1;
+    }
+    if(abs(delta_angle) <= vrot_*delta_t){
+        angle_ = angle_direction;
     } else {
-        angle_ += vrot_*delta_t;
+        angle_ += ((delta_angle > 0)? 1. : -1.)*vrot_*delta_t;
     }
 }
 
-void Neutraliseur::move() {
+void Neutraliseur::move(Carre cible) {
+    S2d direction = cible.centre - forme_.centre;
+    double angle_direction(atan2(direction.y, direction.x));
+    double delta_angle(angle_direction - angle_);
+    if(delta_angle > M_PI) {
+        delta_angle -= M_PI;
+        delta_angle *= -1;
+    } else if(delta_angle < -M_PI){
+        delta_angle += M_PI;
+        delta_angle *= -1;
+    }
+    S2d vect_angle;
+    vect_angle.x = cos(angle_);
+    vect_angle.y = sin(angle_);
     switch(coordination_) {
-        default: {
-            S2d vect_angle;
-            vect_angle.x = cos(angle_);
-            vect_angle.y = sin(angle_);
-            forme_.centre.x += vect_angle.x*vtran_*delta_t;
-            forme_.centre.y += vect_angle.y*vtran_*delta_t;
+        case 0: {
+            if(abs(delta_angle) < epsil_alignement) {
+                forme_.centre.x += vect_angle.x * vtran_ * delta_t;
+                forme_.centre.y += vect_angle.y * vtran_ * delta_t;
+            }
         }
+        case 2:
+            if(abs(delta_angle) < M_PI/3) {
+                forme_.centre.x += vect_angle.x * vtran_ * delta_t;
+                forme_.centre.y += vect_angle.y * vtran_ * delta_t;
+            }
+
     }
 }
 

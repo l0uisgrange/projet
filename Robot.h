@@ -38,7 +38,7 @@ public:
     bool get_panne() const { return panne_; }
     void draw() const override;
     void turn(Carre cible);
-    void move();
+    void move(Carre cible);
     std::string get_info() const;
     void set_panne(bool panne) {panne_ = panne;}
     void set_k_update_panne(int update);
