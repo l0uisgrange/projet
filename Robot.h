@@ -37,7 +37,8 @@ public:
     int get_nbUpdate() const { return nbUpdate_; }
     bool get_panne() const { return panne_; }
     void draw() const override;
-    void move(Carre cible);
+    void turn(Carre cible);
+    void move();
     std::string get_info() const;
     void set_panne(bool panne) {panne_ = panne;}
     void set_k_update_panne(int update);
@@ -49,7 +50,7 @@ private:
     double angle_;
     bool panne_;
     int coordination_;
-    double vrot_ = 0;
+    double vrot_ = vrot_max;
     double vtran_ = vtran_max;
     int k_update_panne_;
     int nbUpdate_;

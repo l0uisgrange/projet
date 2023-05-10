@@ -99,15 +99,23 @@ void Reparateur::move(Cercle cible) {
 
 }
 
-void Neutraliseur::move(Carre cible) {
+void Neutraliseur::turn(Carre cible) {
+    S2d direction = cible.centre - forme_.centre;
+    if((forme_.centre.diff_angle(direction)) > 0) {
+        angle_ -= vrot_*delta_t;
+    } else {
+        angle_ += vrot_*delta_t;
+    }
+}
+
+void Neutraliseur::move() {
     switch(coordination_) {
         default: {
-            S2d direction = cible.centre - forme_.centre;
-            S2d direction_normalisee;
-            direction_normalisee.x = direction.x / direction.norme();
-            direction_normalisee.y = direction.y / direction.norme();
-            forme_.centre.x += direction_normalisee.x*vtran_*delta_t;
-            forme_.centre.y += direction_normalisee.y*vtran_*delta_t;
+            S2d vect_angle;
+            vect_angle.x = cos(angle_);
+            vect_angle.y = sin(angle_);
+            forme_.centre.x += vect_angle.x*vtran_*delta_t;
+            forme_.centre.y += vect_angle.y*vtran_*delta_t;
         }
     }
 }

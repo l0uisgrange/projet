@@ -7,6 +7,18 @@
 #include "Shape.h"
 #include <cmath>
 
+S2d S2d::operator-(S2d p) const {
+        S2d vecteur;
+        vecteur.x = x-p.x;
+        vecteur.y = y-p.y;
+        return vecteur;
+}
+
+double S2d::diff_angle(S2d but) const {
+    double angle_but(asin(but.y/but.norme()));
+    double angle_this(asin(y/norme()));
+    return angle_this - angle_but;
+}
 Cercle::Cercle(S2d p, double r) {
     centre = p;
     rayon = r;
