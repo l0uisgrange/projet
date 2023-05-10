@@ -119,8 +119,29 @@ void Simulation::update_neutraliseurs() {
                         id_p = a;
                     }
                 }
+                Cercle forme = neutraliseurs_[id_n].get_forme();
                 neutraliseurs_[id_n].turn(particules_[id_p].get_forme());
                 neutraliseurs_[id_n].move(particules_[id_p].get_forme());
+                neutraliseurs_[id_n].move();
+                for(auto& particule : particules_) {
+                    if(superposition(particule.get_forme(),
+                                     neutraliseurs_[id_n].get_forme(), true)) {
+                        neutraliseurs_[id_n].set_forme(forme);
+                    }
+                }
+                for(int i = 0; i < neutraliseurs_.size(); i++) {
+                    if(superposition(neutraliseurs_[i].get_forme(),
+                                     neutraliseurs_[id_n].get_forme(), true)
+                                     and i != id_n) {
+                        neutraliseurs_[id_n].set_forme(forme);
+                    }
+                }
+                for(auto& reparateur : reparateurs_) {
+                    if(superposition(reparateur.get_forme(),
+                                     neutraliseurs_[id_n].get_forme(), true)) {
+                        neutraliseurs_[id_n].set_forme(forme);
+                    }
+                }
                 neutraliseurs_[id_n].set_job(true);
                 particules_[id_p].set_target(true);
                 if(id_p != p) {
