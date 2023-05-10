@@ -14,9 +14,9 @@ S2d S2d::operator-(S2d p) const {
         return vecteur;
 }
 
-double S2d::diff_angle(S2d but) const {
-    double angle_but(asin(but.y/but.norme()));
-    double angle_this(asin(y/norme()));
+double S2d::diff_angle(S2d angle) const {
+    double angle_but(atan(angle.y/angle.x));
+    double angle_this(atan(y/x));
     return angle_this - angle_but;
 }
 Cercle::Cercle(S2d p, double r) {

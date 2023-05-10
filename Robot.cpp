@@ -125,5 +125,5 @@ void Spatial::set_update(int update) {
 }
 
 int Spatial::assigner_cible(const vector<Neutraliseur>& neutraliseurs, const Particule& particule) {
-
+    return 0;
 }
