@@ -17,7 +17,18 @@ static default_random_engine e;
 void Simulation::update() {
     spatial_.set_update(spatial_.get_update() + 1);
     update_particules();
+    destroy_neutraliseurs();
     update_neutraliseurs();
+}
+
+void Simulation::destroy_neutraliseurs() {
+    for(int i = 0; i < neutraliseurs_.size(); i++) {
+        if(neutraliseurs_[i].get_panne() and spatial_.get_update() - neutraliseurs_[i].get_k_update_panne() >= max_update) {
+            Neutraliseur n(neutraliseurs_[i]);
+            neutraliseurs_[i] = neutraliseurs_[neutraliseurs_.size()];
+            neutraliseurs_.pop_back();
+        }
+    }
 }
 
 void Simulation::update_particules() {
@@ -38,15 +49,12 @@ void Simulation::update_particules() {
                     Particule new_p(c);
                     nouvelle_liste.push_back(new_p);
                 }
-                Carre explosion;
-                explosion = particule.get_forme();
+                Carre explosion(particule.get_forme());
                 explosion.cote *= risk_factor;
-                for (auto N : neutraliseurs_) {
-                    if(superposition(explosion, N.get_forme())){
-                        //TODO faut metre set job = false?
-                        //TODO nbupdate de N est mis à jour auto?
-                        N.set_panne(true);
-                        N.set_k_update_panne(spatial_.get_update());
+                for(auto& neutraliseur : neutraliseurs_) {
+                    if(superposition(explosion, neutraliseur.get_forme())) {
+                        neutraliseur.set_panne(true);
+                        neutraliseur.set_k_update_panne(spatial_.get_update());
                     }
                 }
             } else {
@@ -85,7 +93,7 @@ void Simulation::update_neutraliseurs() {
             distance_minimale = 5 * dmax;
             id_n = -1;
             for(int n = 0; n < neutraliseurs_.size(); n++) {
-                if(!neutraliseurs_[n].has_job()) {
+                if(!neutraliseurs_[n].has_job() and !neutraliseurs_[n].get_panne()) {
                     S2d vecteur_distance = neutraliseurs_[n].get_forme().centre
                             - particules_[p].get_forme().centre;
                     double distance = vecteur_distance.norme();
