@@ -20,7 +20,8 @@ public:
     bool too_small();
     bool hors_domaine();
     void draw() const;
-    void set_target(bool value) { target_ = value; }
+    void set_target(bool b) { target_ = b; }
+    bool is_target() const { return target_; }
 private:
     Carre forme_;
     bool target_ = false;

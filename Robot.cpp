@@ -107,7 +107,6 @@ void Neutraliseur::move(Carre cible) {
             direction_normalisee.x = direction.x / direction.norme();
             direction_normalisee.y = direction.y / direction.norme();
             forme_.centre.x += direction_normalisee.x*vtran_*delta_t;
-            cout << direction_normalisee.x*vtran_*delta_t << " à " << forme_.centre.x << endl;
             forme_.centre.y += direction_normalisee.y*vtran_*delta_t;
         }
     }
@@ -118,19 +117,5 @@ void Spatial::set_update(int update) {
 }
 
 int Spatial::assigner_cible(const vector<Neutraliseur>& neutraliseurs, const Particule& particule) {
-    double petite_distance = 4 * dmax;
-    int index = -1;
-    int i = 0;
-    for(auto& neutraliseur: neutraliseurs) {
-        if(!neutraliseur.has_job()) {
-            S2d vec = particule.get_forme().centre - neutraliseur.get_forme().centre;
-            double distance = sqrt(pow(vec.x, 2) + pow(vec.y, 2));
-            if(distance < petite_distance) {
-                petite_distance = distance;
-                index = i;
-            }
-        }
-        ++i;
-    }
-    return index;
+
 }

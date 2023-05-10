@@ -1,7 +1,7 @@
 /**
  Simulation.cpp
  Louis Grange et Daniel Ataide
- Version 1.0
+ Version 1.5
 **/
 
 #include "Simulation.h"
@@ -77,17 +77,53 @@ std::vector<Particule> tri_particules(std::vector<Particule>& p) {
 }
 
 void Simulation::update_neutraliseurs() {
-    for(auto& particule: particules_) {
-        int cible = Spatial::assigner_cible(neutraliseurs_, particule);
-        if(cible != -1) { //empêche de cibler d'autres particules si tous les N sont pris
-            if (!neutraliseurs_.empty()) {
-                neutraliseurs_[cible].move(particule.get_forme());
-                neutraliseurs_[cible].set_job(true);
+    double distance_minimale(5 * dmax);
+    int id_n(-1);
+    int id_p(-1);
+    for(int p = 0; p < particules_.size(); p++) {
+        start:
+            distance_minimale = 5 * dmax;
+            id_n = -1;
+            for(int n = 0; n < neutraliseurs_.size(); n++) {
+                if(!neutraliseurs_[n].has_job()) {
+                    S2d vecteur_distance = neutraliseurs_[n].get_forme().centre
+                            - particules_[p].get_forme().centre;
+                    double distance = vecteur_distance.norme();
+                    if(distance < distance_minimale) {
+                        distance_minimale = distance;
+                        id_n = n;
+                    }
+                }
             }
-        }
+            distance_minimale = 5 * dmax;
+            double cote = particules_[p].get_forme().cote;
+            id_p = p;
+            if(id_n > -1) {
+                for(int a = 0; a < particules_.size(); a++) {
+                    if(particules_[a].get_forme().cote < cote or particules_[a].is_target()) {
+                        continue;
+                    }
+                    S2d vecteur_distance = neutraliseurs_[id_n].get_forme().centre
+                            - particules_[a].get_forme().centre;
+                    double distance = vecteur_distance.norme();
+                    if(distance < distance_minimale) {
+                        distance_minimale = distance;
+                        id_p = a;
+                    }
+                }
+                neutraliseurs_[id_n].move(particules_[id_p].get_forme());
+                neutraliseurs_[id_n].set_job(true);
+                particules_[id_p].set_target(true);
+                if(id_p != p) {
+                    goto start; // recommence la recherche
+                }
+            }
     }
-    for(auto& N : neutraliseurs_) {
-        N.set_job(false);
+    for(auto& neutraliseur : neutraliseurs_) {
+        neutraliseur.set_job(false);
+    }
+    for(auto& particule : particules_) {
+        particule.set_target(false);
     }
 }
 
@@ -186,7 +222,6 @@ void Simulation::lecture(ifstream& entree) {
         if(dessiner_) {
             erreurs_superposition();
         }
-        // AVANT CA
         if(dessiner_) {
             cout << message::success();
         } else {
@@ -209,7 +244,6 @@ void decodage_ligne(const string& line, Etat& etape, Simulation* simulation) {
     istringstream ligne(line);
     switch(etape) {
         case NBP: {
-            cout << "NBP" << endl;
             int nbP(0);
             if(ligne >> nbP) {
                 simulation->set_nbP(nbP);
@@ -220,19 +254,15 @@ void decodage_ligne(const string& line, Etat& etape, Simulation* simulation) {
             break;
         }
         case PARTICULE:
-            cout << "P" << endl;
             init_Particule(line, etape, simulation);
             break;
         case SPATIAL:
-            cout << "S" << endl;
             init_Spatial(line, etape, simulation);
             break;
         case REPARATEUR:
-            cout << "R" << endl;
             init_Reparateur(line, etape, simulation);
             break;
         case NEUTRALISEUR:
-            cout << "N" << endl;
             init_Neutraliseur(line, simulation);
             break;
     }
@@ -319,7 +349,6 @@ void init_Neutraliseur(const string& line, Simulation* sim) {
     bool panne;
     string h;
     if(ligne >> position.x >> position.y >> a1 >> c_n >> h >> k_update_panne) {
-        cout << "Before" << endl;
         if(h == "false") {
             panne = false;
         } else if(h == "true") {
@@ -329,13 +358,11 @@ void init_Neutraliseur(const string& line, Simulation* sim) {
             return;
         }
         if(int(sim->get_neutraliseurs().size()) < sim->get_spatial().get_nbNs()) {
-            cout << "X" << endl;
             Neutraliseur N(position, a1, c_n, panne,
                            k_update_panne,
                            sim->get_spatial().get_update());
             sim->add_neutraliseur(N);
         }
-        cout << "After" << endl;
     } else {
         sim->set_dessiner(false);
     }
