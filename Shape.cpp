@@ -49,7 +49,7 @@ bool superposition(Carre const& c1, Cercle const& c2, bool epsil) {
     double L(sqrt(pow(abs(C1C2.x) - c1.cote/2,2)
             + pow(abs(C1C2.y) - c1.cote/2,2)));
 
-    if (epsil) {
+    if(epsil) {
         if ((abs(C1C2.x) > (c1.cote/2))
             and (abs(C1C2.y) > (c1.cote/2))
             and (L > (c2.rayon + epsil_zero))) {
@@ -61,12 +61,12 @@ bool superposition(Carre const& c1, Cercle const& c2, bool epsil) {
             }
         }
     } else {
-        if ((abs(C1C2.x) > (c1.cote/2))
+        if((abs(C1C2.x) > (c1.cote/2))
             and (abs(C1C2.y) > (c1.cote/2))
             and (L > c2.rayon)) {
             return false;
         } else {
-            if ((abs(C1C2.x) < (c1.cote/2 + c2.rayon))
+            if((abs(C1C2.x) < (c1.cote/2 + c2.rayon))
                 and abs(C1C2.y) < c1.cote/2 + c2.rayon) {
                 return true;
             }
