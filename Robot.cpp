@@ -142,7 +142,6 @@ void Neutraliseur::move(Carre cible) {
         }
         case 1:
             if(abs(delta_angle) < M_PI/3){
-
             }
             break;
         case 2:
