@@ -129,7 +129,6 @@ void Neutraliseur::move(Carre cible) {
     S2d vect_angle;
     vect_angle.x = cos(angle_);
     vect_angle.y = sin(angle_);
-    cout << "Delta angle: " << delta_angle << endl;
     switch(coordination_) {
         case 0: {
             if(abs(delta_angle) < M_PI/6){
@@ -147,7 +146,6 @@ void Neutraliseur::move(Carre cible) {
             }
             break;
         case 2:
-            cout << "case 2" << endl;
             if(abs(delta_angle) < M_PI/3) {
                 forme_.centre.x += vect_angle.x * vtran_ * delta_t;
                 forme_.centre.y += vect_angle.y * vtran_ * delta_t;
