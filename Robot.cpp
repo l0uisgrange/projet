@@ -103,12 +103,11 @@ void Neutraliseur::turn(Carre cible) {
     S2d direction = cible.centre - forme_.centre;
     double angle_direction(atan2(direction.y, direction.x));
     double delta_angle(angle_direction - angle_);
+
     if(delta_angle > M_PI) {
-        delta_angle -= M_PI;
-        delta_angle *= -1;
+        delta_angle -= 2*M_PI;
     } else if(delta_angle < -M_PI){
-        delta_angle += M_PI;
-        delta_angle *= -1;
+        delta_angle += 2*M_PI;
     }
     if(abs(delta_angle) <= vrot_*delta_t){
         angle_ = angle_direction;
@@ -121,28 +120,39 @@ void Neutraliseur::move(Carre cible) {
     S2d direction = cible.centre - forme_.centre;
     double angle_direction(atan2(direction.y, direction.x));
     double delta_angle(angle_direction - angle_);
-    if(delta_angle > M_PI) {
-        delta_angle -= M_PI;
-        delta_angle *= -1;
+    vrot_ = vrot_max;
+    if(delta_angle > M_PI) { //normaliser le delta entre -pi et +pi
+        delta_angle -= 2*M_PI;
     } else if(delta_angle < -M_PI){
-        delta_angle += M_PI;
-        delta_angle *= -1;
+        delta_angle += 2*M_PI;
     }
     S2d vect_angle;
     vect_angle.x = cos(angle_);
     vect_angle.y = sin(angle_);
+    cout << "Delta angle: " << delta_angle << endl;
     switch(coordination_) {
         case 0: {
+            if(abs(delta_angle) < M_PI/6){
+                vrot_ = vrot_max/2;
+            }
             if(abs(delta_angle) < epsil_alignement) {
                 forme_.centre.x += vect_angle.x * vtran_ * delta_t;
                 forme_.centre.y += vect_angle.y * vtran_ * delta_t;
             }
+            break;
         }
+        case 1:
+            if(abs(delta_angle) < M_PI/3){
+
+            }
+            break;
         case 2:
+            cout << "case 2" << endl;
             if(abs(delta_angle) < M_PI/3) {
                 forme_.centre.x += vect_angle.x * vtran_ * delta_t;
                 forme_.centre.y += vect_angle.y * vtran_ * delta_t;
             }
+            break;
 
     }
 }

@@ -122,7 +122,6 @@ void Simulation::update_neutraliseurs() {
                 Cercle forme = neutraliseurs_[id_n].get_forme();
                 neutraliseurs_[id_n].turn(particules_[id_p].get_forme());
                 neutraliseurs_[id_n].move(particules_[id_p].get_forme());
-                neutraliseurs_[id_n].move();
                 for(auto& particule : particules_) {
                     if(superposition(particule.get_forme(),
                                      neutraliseurs_[id_n].get_forme(), true)) {
@@ -349,7 +348,7 @@ void init_Spatial(const string& line, Etat& etape, Simulation* sim) {
     int nbUpdate, nbNr, nbNs, nbNd, nbRr, nbRs;
     if(ligne >> position.x >> position.y >> nbUpdate >> nbNr >>
         nbNs >> nbNd >> nbRr >> nbRs) {
-        Spatial S(position, nbUpdate, nbNr, nbNs, nbNd, nbRr, nbNs);
+        Spatial S(position, nbUpdate, nbNr, nbNs, nbNd, nbRr, nbRs);
         sim->set_Spatial(S);
         etape = REPARATEUR;
     } else {
