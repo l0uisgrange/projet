@@ -122,7 +122,6 @@ void Simulation::update_neutraliseurs() {
                 Cercle forme = neutraliseurs_[id_n].get_forme();
                 neutraliseurs_[id_n].turn(particules_[id_p].get_forme());
                 neutraliseurs_[id_n].move(particules_[id_p].get_forme());
-                neutraliseurs_[id_n].move();
                 for(auto& particule : particules_) {
                     if(superposition(particule.get_forme(),
                                      neutraliseurs_[id_n].get_forme(), true)) {

@@ -104,11 +104,9 @@ void Neutraliseur::turn(Carre cible) {
     double angle_direction(atan2(direction.y, direction.x));
     double delta_angle(angle_direction - angle_);
     if(delta_angle > M_PI) {
-        delta_angle -= M_PI;
-        delta_angle *= -1;
+        delta_angle -= 2*M_PI;
     } else if(delta_angle < -M_PI){
-        delta_angle += M_PI;
-        delta_angle *= -1;
+        delta_angle += 2*M_PI;
     }
     if(abs(delta_angle) <= vrot_*delta_t){
         angle_ = angle_direction;
@@ -122,11 +120,9 @@ void Neutraliseur::move(Carre cible) {
     double angle_direction(atan2(direction.y, direction.x));
     double delta_angle(angle_direction - angle_);
     if(delta_angle > M_PI) {
-        delta_angle -= M_PI;
-        delta_angle *= -1;
+        delta_angle -= 2*M_PI;
     } else if(delta_angle < -M_PI){
-        delta_angle += M_PI;
-        delta_angle *= -1;
+        delta_angle += 2*M_PI;
     }
     S2d vect_angle;
     vect_angle.x = cos(angle_);
