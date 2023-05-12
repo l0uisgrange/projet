@@ -64,7 +64,17 @@ void Simulation::update_reparateurs() {
         distance_minimale = 5 * dmax;
     }
     for(auto& reparateur : reparateurs_) {
-        reparateur.set_job(false);
+        if(!reparateur.has_job()) {
+            reparateur.move(spatial_.get_forme());
+            S2d vecteur_distance = reparateur.get_forme().centre - spatial_.get_forme().centre;
+            double distance = vecteur_distance.norme();
+            if(distance <= r_spatial) {
+                spatial_.set_nbRs(spatial_.get_nbRs() - 1);
+                spatial_.set_nbRr(spatial_.get_nbRr() + 1);
+            }
+        } else {
+            reparateur.set_job(false);
+        }
     }
 }
 
@@ -132,6 +142,10 @@ bool Simulation::contact(Mobile& robot) {
         if(superposition(neutraliseur.get_forme(),
                          robot.get_forme(), true)
                          and neutraliseur.get_forme() != robot.get_forme()) {
+            if(robot.get_forme().rayon == r_reparateur and neutraliseur.get_panne()) {
+                neutraliseur.set_panne(false);
+                robot.set_job(false);
+            }
             return true;
         }
     }

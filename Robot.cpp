@@ -101,17 +101,12 @@ void Reparateur::move(Cercle cible) {
     double distance = direction.norme();
     direction_normalisee.x = direction.x / distance;
     direction_normalisee.y = direction.y / distance;
-    bool no = true;
-    if(direction.x < direction_normalisee.x * vtran_max) {
-        forme_.centre.x += direction.x;
-    } else {
-        forme_.centre.x += direction_normalisee.x * vtran_max;
+    double vitesse = vtran_max;
+    if(distance < r_neutraliseur) {
+        vitesse = vtran_max / 2;
     }
-    if(direction.y < direction_normalisee.y * vtran_max) {
-        forme_.centre.y += direction.y;
-    } else {
-        forme_.centre.y += direction_normalisee.y * vtran_max;
-    }
+    forme_.centre.x += direction_normalisee.x * vitesse * delta_t;
+    forme_.centre.y += direction_normalisee.y * vitesse * delta_t;
 }
 
 void Neutraliseur::turn(Carre cible) {
