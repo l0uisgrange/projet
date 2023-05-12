@@ -43,6 +43,7 @@ public:
     int get_k_update_panne() const { return k_update_panne_; }
     int get_nbUpdate() const { return nbUpdate_; }
     bool get_panne() const { return panne_; }
+    double get_angle() const { return angle_; }
     void draw() const override;
     void turn(Carre cible);
     void move(Carre cible);

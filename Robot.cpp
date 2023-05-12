@@ -122,6 +122,8 @@ void Neutraliseur::turn(Carre cible) {
 }
 
 void Neutraliseur::move(Carre cible) {
+    cout << "(" << forme_.centre.x << ", " << forme_.centre.y << ")";
+    cout << " -> (" << cible.centre.x << ", " << cible.centre.y << ")" << endl;
     S2d direction;
     if((coordination_ == 0) or (coordination_ == 2)) {
         direction = cible.centre - forme_.centre;

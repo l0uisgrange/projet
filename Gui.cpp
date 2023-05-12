@@ -105,14 +105,6 @@ Window::Window(Simulation &sim) : exit_button_("exit"), open_button_("open"),
     controller->signal_key_pressed().connect(
             sigc::mem_fun(*this, &Window::touche_clavier), false);
     add_controller(controller);
-    label_maj_.set_halign(Gtk::Align::END);
-    label_pa_.set_halign(Gtk::Align::END);
-    label_rs_.set_halign(Gtk::Align::END);
-    label_rr_.set_halign(Gtk::Align::END);
-    label_ns_.set_halign(Gtk::Align::END);
-    label_np_.set_halign(Gtk::Align::END);
-    label_nd_.set_halign(Gtk::Align::END);
-    label_nr_.set_halign(Gtk::Align::END);
     stats.append(label_maj_);
     stats.append(label_pa_);
     stats.append(label_rs_);
@@ -164,6 +156,7 @@ Gtk::Box Window::append_labels() {
     labels.append(label_nd);
     labels.append(label_nr);
     label_maj.set_halign(Gtk::Align::START);
+    label_maj_.set_width_chars(5);
     label_pa.set_halign(Gtk::Align::START);
     label_rs.set_halign(Gtk::Align::START);
     label_rr.set_halign(Gtk::Align::START);
