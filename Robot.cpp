@@ -38,7 +38,7 @@ string Spatial::get_info() const {
     return info.str();
 }
 
-bool Spatial::hors_domaine() {
+bool Spatial::hors_domaine() const {
     if(abs(forme_.centre.x) < dmax - r_spatial
        and abs(forme_.centre.y) < dmax - r_spatial) {
         return false;
@@ -100,15 +100,15 @@ void Reparateur::move(Cercle cible) {
 }
 
 void Neutraliseur::turn(Carre cible) {
-    S2d direction = cible.centre - forme_.centre;
+    S2d direction;
+    if((coordination_ == 0) or (coordination_ == 2)) {
+        direction = cible.centre - forme_.centre;
+    } else {
+        direction = direction_type1(this, cible);
+    }
     double angle_direction(atan2(direction.y, direction.x));
     double delta_angle(angle_direction - angle_);
-
-    if(delta_angle > M_PI) {
-        delta_angle -= 2*M_PI;
-    } else if(delta_angle < -M_PI){
-        delta_angle += 2*M_PI;
-    }
+    normalise_delta(delta_angle);
     if(abs(delta_angle) <= vrot_*delta_t){
         angle_ = angle_direction;
     } else {
@@ -117,23 +117,21 @@ void Neutraliseur::turn(Carre cible) {
 }
 
 void Neutraliseur::move(Carre cible) {
-    S2d direction = cible.centre - forme_.centre;
+    S2d direction;
+    if((coordination_ == 0) or (coordination_ == 2)) {
+        direction = cible.centre - forme_.centre;
+    } else {
+        direction = direction_type1(this, cible);
+    }
     double angle_direction(atan2(direction.y, direction.x));
     double delta_angle(angle_direction - angle_);
-    vrot_ = vrot_max;
-    if(delta_angle > M_PI) { //normaliser le delta entre -pi et +pi
-        delta_angle -= 2*M_PI;
-    } else if(delta_angle < -M_PI){
-        delta_angle += 2*M_PI;
-    }
+    normalise_delta(delta_angle);
+    vrot_ = choix_vrot(delta_angle);
     S2d vect_angle;
     vect_angle.x = cos(angle_);
     vect_angle.y = sin(angle_);
     switch(coordination_) {
         case 0: {
-            if(abs(delta_angle) < M_PI/6){
-                vrot_ = vrot_max/2;
-            }
             if(abs(delta_angle) < epsil_alignement) {
                 forme_.centre.x += vect_angle.x * vtran_ * delta_t;
                 forme_.centre.y += vect_angle.y * vtran_ * delta_t;
@@ -141,7 +139,9 @@ void Neutraliseur::move(Carre cible) {
             break;
         }
         case 1:
-            if(abs(delta_angle) < M_PI/3){
+            if(abs(delta_angle) < epsil_alignement){
+                forme_.centre.x += vect_angle.x * vtran_ * delta_t;
+                forme_.centre.y += vect_angle.y * vtran_ * delta_t;
             }
             break;
         case 2:
@@ -150,8 +150,47 @@ void Neutraliseur::move(Carre cible) {
                 forme_.centre.y += vect_angle.y * vtran_ * delta_t;
             }
             break;
-
     }
+}
+
+S2d direction_type1(Neutraliseur* N, Carre cible){
+    S2d direction; //vecteur qui dicte ou il faut viser
+    double diff_x(cible.centre.x - N->get_forme().centre.x);
+    double diff_y(cible.centre.y - N->get_forme().centre.y);
+    double carre_imaginaire(cible.cote*risk_factor/2 + r_neutraliseur);
+    if((abs(diff_x) > carre_imaginaire) or (abs(diff_y) > carre_imaginaire)){
+        if (diff_x > 0) { //Particule est sur la gauche
+            direction.x = cible.centre.x - carre_imaginaire;
+        } else { //Particule à droite
+            direction.x = cible.centre.x + carre_imaginaire;
+        }
+        if (diff_y > 0) { //Particule est en bas
+            direction.y = cible.centre.y - carre_imaginaire;
+        } else { //Particule en haut
+            direction.y = cible.centre.y + carre_imaginaire;
+        }
+    } else {
+        direction.x = cible.centre.x;
+        direction.y = cible.centre.y;
+    }
+    return direction;
+}
+
+double normalise_delta(double& delta_angle){
+    if(delta_angle > M_PI) {
+        delta_angle -= 2*M_PI;
+    } else if(delta_angle < -M_PI){
+        delta_angle += 2*M_PI;
+    }
+    return delta_angle;
+}
+
+double choix_vrot(double& delta_angle){
+    double vrot(vrot_max);
+    if(abs(delta_angle) < M_PI/6){
+        vrot = vrot_max/2;
+    }
+    return vrot;
 }
 
 void Spatial::set_update(int update) {

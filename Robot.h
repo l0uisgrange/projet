@@ -85,7 +85,7 @@ public:
     int get_nbRr() const { return nbRr_; }
     int get_nbRs() const { return nbRs_; }
     std::string get_info() const;
-    bool hors_domaine();
+    bool hors_domaine() const;
     static int assigner_cible(const std::vector<Neutraliseur>& neutraliseurs, const Particule& particule);
     void draw() const override;
     void clear();
@@ -100,5 +100,9 @@ private:
     int nbRr_;
     int nbRs_;
 };
+
+S2d direction_type1(Neutraliseur* N, Carre cible);
+double normalise_delta(double& delta_angle);
+double choix_vrot(double& delta_angle);
 
 #endif
