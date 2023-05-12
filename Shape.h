@@ -24,6 +24,7 @@ struct S2d {
 };
 
 struct Cercle {
+    bool operator!=(Cercle c) const;
     Cercle() = default;
     Cercle(S2d p, double r);
     S2d centre;

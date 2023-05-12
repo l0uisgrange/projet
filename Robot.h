@@ -21,10 +21,17 @@ public:
 
 class Mobile : public Robot {
 public:
-    using Robot :: Robot;
+    using Robot::Robot;
     ~Mobile() override = default;
+    virtual void set_forme(Cercle c) { forme_ = c; }
+    virtual Cercle get_forme() const { return forme_; }
+    virtual void set_job(bool b) { job_ = b; }
+    virtual bool has_job() const { return job_; }
 protected:
     void draw() const override {};
+private:
+    Cercle forme_;
+    bool job_;
 };
 
 class Neutraliseur : public Mobile {
@@ -32,21 +39,19 @@ public:
     Neutraliseur() = delete;
     Neutraliseur(S2d position, double angle, int coordination, bool panne,
                  int k_update_panne, int nbUpdate);
-    Cercle get_forme() const { return forme_; }
+    Cercle get_forme() const override { return forme_; }
     int get_k_update_panne() const { return k_update_panne_; }
     int get_nbUpdate() const { return nbUpdate_; }
     bool get_panne() const { return panne_; }
-    double get_angle() const { return angle_; }
     void draw() const override;
     void turn(Carre cible);
     void move(Carre cible);
     std::string get_info() const;
     void set_panne(bool panne) {panne_ = panne;}
     void set_k_update_panne(int update);
-    void set_forme(Cercle c) { forme_ = c; }
-    void set_angle(double angle) { angle_ = angle; }
-    void set_job(bool b) { job_ = b; }
-    bool has_job() const { return job_; }
+    void set_forme(Cercle c) override { forme_ = c; }
+    void set_job(bool b) override { job_ = b; }
+    bool has_job() const override { return job_; }
     virtual ~Neutraliseur() = default;
 private:
     Cercle forme_;
@@ -64,12 +69,16 @@ class Reparateur : public Mobile {
 public:
     Reparateur() = delete;
     explicit Reparateur(S2d position);
-    Cercle get_forme() const { return forme_; }
+    Cercle get_forme() const override { return forme_; }
+    void set_forme(Cercle c) override { forme_ = c; }
     void draw() const override;
     void move(Cercle cible);
+    void set_job(bool b) override { job_ = b; }
+    bool has_job() const override { return job_; }
     virtual ~Reparateur() = default;
 private:
     Cercle forme_;
+    bool job_;
 };
 
 class Spatial : public Robot {
