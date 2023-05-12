@@ -8,10 +8,19 @@
 #include <cmath>
 
 S2d S2d::operator-(S2d p) const {
-        S2d vecteur;
-        vecteur.x = x-p.x;
-        vecteur.y = y-p.y;
-        return vecteur;
+    S2d vecteur;
+    vecteur.x = x-p.x;
+    vecteur.y = y-p.y;
+    return vecteur;
+}
+
+bool Cercle::operator!=(Cercle c) const {
+    if(c.rayon != rayon) {
+        return true;
+    } else if(centre.x == c.centre.x and centre.y == c.centre.y) {
+        return false;
+    }
+    return true;
 }
 
 double S2d::diff_angle(S2d angle) const {
@@ -23,6 +32,7 @@ double S2d::diff_angle(S2d angle) const {
     return angle_this - angle_but;
      */
 }
+
 Cercle::Cercle(S2d p, double r) {
     centre = p;
     rayon = r;

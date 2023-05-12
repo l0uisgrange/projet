@@ -19,6 +19,7 @@ void Simulation::update() {
     update_particules();
     destroy_neutraliseurs();
     update_neutraliseurs();
+    update_reparateurs();
 }
 
 void Simulation::destroy_neutraliseurs() {
@@ -28,6 +29,41 @@ void Simulation::destroy_neutraliseurs() {
             neutraliseurs_[i] = neutraliseurs_[neutraliseurs_.size()];
             neutraliseurs_.pop_back();
         }
+    }
+}
+
+void Simulation::update_reparateurs() {
+    double distance_minimale(5 * dmax);
+    int id_r(-1);
+    for(const auto& neutraliseur : neutraliseurs_) {
+        if(neutraliseur.get_panne()) {
+            for(int r = 0; r < reparateurs_.size(); r++) {
+                if(reparateurs_[r].has_job()) {
+                    continue;
+                }
+                S2d vecteur_distance = neutraliseur.get_forme().centre
+                        - reparateurs_[r].get_forme().centre;
+                double distance = vecteur_distance.norme();
+                if(distance < distance_minimale
+                   and distance < (max_update - (spatial_.get_update()
+                   - neutraliseur.get_k_update_panne())) * vtran_max) {
+                    id_r = r;
+                    distance_minimale = distance;
+                }
+            }
+        }
+        if(id_r > -1) {
+            Cercle forme = reparateurs_[id_r].get_forme();
+            reparateurs_[id_r].move(neutraliseur.get_forme());
+            if(contact(reparateurs_[id_r])) {
+                reparateurs_[id_r].set_forme(forme);
+            }
+            reparateurs_[id_r].set_job(true);
+        }
+        distance_minimale = 5 * dmax;
+    }
+    for(auto& reparateur : reparateurs_) {
+        reparateur.set_job(false);
     }
 }
 
@@ -84,6 +120,30 @@ std::vector<Particule> tri_particules(std::vector<Particule>& p) {
     return p;
 }
 
+bool Simulation::contact(Mobile& robot) {
+    for(auto& particule : particules_) {
+        if(superposition(particule.get_forme(),
+                         robot.get_forme(), true)) {
+            return true;
+        }
+    }
+    for(auto& neutraliseur : neutraliseurs_) {
+        if(superposition(neutraliseur.get_forme(),
+                         robot.get_forme(), true)
+                         and neutraliseur.get_forme() != robot.get_forme()) {
+            return true;
+        }
+    }
+    for(auto& reparateur : reparateurs_) {
+        if(superposition(reparateur.get_forme(),
+                         robot.get_forme(), true)
+                         and reparateur.get_forme() != robot.get_forme()) {
+            return true;
+        }
+    }
+    return false;
+}
+
 void Simulation::update_neutraliseurs() {
     double distance_minimale(5 * dmax);
     int id_n(-1);
@@ -122,24 +182,8 @@ void Simulation::update_neutraliseurs() {
                 Cercle forme = neutraliseurs_[id_n].get_forme();
                 neutraliseurs_[id_n].turn(particules_[id_p].get_forme());
                 neutraliseurs_[id_n].move(particules_[id_p].get_forme());
-                for(auto& particule : particules_) {
-                    if(superposition(particule.get_forme(),
-                                     neutraliseurs_[id_n].get_forme(), true)) {
-                        neutraliseurs_[id_n].set_forme(forme);
-                    }
-                }
-                for(int i = 0; i < neutraliseurs_.size(); i++) {
-                    if(superposition(neutraliseurs_[i].get_forme(),
-                                     neutraliseurs_[id_n].get_forme(), true)
-                                     and i != id_n) {
-                        neutraliseurs_[id_n].set_forme(forme);
-                    }
-                }
-                for(auto& reparateur : reparateurs_) {
-                    if(superposition(reparateur.get_forme(),
-                                     neutraliseurs_[id_n].get_forme(), true)) {
-                        neutraliseurs_[id_n].set_forme(forme);
-                    }
+                if(contact(neutraliseurs_[id_n])) {
+                    neutraliseurs_[id_n].set_forme(forme);
                 }
                 neutraliseurs_[id_n].set_job(true);
                 particules_[id_p].set_target(true);

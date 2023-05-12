@@ -96,7 +96,12 @@ void Reparateur::draw() const {
 }
 
 void Reparateur::move(Cercle cible) {
-
+    S2d direction = cible.centre - forme_.centre;
+    S2d direction_normalisee;
+    direction_normalisee.x = direction.x / direction.norme();
+    direction_normalisee.y = direction.y / direction.norme();
+    forme_.centre.x += direction_normalisee.x * vtran_max;
+    forme_.centre.y += direction_normalisee.y * vtran_max;
 }
 
 void Neutraliseur::turn(Carre cible) {
