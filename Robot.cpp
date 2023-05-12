@@ -109,12 +109,15 @@ void Neutraliseur::turn(Carre cible) {
     if((coordination_ == 0) or (coordination_ == 2)) {
         direction = cible.centre - forme_.centre;
     } else {
-        direction = direction_type1(this, cible);
+        direction = direction_type1(this, cible) -forme_.centre;
     }
     double angle_direction(atan2(direction.y, direction.x));
     double delta_angle(angle_direction - angle_);
     normalise_delta(delta_angle);
+    cout << endl << "ANGLE robot: " << angle_ << endl;
+    cout << "Angle direction: " << angle_direction << endl;
     if(abs(delta_angle) <= vrot_*delta_t){
+        cout << "delta_a <= vrot: " << delta_angle << " <= " << vrot_*delta_t << endl;
         angle_ = angle_direction;
     } else {
         angle_ += ((delta_angle > 0)? 1. : -1.)*vrot_*delta_t;
@@ -126,7 +129,7 @@ void Neutraliseur::move(Carre cible) {
     if((coordination_ == 0) or (coordination_ == 2)) {
         direction = cible.centre - forme_.centre;
     } else {
-        direction = direction_type1(this, cible);
+        direction = direction_type1(this, cible) - forme_.centre;
     }
     double angle_direction(atan2(direction.y, direction.x));
     double delta_angle(angle_direction - angle_);
@@ -144,6 +147,7 @@ void Neutraliseur::move(Carre cible) {
             break;
         }
         case 1:
+            cout << endl << "Delta Angle: " << delta_angle << endl;
             if(abs(delta_angle) < epsil_alignement){
                 forme_.centre.x += vect_angle.x * vtran_ * delta_t;
                 forme_.centre.y += vect_angle.y * vtran_ * delta_t;
@@ -160,24 +164,50 @@ void Neutraliseur::move(Carre cible) {
 
 S2d direction_type1(Neutraliseur* N, Carre cible){
     S2d direction; //vecteur qui dicte ou il faut viser
+    direction.x = cible.centre.x;
+    direction.y = cible.centre.y;
+    double cote_sup(cible.cote*risk_factor/2 + r_neutraliseur);
+    vector<S2d> proj(4); //Projections du robot sur chacune de 4 droites possibles
+    proj[0].x = N->get_forme().centre.x;
+    proj[0].y = cible.centre.y + cote_sup;
+    proj[1].x = N->get_forme().centre.x;
+    proj[1].y = cible.centre.y - cote_sup;
+    proj[2].x = cible.centre.x + cote_sup;
+    proj[2].y = N->get_forme().centre.y;
+    proj[3].x = cible.centre.x - cote_sup;
+    proj[3].y = N->get_forme().centre.y;
+
+    S2d proj_proche(proj[0]);
+
+    for(auto projection: proj){ //savoir quelle est la projection la plus proche
+        S2d test(N->get_forme().centre - projection);
+        if(test.norme() < proj_proche.norme()){
+            proj_proche = test;
+        }
+    }
+    //Il reste à savoir lequel des 2 points possibles sur la droite est le plus proche
+    if()
+
+
+
+
+    /*
     double diff_x(cible.centre.x - N->get_forme().centre.x);
     double diff_y(cible.centre.y - N->get_forme().centre.y);
-    double carre_imaginaire(cible.cote*risk_factor/2 + r_neutraliseur);
-    if((abs(diff_x) > carre_imaginaire) or (abs(diff_y) > carre_imaginaire)){
+    double cote_sup(cible.cote*risk_factor/2 + r_neutraliseur);
+    if((abs(diff_x) > cote_sup) or (abs(diff_y) > cote_sup)){
         if (diff_x > 0) { //Particule est sur la gauche
-            direction.x = cible.centre.x - carre_imaginaire;
+            direction.x = cible.centre.x - cote_sup;
         } else { //Particule à droite
-            direction.x = cible.centre.x + carre_imaginaire;
+            direction.x = cible.centre.x + cote_sup;
         }
         if (diff_y > 0) { //Particule est en bas
-            direction.y = cible.centre.y - carre_imaginaire;
+            direction.y = cible.centre.y - cote_sup;
         } else { //Particule en haut
-            direction.y = cible.centre.y + carre_imaginaire;
+            direction.y = cible.centre.y + cote_sup;
         }
-    } else {
-        direction.x = cible.centre.x;
-        direction.y = cible.centre.y;
     }
+     */
     return direction;
 }
 
@@ -192,7 +222,7 @@ double normalise_delta(double& delta_angle){
 
 double choix_vrot(double& delta_angle){
     double vrot(vrot_max);
-    if(abs(delta_angle) < M_PI/6){
+    if(abs(delta_angle) < M_PI/12){
         vrot = vrot_max/2;
     }
     return vrot;
