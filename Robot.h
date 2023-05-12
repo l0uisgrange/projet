@@ -43,6 +43,7 @@ public:
     int get_k_update_panne() const { return k_update_panne_; }
     int get_nbUpdate() const { return nbUpdate_; }
     bool get_panne() const { return panne_; }
+    double get_angle() const { return angle_; }
     void draw() const override;
     void turn(Carre cible);
     void move(Carre cible);
@@ -94,6 +95,7 @@ public:
     int get_nbRr() const { return nbRr_; }
     int get_nbRs() const { return nbRs_; }
     std::string get_info() const;
+    void set_nbRr(int nb) { nbRr_ = nb; }
     bool hors_domaine() const;
     static int assigner_cible(const std::vector<Neutraliseur>& neutraliseurs, const Particule& particule);
     void draw() const override;

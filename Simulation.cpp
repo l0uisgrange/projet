@@ -24,7 +24,8 @@ void Simulation::update() {
 
 void Simulation::destroy_neutraliseurs() {
     for(int i = 0; i < neutraliseurs_.size(); i++) {
-        if(neutraliseurs_[i].get_panne() and spatial_.get_update() - neutraliseurs_[i].get_k_update_panne() >= max_update) {
+        if(neutraliseurs_[i].get_panne() and spatial_.get_update() -
+        neutraliseurs_[i].get_k_update_panne() >= max_update) {
             Neutraliseur n(neutraliseurs_[i]);
             neutraliseurs_[i] = neutraliseurs_[neutraliseurs_.size()];
             neutraliseurs_.pop_back();
@@ -63,7 +64,17 @@ void Simulation::update_reparateurs() {
         distance_minimale = 5 * dmax;
     }
     for(auto& reparateur : reparateurs_) {
-        reparateur.set_job(false);
+        if(!reparateur.has_job()) {
+            reparateur.move(spatial_.get_forme());
+            S2d vecteur_distance = reparateur.get_forme().centre - spatial_.get_forme().centre;
+            double distance = vecteur_distance.norme();
+            if(distance <= r_spatial) {
+                spatial_.set_nbRs(spatial_.get_nbRs() - 1);
+                spatial_.set_nbRr(spatial_.get_nbRr() + 1);
+            }
+        } else {
+            reparateur.set_job(false);
+        }
     }
 }
 
@@ -131,6 +142,10 @@ bool Simulation::contact(Mobile& robot) {
         if(superposition(neutraliseur.get_forme(),
                          robot.get_forme(), true)
                          and neutraliseur.get_forme() != robot.get_forme()) {
+            if(robot.get_forme().rayon == r_reparateur and neutraliseur.get_panne()) {
+                neutraliseur.set_panne(false);
+                robot.set_job(false);
+            }
             return true;
         }
     }
@@ -145,20 +160,29 @@ bool Simulation::contact(Mobile& robot) {
 }
 
 void Simulation::update_neutraliseurs() {
-    double distance_minimale(5 * dmax);
-    int id_n(-1);
-    int id_p(-1);
+    double distance_minimale;
+    int id_n;
+    int id_p;
+    bool var;
     for(int p = 0; p < particules_.size(); p++) {
-        start:
+        if(particules_[p].is_target()) {
+            continue;
+        }
+        var = true;
+        while(var) {
             distance_minimale = 5 * dmax;
             id_n = -1;
             for(int n = 0; n < neutraliseurs_.size(); n++) {
                 if(!neutraliseurs_[n].has_job() and !neutraliseurs_[n].get_panne()) {
                     S2d vecteur_distance = neutraliseurs_[n].get_forme().centre
                             - particules_[p].get_forme().centre;
-                    double distance = vecteur_distance.norme();
-                    if(distance < distance_minimale) {
-                        distance_minimale = distance;
+                    double distance_temps = vecteur_distance.norme() * vtran_max;
+                    double angle_direction(atan2(vecteur_distance.y, vecteur_distance.x));
+                    double delta_angle(angle_direction - neutraliseurs_[n].get_angle());
+                    normalise_delta(delta_angle);
+                    distance_temps += delta_angle / vrot_max;
+                    if(distance_temps < distance_minimale) {
+                        distance_minimale = distance_temps;
                         id_n = n;
                     }
                 }
@@ -188,9 +212,14 @@ void Simulation::update_neutraliseurs() {
                 neutraliseurs_[id_n].set_job(true);
                 particules_[id_p].set_target(true);
                 if(id_p != p) {
-                    goto start; // recommence la recherche
+                    var = true;
+                } else {
+                    var = false;
                 }
+            } else {
+                var = false;
             }
+        }
     }
     for(auto& neutraliseur : neutraliseurs_) {
         neutraliseur.set_job(false);
@@ -351,7 +380,7 @@ void Simulation::erreurs_construction() {
     if(spatial_.hors_domaine()) {
         dessiner_ = false;
     }
-    for(auto N : neutraliseurs_) {
+    for(const auto& N : neutraliseurs_) {
         if(N.get_k_update_panne() > N.get_nbUpdate()) {
             cout << message::invalid_k_update(N.get_forme().centre.x,
                               N.get_forme().centre.y,

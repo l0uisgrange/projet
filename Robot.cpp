@@ -98,10 +98,15 @@ void Reparateur::draw() const {
 void Reparateur::move(Cercle cible) {
     S2d direction = cible.centre - forme_.centre;
     S2d direction_normalisee;
-    direction_normalisee.x = direction.x / direction.norme();
-    direction_normalisee.y = direction.y / direction.norme();
-    forme_.centre.x += direction_normalisee.x * vtran_max;
-    forme_.centre.y += direction_normalisee.y * vtran_max;
+    double distance = direction.norme();
+    direction_normalisee.x = direction.x / distance;
+    direction_normalisee.y = direction.y / distance;
+    double vitesse = vtran_max;
+    if(distance < r_neutraliseur) {
+        vitesse = vtran_max / 2;
+    }
+    forme_.centre.x += direction_normalisee.x * vitesse * delta_t;
+    forme_.centre.y += direction_normalisee.y * vitesse * delta_t;
 }
 
 void Neutraliseur::turn(Carre cible) {
@@ -114,10 +119,7 @@ void Neutraliseur::turn(Carre cible) {
     double angle_direction(atan2(direction.y, direction.x));
     double delta_angle(angle_direction - angle_);
     normalise_delta(delta_angle);
-    cout << endl << "ANGLE robot: " << angle_ << endl;
-    cout << "Angle direction: " << angle_direction << endl;
     if(abs(delta_angle) <= vrot_*delta_t){
-        cout << "delta_a <= vrot: " << delta_angle << " <= " << vrot_*delta_t << endl;
         angle_ = angle_direction;
     } else {
         angle_ += ((delta_angle > 0)? 1. : -1.)*vrot_*delta_t;
@@ -163,52 +165,19 @@ void Neutraliseur::move(Carre cible) {
 }
 
 S2d direction_type1(Neutraliseur* N, Carre cible){
-    S2d direction; //vecteur qui dicte ou il faut viser
-    direction.x = cible.centre.x;
-    direction.y = cible.centre.y;
-    double cote_sup(cible.cote*risk_factor/2 + r_neutraliseur);
-    vector<S2d> proj(4); //Projections du robot sur chacune de 4 droites possibles
-    proj[0].x = N->get_forme().centre.x;
-    proj[0].y = cible.centre.y + cote_sup;
-    proj[1].x = N->get_forme().centre.x;
-    proj[1].y = cible.centre.y - cote_sup;
-    proj[2].x = cible.centre.x + cote_sup;
-    proj[2].y = N->get_forme().centre.y;
-    proj[3].x = cible.centre.x - cote_sup;
-    proj[3].y = N->get_forme().centre.y;
+    vector<S2d> points;
+    for(int i = 0; i < 8; i++) {
 
-    S2d proj_proche(proj[0]);
-
-    for(auto projection: proj){ //savoir quelle est la projection la plus proche
-        S2d test(N->get_forme().centre - projection);
-        if(test.norme() < proj_proche.norme()){
-            proj_proche = test;
+    }
+    S2d point_choisi;
+    double distance_minimale = 5 * dmax;
+    for(auto& point : points) {
+        S2d vecteur_distance = point - N->get_forme().centre;
+        double distance = vecteur_distance.norme();
+        if(distance < distance_minimale) {
+            return point_choisi;
         }
     }
-    //Il reste à savoir lequel des 2 points possibles sur la droite est le plus proche
-    if()
-
-
-
-
-    /*
-    double diff_x(cible.centre.x - N->get_forme().centre.x);
-    double diff_y(cible.centre.y - N->get_forme().centre.y);
-    double cote_sup(cible.cote*risk_factor/2 + r_neutraliseur);
-    if((abs(diff_x) > cote_sup) or (abs(diff_y) > cote_sup)){
-        if (diff_x > 0) { //Particule est sur la gauche
-            direction.x = cible.centre.x - cote_sup;
-        } else { //Particule à droite
-            direction.x = cible.centre.x + cote_sup;
-        }
-        if (diff_y > 0) { //Particule est en bas
-            direction.y = cible.centre.y - cote_sup;
-        } else { //Particule en haut
-            direction.y = cible.centre.y + cote_sup;
-        }
-    }
-     */
-    return direction;
 }
 
 double normalise_delta(double& delta_angle){
