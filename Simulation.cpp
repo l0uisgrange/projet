@@ -137,6 +137,11 @@ bool Simulation::contact(Mobile& robot) {
     for(auto& particule : particules_) {
         if(superposition(particule.get_forme(),
                          robot.get_forme(), true)) {
+            if(robot.get_forme().rayon == r_neutraliseur) {
+                robot.set_collision(true);
+            } else {
+                robot.set_collision(false);
+            }
             return true;
         }
     }
@@ -144,7 +149,8 @@ bool Simulation::contact(Mobile& robot) {
         if(superposition(neutraliseur.get_forme(),
                          robot.get_forme(), true)
                          and neutraliseur.get_forme() != robot.get_forme()) {
-            if(robot.get_forme().rayon == r_reparateur and neutraliseur.get_panne()) {
+            if(robot.get_forme().rayon == r_reparateur and neutraliseur.get_panne()
+            and robot.has_job()) {
                 neutraliseur.set_panne(false);
                 robot.set_job(false);
             }

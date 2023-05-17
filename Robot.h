@@ -27,11 +27,13 @@ public:
     virtual Cercle get_forme() const { return forme_; }
     virtual void set_job(bool b) { job_ = b; }
     virtual bool has_job() const { return job_; }
+    virtual void set_collision(bool b) { collision_ = b; }
 protected:
     void draw() const override {};
 private:
     Cercle forme_;
     bool job_;
+    bool collision_;
 };
 
 class Neutraliseur : public Mobile {
@@ -50,6 +52,7 @@ public:
     std::string get_info() const;
     void set_panne(bool panne) {panne_ = panne;}
     void set_k_update_panne(int update);
+    void set_collision(bool b) override { collision_ = b; }
     void set_forme(Cercle c) override { forme_ = c; }
     void set_job(bool b) override { job_ = b; }
     bool has_job() const override { return job_; }
@@ -58,6 +61,7 @@ private:
     Cercle forme_;
     double angle_;
     bool panne_;
+    bool collision_;
     int coordination_;
     double vrot_ = vrot_max;
     double vtran_ = vtran_max;
