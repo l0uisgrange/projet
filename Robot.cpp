@@ -50,7 +50,7 @@ bool Spatial::hors_domaine() const {
 
 Neutraliseur::Neutraliseur(S2d position, double angle, int coordination, bool panne,
                            int k_update_panne, int nbUpdate)
-    : angle_(angle), panne_(panne), coordination_(coordination),
+    : angle_(angle), collision_(false), panne_(panne), coordination_(coordination),
     k_update_panne_(k_update_panne), nbUpdate_(nbUpdate), job_(false) {
     forme_.centre.x = position.x;
     forme_.centre.y = position.y;
@@ -59,6 +59,9 @@ Neutraliseur::Neutraliseur(S2d position, double angle, int coordination, bool pa
 
 void Neutraliseur::draw() const {
     Couleurs couleur(NOIR);
+    if(collision_) {
+        couleur = VIOLET;
+    }
     if(panne_) {
         couleur = ORANGE;
     }
@@ -128,7 +131,7 @@ void Neutraliseur::turn(Carre cible) {
 
 void Neutraliseur::move(Carre cible) {
     S2d direction;
-    if((coordination_ == 0) or (coordination_ == 2)) {
+    if(coordination_ == 0 or coordination_ == 2) {
         direction = cible.centre - forme_.centre;
     } else {
         direction = direction_type1(this, cible) - forme_.centre;
@@ -149,8 +152,7 @@ void Neutraliseur::move(Carre cible) {
             break;
         }
         case 1:
-            cout << endl << "Delta Angle: " << delta_angle << endl;
-            if(abs(delta_angle) < epsil_alignement){
+            if(abs(delta_angle) < epsil_alignement) {
                 forme_.centre.x += vect_angle.x * vtran_ * delta_t;
                 forme_.centre.y += vect_angle.y * vtran_ * delta_t;
             }
@@ -164,10 +166,21 @@ void Neutraliseur::move(Carre cible) {
     }
 }
 
-S2d direction_type1(Neutraliseur* N, Carre cible){
+S2d direction_type1(Neutraliseur* N, Carre cible) {
     vector<S2d> points;
-    for(int i = 0; i < 8; i++) {
-
+    double angle_decallage = atan((cible.cote*risk_factor/2.0)/(cible.cote/2.0));
+    """donne moi le point le plus proche du neutraliseur, situé sur le carre de centre cible.centre et de coté cible.cote*risk_factor. ce point doit etre sur une des 8 droites qui forment le carre de cible"""
+    for(int i = 0; i < 4; i++) {
+        S2d point;
+        point.x = cible.centre.x + cible.cote*risk_factor/2.0 * cos(i * M_PI/2.0 + angle_decallage);
+        point.y = cible.centre.y + cible.cote*risk_factor/2.0 * sin(i * M_PI/2.0 + angle_decallage);
+        points.push_back(point);
+    }
+    for(int i = 0; i < 4; i++) {
+        S2d point;
+        point.x = cible.centre.x + cible.cote*risk_factor/2.0 * cos(i * M_PI/2.0 + M_PI-angle_decallage);
+        point.y = cible.centre.y + cible.cote*risk_factor/2.0 * sin(i * M_PI/2.0 + M_PI-angle_decallage);
+        points.push_back(point);
     }
     S2d point_choisi;
     double distance_minimale = 5 * dmax;
@@ -175,9 +188,10 @@ S2d direction_type1(Neutraliseur* N, Carre cible){
         S2d vecteur_distance = point - N->get_forme().centre;
         double distance = vecteur_distance.norme();
         if(distance < distance_minimale) {
-            return point_choisi;
+            point_choisi = point;
         }
     }
+    return point_choisi;
 }
 
 double normalise_delta(double& delta_angle){
