@@ -62,5 +62,5 @@ void superposition_P(std::vector<Carre>& tab1, Simulation* sim);
 void superposition_P_R_N(std::vector<Cercle>& tab1, std::vector<Carre>& tab2,
                          Simulation* sim);
 std::vector<Particule> tri_particules(std::vector<Particule>& particules);
-
+void alignement_particule(Carre &cible, Mobile &robot);
 #endif

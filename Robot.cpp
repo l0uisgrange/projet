@@ -50,7 +50,7 @@ bool Spatial::hors_domaine() const {
 
 Neutraliseur::Neutraliseur(S2d position, double angle, int coordination, bool panne,
                            int k_update_panne, int nbUpdate)
-    : angle_(angle), collision_(false), panne_(panne), coordination_(coordination),
+    : angle_(angle), panne_(panne), collision_(false), coordination_(coordination),
     k_update_panne_(k_update_panne), nbUpdate_(nbUpdate), job_(false) {
     forme_.centre.x = position.x;
     forme_.centre.y = position.y;
@@ -152,7 +152,6 @@ void Neutraliseur::move(Carre cible) {
             break;
         }
         case 1:
-            cout << endl << "Delta Angle: " << delta_angle << endl;
             if(abs(delta_angle) < epsil_alignement){
                 forme_.centre.x += vect_angle.x * vtran_ * delta_t;
                 forme_.centre.y += vect_angle.y * vtran_ * delta_t;
