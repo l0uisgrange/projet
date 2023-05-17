@@ -27,7 +27,7 @@ void Simulation::destroy_neutraliseurs() {
         if(neutraliseurs_[i].get_panne() and spatial_.get_update() -
         neutraliseurs_[i].get_k_update_panne() >= max_update) {
             Neutraliseur n(neutraliseurs_[i]);
-            neutraliseurs_[i] = neutraliseurs_[neutraliseurs_.size()];
+            neutraliseurs_[i] = neutraliseurs_[neutraliseurs_.size() - 1];
             neutraliseurs_.pop_back();
         }
     }
@@ -63,17 +63,19 @@ void Simulation::update_reparateurs() {
         }
         distance_minimale = 5 * dmax;
     }
-    for(auto& reparateur : reparateurs_) {
-        if(!reparateur.has_job()) {
-            reparateur.move(spatial_.get_forme());
-            S2d vecteur_distance = reparateur.get_forme().centre - spatial_.get_forme().centre;
+    for(int i = 0; i < reparateurs_.size(); i++) {
+        if(!reparateurs_[i].has_job()) {
+            reparateurs_[i].move(spatial_.get_forme());
+            S2d vecteur_distance = reparateurs_[i].get_forme().centre - spatial_.get_forme().centre;
             double distance = vecteur_distance.norme();
             if(distance <= r_spatial) {
                 spatial_.set_nbRs(spatial_.get_nbRs() - 1);
                 spatial_.set_nbRr(spatial_.get_nbRr() + 1);
+                reparateurs_[i] = reparateurs_[reparateurs_.size() - 1];
+                reparateurs_.pop_back();
             }
         } else {
-            reparateur.set_job(false);
+            reparateurs_[i].set_job(false);
         }
     }
 }

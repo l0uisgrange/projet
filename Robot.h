@@ -95,12 +95,13 @@ public:
     int get_nbRr() const { return nbRr_; }
     int get_nbRs() const { return nbRs_; }
     std::string get_info() const;
-    void set_nbRr(int nb) { nbRr_ = nb; }
     bool hors_domaine() const;
     static int assigner_cible(const std::vector<Neutraliseur>& neutraliseurs, const Particule& particule);
     void draw() const override;
     void clear();
     void set_update(int update);
+    void set_nbRr(int nb) { nbRr_ = nb; }
+    void set_nbRs(int nb) { nbRs_ = nb; }
     ~Spatial() override = default;
 private:
     Cercle forme_;

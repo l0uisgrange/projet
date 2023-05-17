@@ -255,7 +255,7 @@ void Window::start_button_clicked() {
         minuteur_ = true;
         sigc::slot<bool()> my_slot = sigc::bind(sigc::mem_fun(*this,
                                                               &Window::on_timeout));
-        auto conn = Glib::signal_timeout().connect(my_slot, int(delta_t*1000));
+        auto conn = Glib::signal_timeout().connect(my_slot, int(delta_t*500));
         start_button_.set_label("stop");
     }
 }
