@@ -105,6 +105,7 @@ void Reparateur::move(Cercle cible) {
     direction_normalisee.x = direction.x / distance;
     direction_normalisee.y = direction.y / distance;
     double vitesse = vtran_max;
+
     if(distance < r_neutraliseur) {
         vitesse = vtran_max / 2;
     }
@@ -145,7 +146,7 @@ void Neutraliseur::move(Carre cible) {
     vect_angle.y = sin(angle_);
     switch(coordination_) {
         case 0: {
-            if(abs(delta_angle) < epsil_alignement) {
+            if((abs(delta_angle) < epsil_alignement) or (collision_)) { //collision important sinon il bouge pas et on a pas de superposition
                 forme_.centre.x += vect_angle.x * vtran_ * delta_t;
                 forme_.centre.y += vect_angle.y * vtran_ * delta_t;
             }
@@ -169,7 +170,6 @@ void Neutraliseur::move(Carre cible) {
 S2d direction_type1(Neutraliseur* N, Carre cible) {
     vector<S2d> points;
     double angle_decallage = atan((cible.cote*risk_factor/2.0)/(cible.cote/2.0));
-    """donne moi le point le plus proche du neutraliseur, situé sur le carre de centre cible.centre et de coté cible.cote*risk_factor. ce point doit etre sur une des 8 droites qui forment le carre de cible"""
     for(int i = 0; i < 4; i++) {
         S2d point;
         point.x = cible.centre.x + cible.cote*risk_factor/2.0 * cos(i * M_PI/2.0 + angle_decallage);

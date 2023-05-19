@@ -28,8 +28,8 @@ public:
     virtual void set_job(bool b) { job_ = b; }
     virtual bool has_job() const { return job_; }
     virtual void set_collision(bool b) { collision_ = b; }
-    virtual void turn(Carre cible);
-    virtual double get_angle() const;
+    virtual void turn(Carre cible) {};
+    virtual double get_angle() const { return 0.0; }
 protected:
     void draw() const override {};
 private:

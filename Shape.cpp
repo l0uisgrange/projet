@@ -72,7 +72,7 @@ bool superposition(Carre const& c1, Cercle const& c2, bool epsil) {
             return false;
         } else {
             if ((abs(C1C2.x) < (c1.cote/2 + c2.rayon + epsil_zero))
-                and abs(C1C2.y) < c1.cote/2 + c2.rayon + epsil_zero) {
+                and abs(C1C2.y) < (c1.cote/2 + c2.rayon + epsil_zero)) {
                 return true;
             }
         }

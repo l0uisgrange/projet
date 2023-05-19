@@ -133,26 +133,16 @@ std::vector<Particule> tri_particules(std::vector<Particule>& p) {
     return p;
 }
 
-void alignement_particule(Carre &cible, Mobile &robot) {
-    double angle_directeur(fmod(robot.get_angle(),(M_PI)/2));
-    Carre new_cible(cible);
-    if(angle_directeur > M_PI/4) { //s'aligner avec axe y
-        new_cible.centre.x = robot.get_forme().centre.x + r_neutraliseur;
-        new_cible.centre.y = robot.get_forme().centre.y;
-        robot.turn(new_cible);
-    } else { //s'aligner avec axe x
-        new_cible.centre.x = robot.get_forme().centre.x;
-        new_cible.centre.y = robot.get_forme().centre.y + r_neutraliseur;
-    }
-}
-
 bool Simulation::contact(Mobile& robot) {
-    for(auto& particule : particules_) {
-        if(superposition(particule.get_forme(),
+    for(int i(0); i < particules_.size(); ++i) {
+        if(superposition(particules_[i].get_forme(),
                          robot.get_forme(), true)) {
             if(robot.get_forme().rayon == r_neutraliseur) {
                 robot.set_collision(true);
-                alignement_particule(particule.get_forme(), robot);
+                if(alignement_particule(particules_[i].get_forme(), robot)){
+                    particules_[i]=particules_[-1];
+                    particules_.pop_back();
+                }
             } else {
                 robot.set_collision(false);
             }
@@ -178,7 +168,47 @@ bool Simulation::contact(Mobile& robot) {
             return true;
         }
     }
+    robot.set_collision(false);
     return false;
+}
+
+bool alignement_particule(Carre &cible, Mobile &robot) {
+    double angle_directeur(fmod(robot.get_angle(), M_PI/2));
+    int quadrant(choix_quadrant(robot.get_angle()));
+    Carre new_cible(cible);
+    new_cible.centre = robot.get_forme().centre;
+    switch (quadrant) {
+        case 1: {
+            if(angle_directeur < M_PI/4) {new_cible.centre.x += r_neutraliseur;}
+            else{new_cible.centre.y += r_neutraliseur;}
+        }
+        case 2:
+            if(angle_directeur < M_PI/4) {new_cible.centre.x += r_neutraliseur;}
+            else{new_cible.centre.y -= r_neutraliseur;}
+        case 3:
+            if(angle_directeur > -M_PI/4) {new_cible.centre.y -= r_neutraliseur;}
+            else{new_cible.centre.x -= r_neutraliseur;}
+        case 4:
+            if(angle_directeur > -M_PI/4) {new_cible.centre.x += r_neutraliseur;}
+            else{new_cible.centre.y -= r_neutraliseur;}
+    }
+    robot.turn(new_cible);
+    if(fmod(abs(robot.get_angle()), M_PI/2) < epsil_alignement){
+        robot.set_collision(false);
+        return true;
+    }
+    return false;
+}
+
+int choix_quadrant(double angle){
+    if(angle > 0) {
+        if(angle < M_PI/2) { return 1;}
+        else { return 2;}
+    } else {
+        if(angle > -M_PI/2) {return 4;}
+        else{ return 3;}
+    }
+    return 0;
 }
 
 void Simulation::update_neutraliseurs() {
@@ -226,6 +256,7 @@ void Simulation::update_neutraliseurs() {
                     }
                 }
                 Cercle forme = neutraliseurs_[id_n].get_forme();
+                cout << endl << "timer:  " << spatial_.get_update() << endl;
                 if(!neutraliseurs_[id_n].get_collision()) {
                     neutraliseurs_[id_n].turn(particules_[id_p].get_forme());
                 }
@@ -456,12 +487,17 @@ void init_Spatial(const string& line, Etat& etape, Simulation* sim) {
 void init_Reparateur(const string& line, Etat& etape, Simulation* sim) {
     istringstream ligne(line);
     S2d position;
+    if(sim->get_spatial().get_nbRs() == 0){
+        etape = NEUTRALISEUR;
+        init_Neutraliseur(line, sim);
+        return;
+    }
     if(ligne >> position.x >> position.y) {
-        Reparateur R(position);
-        sim->add_reparateur(R);
-        if(int(sim->get_reparateurs().size()) == sim->get_spatial().get_nbRs()) {
+        if(int(sim->get_reparateurs().size()+1) == sim->get_spatial().get_nbRs()){
             etape = NEUTRALISEUR;
         }
+        Reparateur R(position);
+        sim->add_reparateur(R);
     } else {
         sim->set_dessiner(false);
     }
