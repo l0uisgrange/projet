@@ -114,10 +114,17 @@ void Reparateur::move(Cercle cible) {
 
 void Neutraliseur::turn(Carre cible) {
     S2d direction;
-    if((coordination_ == 0) or (coordination_ == 2)) {
-        direction = cible.centre - forme_.centre;
+    if(coordination_ == 1) {
+        Carre zone_danger_large;
+        zone_danger_large.centre = cible.centre;
+        zone_danger_large.cote = cible.cote * risk_factor + r_neutraliseur + 1;
+        if(superposition(zone_danger_large, this->forme_)) {
+            direction = cible.centre - forme_.centre;
+        } else {
+            direction = direction_type1(this, cible) - forme_.centre;
+        }
     } else {
-        direction = direction_type1(this, cible) -forme_.centre;
+        direction = cible.centre - forme_.centre;
     }
     double angle_direction(atan2(direction.y, direction.x));
     double delta_angle(angle_direction - angle_);
@@ -131,10 +138,14 @@ void Neutraliseur::turn(Carre cible) {
 
 void Neutraliseur::move(Carre cible) {
     S2d direction;
-    if(coordination_ == 0 or coordination_ == 2) {
-        direction = cible.centre - forme_.centre;
+    if(coordination_ == 1) {
+        if() {
+            direction = cible.centre - forme_.centre;
+        } else {
+            direction = direction_type1(this, cible) - forme_.centre;
+        }
     } else {
-        direction = direction_type1(this, cible) - forme_.centre;
+        direction = cible.centre - forme_.centre;
     }
     double angle_direction(atan2(direction.y, direction.x));
     double delta_angle(angle_direction - angle_);
@@ -168,33 +179,35 @@ void Neutraliseur::move(Carre cible) {
 
 S2d direction_type1(Neutraliseur* N, Carre cible) {
     vector<S2d> points;
-    double angle_decallage = atan((cible.cote*risk_factor/2.0)/(cible.cote/2.0));
-    """donne moi le point le plus proche du neutraliseur, situé sur le carre de centre cible.centre et de coté cible.cote*risk_factor. ce point doit etre sur une des 8 droites qui forment le carre de cible"""
+    double distance = (cible.cote * risk_factor)/2.0 + r_neutraliseur + epsil_zero;
+    double d = sqrt(pow(distance, 2) + pow(cible.cote/2.0, 2));
+    // On crée les 8 points de la cible (sur la frontière du carré)
     for(int i = 0; i < 4; i++) {
         S2d point;
-        point.x = cible.centre.x + cible.cote*risk_factor/2.0 * cos(i * M_PI/2.0 + angle_decallage);
-        point.y = cible.centre.y + cible.cote*risk_factor/2.0 * sin(i * M_PI/2.0 + angle_decallage);
-        points.push_back(point);
-    }
-    for(int i = 0; i < 4; i++) {
-        S2d point;
-        point.x = cible.centre.x + cible.cote*risk_factor/2.0 * cos(i * M_PI/2.0 + M_PI-angle_decallage);
-        point.y = cible.centre.y + cible.cote*risk_factor/2.0 * sin(i * M_PI/2.0 + M_PI-angle_decallage);
+        point.x = cible.centre.x + d * cos(i * M_PI/2.0);
+        point.y = cible.centre.y + d * sin(i * M_PI/2.0);
         points.push_back(point);
     }
     S2d point_choisi;
-    double distance_minimale = 5 * dmax;
+    double distance_minimale = 15 * dmax;
     for(auto& point : points) {
+        // Calcul du temps pour atteindre le point
         S2d vecteur_distance = point - N->get_forme().centre;
-        double distance = vecteur_distance.norme();
-        if(distance < distance_minimale) {
+        double distance_temps = vecteur_distance.norme()*vtran_max;
+        double angle_direction(atan2(vecteur_distance.y, vecteur_distance.x));
+        double delta_angle(angle_direction - N->get_angle());
+        normalise_delta(delta_angle);
+        distance_temps += delta_angle / vrot_max;
+        if(distance_temps < distance_minimale) {
+            distance_minimale = distance_temps;
             point_choisi = point;
         }
     }
     return point_choisi;
 }
 
-double normalise_delta(double& delta_angle){
+double normalise_delta(double& delta_angle) {
+    delta_angle = fmod(delta_angle, 2*M_PI);
     if(delta_angle > M_PI) {
         delta_angle -= 2*M_PI;
     } else if(delta_angle < -M_PI){
@@ -203,7 +216,7 @@ double normalise_delta(double& delta_angle){
     return delta_angle;
 }
 
-double choix_vrot(double& delta_angle){
+double choix_vrot(double& delta_angle) {
     double vrot(vrot_max);
     if(abs(delta_angle) < M_PI/12){
         vrot = vrot_max/2;
