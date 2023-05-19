@@ -22,6 +22,65 @@ void Simulation::update() {
     update_reparateurs();
 }
 
+void Simulation::update_particules() {
+    vector<Particule> nouvelle_liste;
+    bernoulli_distribution b(desintegration_rate/nbP_);
+    for(auto& particule: particules_) {
+        if(b(e) and particule.get_forme().cote/2.0 - 2*epsil_zero >=
+        d_particule_min + epsil_zero) {
+            // Création des 4 nouvelles particules
+            double rayon = sqrt(2*pow(particule.get_forme().cote/4, 2));
+            for(int i=0; i<4; i++) {
+                Carre c;
+                double angle = M_PI/2.0*i+M_PI/4.0;
+                c.centre.x = particule.get_forme().centre.x + rayon*cos(angle);
+                c.centre.y = particule.get_forme().centre.y + rayon*sin(angle);
+                c.cote = particule.get_forme().cote/2.0 - 2*epsil_zero;
+                nouvelle_liste.emplace_back(c);
+            }
+            Carre explosion(particule.get_forme());
+            explosion.cote *= risk_factor;
+            for(auto& neutraliseur : neutraliseurs_) {
+                if(superposition(explosion, neutraliseur.get_forme())) {
+                    neutraliseur.set_panne(true);
+                    neutraliseur.set_k_update_panne(spatial_.get_update());
+                }
+            }
+        } else {
+            nouvelle_liste.push_back(particule);
+        }
+    }
+    nbP_ = int(nouvelle_liste.size());
+    particules_ = tri_particules(nouvelle_liste);
+}
+
+std::vector<Particule> tri_particules(std::vector<Particule>& p) {
+    // Tri par insertion
+    Carre c;
+    Particule tmp(c);
+    int j;
+    for(int pos(1); pos<p.size(); ++pos) {
+        tmp = p[pos];
+        j = pos;
+        while(j >= 1 and tmp.get_forme().cote > p[j-1].get_forme().cote) {
+            p[j] = p[j-1];
+            --j;
+        }
+        p[j] = tmp;
+    }
+    return p;
+}
+
+void Simulation::destroy_neutraliseurs() {
+    for(int i = 0; i < neutraliseurs_.size(); i++) {
+        if(neutraliseurs_[i].get_panne() and spatial_.get_update() -
+        neutraliseurs_[i].get_k_update_panne() >= max_update) {
+            neutraliseurs_[i] = neutraliseurs_[neutraliseurs_.size() - 1];
+            neutraliseurs_.pop_back();
+        }
+    }
+}
+
 void Simulation::decisions_spatial() {
     if(fmod(spatial_.get_update(), modulo_update) == 0) {
         // Création d'un neutraliseur
@@ -36,17 +95,6 @@ void Simulation::decisions_spatial() {
                     reparateurs_.push_back(nouveau_reparateur);
                 }
             }
-        }
-    }
-}
-
-void Simulation::destroy_neutraliseurs() {
-    for(int i = 0; i < neutraliseurs_.size(); i++) {
-        if(neutraliseurs_[i].get_panne() and spatial_.get_update() -
-        neutraliseurs_[i].get_k_update_panne() >= max_update) {
-            Neutraliseur n(neutraliseurs_[i]);
-            neutraliseurs_[i] = neutraliseurs_[neutraliseurs_.size() - 1];
-            neutraliseurs_.pop_back();
         }
     }
 }
@@ -96,59 +144,6 @@ void Simulation::update_reparateurs() {
             reparateurs_[i].set_job(false);
         }
     }
-}
-
-void Simulation::update_particules() {
-    vector<Particule> nouvelle_liste;
-    bernoulli_distribution b(desintegration_rate/nbP_);
-    for(auto& particule: particules_) {
-        if(particule.get_forme().cote/2.0 - 2*epsil_zero >=
-        d_particule_min + epsil_zero) {
-            if(b(e)) {
-                double rayon = sqrt(2*pow(particule.get_forme().cote/4, 2));
-                for(int i=0; i<4; i++) {
-                    Carre c;
-                    double angle = (90*i+45)*3.14159/180;
-                    c.centre.x = particule.get_forme().centre.x + rayon*cos(angle);
-                    c.centre.y = particule.get_forme().centre.y + rayon*sin(angle);
-                    double cote = particule.get_forme().cote;
-                    c.cote = cote/2.0 - 2*epsil_zero;
-                    Particule new_p(c);
-                    nouvelle_liste.push_back(new_p);
-                }
-                Carre explosion(particule.get_forme());
-                explosion.cote *= risk_factor;
-                for(auto& neutraliseur : neutraliseurs_) {
-                    if(superposition(explosion, neutraliseur.get_forme())) {
-                        neutraliseur.set_panne(true);
-                        neutraliseur.set_k_update_panne(spatial_.get_update());
-                    }
-                }
-            } else {
-                nouvelle_liste.push_back(particule);
-            }
-        } else {
-            nouvelle_liste.push_back(particule);
-        }
-    }
-    nbP_ = int(nouvelle_liste.size());
-    particules_ = tri_particules(nouvelle_liste);
-}
-
-std::vector<Particule> tri_particules(std::vector<Particule>& p) {
-    Carre c;
-    Particule tmp(c);
-    int j;
-    for(int pos(1); pos<p.size(); ++pos) {
-        tmp = p[pos];
-        j = pos;
-        while((j >= 1) and (tmp.get_forme().cote > p[j-1].get_forme().cote)) {
-            p[j] = p[j-1];
-            --j;
-        }
-        p[j] = tmp;
-    }
-    return p;
 }
 
 bool Simulation::contact(Mobile& robot) {
