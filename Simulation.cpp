@@ -121,52 +121,51 @@ bool Simulation::contact(Mobile& robot) {
 }
 
 bool alignement_particule(Carre &cible, Mobile &robot) {
-    double angle_directeur(fmod(robot.get_angle(), M_PI/2));
-    robot.set_vrot(choix_vrot(angle_directeur));
-    double delta_vrot(robot.get_vrot()*delta_t);
     bool coin(is_coin(cible, robot));
     S2d direction(cible.centre - robot.get_forme().centre);
     double angle_direction(atan2(direction.y, direction.x));
     double delta_angle(angle_direction - robot.get_angle());
-    normalise_delta(delta_angle);
-    if(coin) {
-        robot.set_vrot(choix_vrot(delta_angle));
-        robot.turn(cible);
-    } else {
-        if (angle_directeur > 0) {
-            if (angle_directeur > M_PI / 4) {
-                robot.set_angle(robot.get_angle() + delta_vrot);
-            } else {
-                robot.set_angle(robot.get_angle() - delta_vrot);
-            }
-        } else {
-            if (angle_directeur < -M_PI / 4) {
-                robot.set_angle(robot.get_angle() - delta_vrot);
-            } else {
-                robot.set_angle(robot.get_angle() + delta_vrot);
-            }
-        }
+    int quadrant(choix_quadrant(delta_angle));
+    Carre new_cible(cible);
+    new_cible.centre = robot.get_forme().centre;
+    if(coin){
+        new_cible = cible;
     }
+        switch (quadrant) {
+            case 1: {
+                new_cible.centre.y -= r_neutraliseur;
+                break;
+            }
+            case 2:
+                new_cible.centre.x += r_neutraliseur;
+                break;
+            case 3:
+                new_cible.centre.y += r_neutraliseur;
+                break;
+            case 4:
+                new_cible.centre.x -= r_neutraliseur;
+        }
+    robot.turn(new_cible);
 
     if(fmod(abs(robot.get_angle()), M_PI/2) < epsil_alignement and !coin) {
         robot.set_collision(false);
         return true;
     } else if (abs(delta_angle) < epsil_alignement and coin) {
-        cout << "Delta angle: " << delta_angle << endl;
-        cout << "epsil ali: " << epsil_alignement << endl;
          robot.set_collision(false);
         return true;
     }
     return false;
 }
 
-int choix_quadrant(double angle){
-    if(angle > 0) {
-        if(angle < M_PI/2) { return 1;}
-        else { return 2;}
+int choix_quadrant(double angle){ //Pour savoir quelle face on touche
+    if(angle < 3*M_PI/4 and angle >= M_PI/4){
+        return 1;
+    } else if(angle <= M_PI/4 and angle > -M_PI/4){
+        return 2;
+    } else if(angle < -M_PI/4 and angle >= -3*M_PI/4){
+        return 3;
     } else {
-        if(angle > -M_PI/2) {return 4;}
-        else{ return 3;}
+        return 4;
     }
 }
 
