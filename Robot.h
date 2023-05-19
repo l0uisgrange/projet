@@ -85,6 +85,8 @@ public:
     explicit Reparateur(S2d position);
     Cercle get_forme() const override { return forme_; }
     void set_forme(Cercle c) override { forme_ = c; }
+    S2d& get_but() { return but_; }
+    void set_but(S2d n) { but_ = n; }
     void draw() const override;
     void move(Cercle cible);
     void set_job(bool b) override { job_ = b; }
@@ -92,6 +94,7 @@ public:
     virtual ~Reparateur() = default;
 private:
     Cercle forme_;
+    S2d but_;
     bool job_;
 };
 
@@ -109,12 +112,14 @@ public:
     int get_nbRs() const { return nbRs_; }
     std::string get_info() const;
     bool hors_domaine() const;
-    static int assigner_cible(const std::vector<Neutraliseur>& neutraliseurs, const Particule& particule);
     void draw() const override;
     void clear();
     void set_update(int update);
     void set_nbRr(int nb) { nbRr_ = nb; }
     void set_nbRs(int nb) { nbRs_ = nb; }
+    void update(std::vector<Particule>& particules,
+                std::vector<Neutraliseur>& neutraliseurs,
+                std::vector<Reparateur>& reparateurs);
     ~Spatial() override = default;
 private:
     Cercle forme_;

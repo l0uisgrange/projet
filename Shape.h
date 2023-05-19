@@ -17,6 +17,7 @@ enum Etat { NBP, PARTICULE, SPATIAL, REPARATEUR, NEUTRALISEUR };
 
 struct S2d {
     S2d operator-(S2d p) const;
+    bool operator==(S2d p) const;
     double norme() const { return sqrt(pow(x,2)+pow(y,2)); }
     double x = 0.;
     double y = 0.;

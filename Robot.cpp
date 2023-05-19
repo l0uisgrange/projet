@@ -159,20 +159,20 @@ void Neutraliseur::move(Carre cible) {
     vect_angle.y = sin(angle_);
     switch(coordination_) {
         case 0: {
-            if((abs(delta_angle) < epsil_alignement) or (collision_)) { //collision important sinon il bouge pas et on a pas de superposition
+            if(abs(delta_angle) < epsil_alignement or collision_) {
                 forme_.centre.x += vect_angle.x * vtran_ * delta_t;
                 forme_.centre.y += vect_angle.y * vtran_ * delta_t;
             }
             break;
         }
         case 1:
-            if(abs(delta_angle) < epsil_alignement) {
+            if(abs(delta_angle) < epsil_alignement or collision_) {
                 forme_.centre.x += vect_angle.x * vtran_ * delta_t;
                 forme_.centre.y += vect_angle.y * vtran_ * delta_t;
             }
             break;
         case 2:
-            if(abs(delta_angle) < M_PI/3) {
+            if(abs(delta_angle) < M_PI/3 or collision_) {
                 forme_.centre.x += vect_angle.x * vtran_ * delta_t;
                 forme_.centre.y += vect_angle.y * vtran_ * delta_t;
             }
@@ -230,6 +230,82 @@ void Spatial::set_update(int update) {
     nbUpdate_ = update;
 }
 
-int Spatial::assigner_cible(const vector<Neutraliseur>& neutraliseurs, const Particule& particule) {
-    return 0;
+void Spatial::update(vector<Particule> &particules,
+                     vector<Neutraliseur> &neutraliseurs,
+                     vector<Reparateur> &reparateurs) {
+    if(fmod(nbUpdate_, modulo_update) == 0) {
+        // Neutraliseurs en détresse
+        vector<Neutraliseur> neutraliseurs_detresse;
+        for(auto& neutraliseur : neutraliseurs) {
+            if(neutraliseur.get_panne()) {
+                bool est_attribue = false;
+                for(auto& reparateur : reparateurs) {
+                    if(reparateur.get_but() == neutraliseur.get_forme().centre) {
+                        est_attribue = true;
+                    }
+                }
+                if(!est_attribue) {
+                    neutraliseurs_detresse.push_back(neutraliseur);
+                }
+            }
+        }
+        // Création nouveau réparateur
+        for(auto& neutraliseur: neutraliseurs_detresse) {
+            S2d direction = forme_.centre - neutraliseur.get_forme().centre;
+            double angle = atan2(direction.x, direction.y);
+            S2d position;
+            position.x = forme_.centre.x + (r_spatial+r_neutraliseur)*cos(angle);
+            position.y = forme_.centre.y + (r_spatial+r_neutraliseur)*sin(angle);
+            Reparateur r(position);
+        }
+        // Création nouveau neutraliseur
+        if(nbNs_ < 3 and !particules.empty()) {
+
+        }
+    }
+    // Mise à jour buts des réparateurs
+    double distance_minimale(5 * dmax);
+    int id_r(-1);
+    for(const auto& neutraliseur : neutraliseurs_) {
+        if(neutraliseur.get_panne()) {
+            for(int r = 0; r < reparateurs_.size(); r++) {
+                if(reparateurs_[r].has_job()) {
+                    continue;
+                }
+                S2d vecteur_distance = neutraliseur.get_forme().centre
+                        - reparateurs_[r].get_forme().centre;
+                double distance = vecteur_distance.norme();
+                if(distance < distance_minimale
+                   and distance < (max_update - (spatial_.get_update()
+                   - neutraliseur.get_k_update_panne())) * vtran_max) {
+                    id_r = r;
+                    distance_minimale = distance;
+                }
+            }
+        }
+        if(id_r > -1) {
+            Cercle forme = reparateurs_[id_r].get_forme();
+            reparateurs_[id_r].move(neutraliseur.get_forme());
+            if(contact(reparateurs_[id_r])) {
+                reparateurs_[id_r].set_forme(forme);
+            }
+            reparateurs_[id_r].set_job(true);
+        }
+        distance_minimale = 5 * dmax;
+    }
+    for(int i = 0; i < reparateurs_.size(); i++) {
+        if(!reparateurs_[i].has_job()) {
+            reparateurs_[i].move(spatial_.get_forme());
+            S2d vecteur_distance = reparateurs_[i].get_forme().centre - spatial_.get_forme().centre;
+            double distance = vecteur_distance.norme();
+            if(distance <= r_spatial) {
+                spatial_.set_nbRs(spatial_.get_nbRs() - 1);
+                spatial_.set_nbRr(spatial_.get_nbRr() + 1);
+                reparateurs_[i] = reparateurs_[reparateurs_.size() - 1];
+                reparateurs_.pop_back();
+            }
+        } else {
+            reparateurs_[i].set_job(false);
+        }
+    }
 }
