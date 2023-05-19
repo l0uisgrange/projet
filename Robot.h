@@ -28,8 +28,11 @@ public:
     virtual void set_job(bool b) { job_ = b; }
     virtual bool has_job() const { return job_; }
     virtual void set_collision(bool b) { collision_ = b; }
-    virtual void turn(Carre cible) {};
-    virtual double get_angle() const { return 0.0; }
+    virtual void turn(Carre& cible) {};
+    virtual double& get_angle() {}
+    virtual void set_angle(double angle) {}
+    virtual double& get_vrot() {}
+    virtual void set_vrot(double vrot) {}
 protected:
     void draw() const override {};
 private:
@@ -47,16 +50,19 @@ public:
     int get_k_update_panne() const { return k_update_panne_; }
     int get_nbUpdate() const { return nbUpdate_; }
     bool get_panne() const { return panne_; }
-    double get_angle() const override { return angle_; }
+    double& get_angle() override { return angle_; }
+    double& get_vrot() override { return vrot_; }
     bool get_collision() { return collision_; }
     void draw() const override;
-    void turn(Carre cible) override;
+    void turn(Carre& cible) override;
     void move(Carre cible);
     std::string get_info() const;
+    void set_angle(double angle) override {angle_ = angle;}
     void set_panne(bool panne) {panne_ = panne;}
     void set_k_update_panne(int update);
     void set_collision(bool b) override { collision_ = b; }
     void set_forme(Cercle c) override { forme_ = c; }
+    void set_vrot(double vrot) override { vrot_ = vrot; }
     void set_job(bool b) override { job_ = b; }
     bool has_job() const override { return job_; }
     virtual ~Neutraliseur() = default;

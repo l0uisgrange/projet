@@ -112,7 +112,7 @@ void Reparateur::move(Cercle cible) {
     forme_.centre.y += direction_normalisee.y * vitesse * delta_t;
 }
 
-void Neutraliseur::turn(Carre cible) {
+void Neutraliseur::turn(Carre& cible) {
     S2d direction;
     if(coordination_ == 1) {
         Carre zone_danger_large;
@@ -209,8 +209,7 @@ S2d direction_type1(Neutraliseur* N, Carre cible) {
     return point_choisi;
 }
 
-double normalise_delta(double& delta_angle) {
-    delta_angle = fmod(delta_angle, 2*M_PI);
+double normalise_delta(double& delta_angle){
     if(delta_angle > M_PI) {
         delta_angle -= 2*M_PI;
     } else if(delta_angle < -M_PI){
@@ -219,7 +218,7 @@ double normalise_delta(double& delta_angle) {
     return delta_angle;
 }
 
-double choix_vrot(double& delta_angle) {
+double choix_vrot(double& delta_angle){
     double vrot(vrot_max);
     if(abs(delta_angle) < M_PI/12){
         vrot = vrot_max/2;

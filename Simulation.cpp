@@ -140,7 +140,7 @@ bool Simulation::contact(Mobile& robot) {
             if(robot.get_forme().rayon == r_neutraliseur) {
                 robot.set_collision(true);
                 if(alignement_particule(particules_[i].get_forme(), robot)){
-                    particules_[i]=particules_[-1];
+                    particules_[i]=particules_[particules_.size()-1];
                     particules_.pop_back();
                 }
             } else {
@@ -174,27 +174,39 @@ bool Simulation::contact(Mobile& robot) {
 
 bool alignement_particule(Carre &cible, Mobile &robot) {
     double angle_directeur(fmod(robot.get_angle(), M_PI/2));
-    int quadrant(choix_quadrant(robot.get_angle()));
-    Carre new_cible(cible);
-    new_cible.centre = robot.get_forme().centre;
-    switch (quadrant) {
-        case 1: {
-            if(angle_directeur < M_PI/4) {new_cible.centre.x += r_neutraliseur;}
-            else{new_cible.centre.y += r_neutraliseur;}
+    robot.set_vrot(choix_vrot(angle_directeur));
+    double delta_vrot(robot.get_vrot()*delta_t);
+    bool coin(is_coin(cible, robot));
+    S2d direction(cible.centre - robot.get_forme().centre);
+    double angle_direction(atan2(direction.y, direction.x));
+    double delta_angle(angle_direction - robot.get_angle());
+    normalise_delta(delta_angle);
+    if(coin) {
+        robot.set_vrot(choix_vrot(delta_angle));
+        robot.turn(cible);
+    } else {
+        if (angle_directeur > 0) {
+            if (angle_directeur > M_PI / 4) {
+                robot.set_angle(robot.get_angle() + delta_vrot);
+            } else {
+                robot.set_angle(robot.get_angle() - delta_vrot);
+            }
+        } else {
+            if (angle_directeur < -M_PI / 4) {
+                robot.set_angle(robot.get_angle() - delta_vrot);
+            } else {
+                robot.set_angle(robot.get_angle() + delta_vrot);
+            }
         }
-        case 2:
-            if(angle_directeur < M_PI/4) {new_cible.centre.x += r_neutraliseur;}
-            else{new_cible.centre.y -= r_neutraliseur;}
-        case 3:
-            if(angle_directeur > -M_PI/4) {new_cible.centre.y -= r_neutraliseur;}
-            else{new_cible.centre.x -= r_neutraliseur;}
-        case 4:
-            if(angle_directeur > -M_PI/4) {new_cible.centre.x += r_neutraliseur;}
-            else{new_cible.centre.y -= r_neutraliseur;}
     }
-    robot.turn(new_cible);
-    if(fmod(abs(robot.get_angle()), M_PI/2) < epsil_alignement){
+
+    if(fmod(abs(robot.get_angle()), M_PI/2) < epsil_alignement and !coin) {
         robot.set_collision(false);
+        return true;
+    } else if (abs(delta_angle) < epsil_alignement and coin) {
+        cout << "Delta angle: " << delta_angle << endl;
+        cout << "epsil ali: " << epsil_alignement << endl;
+         robot.set_collision(false);
         return true;
     }
     return false;
@@ -208,8 +220,20 @@ int choix_quadrant(double angle){
         if(angle > -M_PI/2) {return 4;}
         else{ return 3;}
     }
-    return 0;
 }
+
+bool is_coin(Carre &cible, Mobile &robot){
+    //distance min dont le robot doit être
+    double rayon_lim(sqrt(pow(cible.cote/2,2) + pow(cible.cote/2+r_neutraliseur,2)));
+    S2d vect_direction(cible.centre - robot.get_forme().centre);
+    double distance_robot(vect_direction.norme());
+    if(rayon_lim > distance_robot){
+        return false;
+    } else {
+        return true;
+    }
+}
+
 
 void Simulation::update_neutraliseurs() {
     double distance_minimale;
