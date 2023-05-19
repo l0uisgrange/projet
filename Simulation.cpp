@@ -133,12 +133,26 @@ std::vector<Particule> tri_particules(std::vector<Particule>& p) {
     return p;
 }
 
+void alignement_particule(Carre &cible, Mobile &robot) {
+    double angle_directeur(fmod(robot.get_angle(),(M_PI)/2));
+    Carre new_cible(cible);
+    if(angle_directeur > M_PI/4) { //s'aligner avec axe y
+        new_cible.centre.x = robot.get_forme().centre.x + r_neutraliseur;
+        new_cible.centre.y = robot.get_forme().centre.y;
+        robot.turn(new_cible);
+    } else { //s'aligner avec axe x
+        new_cible.centre.x = robot.get_forme().centre.x;
+        new_cible.centre.y = robot.get_forme().centre.y + r_neutraliseur;
+    }
+}
+
 bool Simulation::contact(Mobile& robot) {
     for(auto& particule : particules_) {
         if(superposition(particule.get_forme(),
                          robot.get_forme(), true)) {
             if(robot.get_forme().rayon == r_neutraliseur) {
                 robot.set_collision(true);
+                alignement_particule(particule.get_forme(), robot);
             } else {
                 robot.set_collision(false);
             }
@@ -212,7 +226,9 @@ void Simulation::update_neutraliseurs() {
                     }
                 }
                 Cercle forme = neutraliseurs_[id_n].get_forme();
-                neutraliseurs_[id_n].turn(particules_[id_p].get_forme());
+                if(!neutraliseurs_[id_n].get_collision()) {
+                    neutraliseurs_[id_n].turn(particules_[id_p].get_forme());
+                }
                 neutraliseurs_[id_n].move(particules_[id_p].get_forme());
                 if(contact(neutraliseurs_[id_n])) {
                     neutraliseurs_[id_n].set_forme(forme);
@@ -514,7 +530,7 @@ vector<Cercle> Simulation::get_cercles() {
 vector<Carre> Simulation::get_carres() {
     vector<Carre> tab;
     tab.reserve(particules_.size());
-    for(const auto& particule : particules_) {
+    for(auto& particule : particules_) {
         tab.push_back(particule.get_forme());
     }
     return tab;
@@ -534,5 +550,4 @@ void Simulation::draw_simulation() {
     for(const auto &particule: particules_) {
         particule.draw();
     }
-
 }

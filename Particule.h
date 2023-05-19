@@ -16,7 +16,7 @@ class Particule {
 public:
     Particule() = delete;
     explicit Particule(Carre c);
-    Carre get_forme() const { return forme_; }
+    Carre& get_forme() { return forme_; }
     bool too_small();
     bool hors_domaine();
     void draw() const;

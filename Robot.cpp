@@ -50,7 +50,7 @@ bool Spatial::hors_domaine() const {
 
 Neutraliseur::Neutraliseur(S2d position, double angle, int coordination, bool panne,
                            int k_update_panne, int nbUpdate)
-    : angle_(angle), collision_(false), panne_(panne), coordination_(coordination),
+    : angle_(angle), panne_(panne), collision_(false), coordination_(coordination),
     k_update_panne_(k_update_panne), nbUpdate_(nbUpdate), job_(false) {
     forme_.centre.x = position.x;
     forme_.centre.y = position.y;
@@ -139,7 +139,10 @@ void Neutraliseur::turn(Carre cible) {
 void Neutraliseur::move(Carre cible) {
     S2d direction;
     if(coordination_ == 1) {
-        if() {
+        Carre zone_danger_large;
+        zone_danger_large.centre = cible.centre;
+        zone_danger_large.cote = cible.cote * risk_factor + r_neutraliseur + 1;
+        if(superposition(zone_danger_large, this->forme_)) {
             direction = cible.centre - forme_.centre;
         } else {
             direction = direction_type1(this, cible) - forme_.centre;
