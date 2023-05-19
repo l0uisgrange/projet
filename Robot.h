@@ -28,6 +28,8 @@ public:
     virtual void set_job(bool b) { job_ = b; }
     virtual bool has_job() const { return job_; }
     virtual void set_collision(bool b) { collision_ = b; }
+    virtual void turn(Carre cible);
+    virtual double get_angle() const;
 protected:
     void draw() const override {};
 private:
@@ -45,9 +47,10 @@ public:
     int get_k_update_panne() const { return k_update_panne_; }
     int get_nbUpdate() const { return nbUpdate_; }
     bool get_panne() const { return panne_; }
-    double get_angle() const { return angle_; }
+    double get_angle() const override { return angle_; }
+    bool get_collision() { return collision_; }
     void draw() const override;
-    void turn(Carre cible);
+    void turn(Carre cible) override;
     void move(Carre cible);
     std::string get_info() const;
     void set_panne(bool panne) {panne_ = panne;}

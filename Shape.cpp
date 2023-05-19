@@ -23,16 +23,6 @@ bool Cercle::operator!=(Cercle c) const {
     return true;
 }
 
-double S2d::diff_angle(S2d angle) const {
-    /*
-    double angle_but(2*atan((angle.y/angle.x)/2));
-    std::cout << "Angle_but: " << angle_but << std::endl;
-    double angle_this(2*atan((y/x)/2));
-    std::cout << "Angle_Robot: " << angle_this << std::endl;
-    return angle_this - angle_but;
-     */
-}
-
 Cercle::Cercle(S2d p, double r) {
     centre = p;
     rayon = r;
