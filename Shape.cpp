@@ -14,6 +14,14 @@ S2d S2d::operator-(S2d p) const {
     return vecteur;
 }
 
+bool S2d::operator==(S2d p) const {
+    if(x == p.x and y == p.y) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 bool Cercle::operator!=(Cercle c) const {
     if(c.rayon != rayon) {
         return true;
