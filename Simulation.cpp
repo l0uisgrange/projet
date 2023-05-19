@@ -22,6 +22,24 @@ void Simulation::update() {
     update_reparateurs();
 }
 
+void Simulation::decisions_spatial() {
+    if(fmod(spatial_.get_update(), modulo_update) == 0) {
+        // Création d'un neutraliseur
+        // Création d'un réparateur
+        if(spatial_.get_nbRr() > 0 and get_nbNp() - spatial_.get_nbRs() > 0) {
+            for(auto& neutraliseur: neutraliseurs_) {
+                if(neutraliseur.get_panne()) {
+                    S2d position;
+                    position.x = spatial_.get_forme().centre.x + spatial_.get_forme().rayon * cos(neutraliseur.get_angle());
+                    position.y = spatial_.get_forme().centre.y + spatial_.get_forme().rayon * sin(neutraliseur.get_angle());
+                    Reparateur nouveau_reparateur = Reparateur(position);
+                    reparateurs_.push_back(nouveau_reparateur);
+                }
+            }
+        }
+    }
+}
+
 void Simulation::destroy_neutraliseurs() {
     for(int i = 0; i < neutraliseurs_.size(); i++) {
         if(neutraliseurs_[i].get_panne() and spatial_.get_update() -

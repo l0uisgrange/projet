@@ -159,20 +159,20 @@ void Neutraliseur::move(Carre cible) {
     vect_angle.y = sin(angle_);
     switch(coordination_) {
         case 0: {
-            if((abs(delta_angle) < epsil_alignement) or (collision_)) { //collision important sinon il bouge pas et on a pas de superposition
+            if(abs(delta_angle) < epsil_alignement or collision_) {
                 forme_.centre.x += vect_angle.x * vtran_ * delta_t;
                 forme_.centre.y += vect_angle.y * vtran_ * delta_t;
             }
             break;
         }
         case 1:
-            if(abs(delta_angle) < epsil_alignement) {
+            if(abs(delta_angle) < epsil_alignement or collision_) {
                 forme_.centre.x += vect_angle.x * vtran_ * delta_t;
                 forme_.centre.y += vect_angle.y * vtran_ * delta_t;
             }
             break;
         case 2:
-            if(abs(delta_angle) < M_PI/3) {
+            if(abs(delta_angle) < M_PI/3 or collision_) {
                 forme_.centre.x += vect_angle.x * vtran_ * delta_t;
                 forme_.centre.y += vect_angle.y * vtran_ * delta_t;
             }
