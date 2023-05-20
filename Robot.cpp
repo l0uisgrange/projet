@@ -251,38 +251,18 @@ void Spatial::update(vector<Particule> &particules,
         }
 
         //Décision entre réparateur et neutraliseur
-        int N_en_manque(particules.size()-nbNs_);
-        int R_en_manque(neutraliseurs_detresse.size());
+        int N_en_manque(min(int(particules.size()-nbNs_), nbNr_));
+        int R_en_manque(min(int(neutraliseurs_detresse.size()), nbRr_));
         bool spawn_N(false);
         bool spawn_R(false);
-
-        if(N_en_manque > nbNr_ and N_en_manque > 0) {
-            N_en_manque = nbNr_;
-        }
-        if(R_en_manque > nbRr_ and R_en_manque > 0) {
-            R_en_manque = nbRr_;
-        }
         //Si égal, priorité va sur le réparateur, sinon celui qui a le plus besoin
         R_en_manque > 0 ? spawn_R = true : spawn_N = true;
-
         // Création nouveau réparateur
         if(spawn_R) {
-            vector<Neutraliseur> NDNV; //neutraliseurs detresse non visés
-            for(const auto & N : neutraliseurs_detresse){
-                bool est_cible(false);
-                for(auto &R : reparateurs){
-                    if(N.get_forme().centre == R.get_but()){
-                        est_cible = true;
-                    }
-                }
-                if(!est_cible){
-                    NDNV.push_back(N);
-                }
-            }
-            if(NDNV.size() > 0) {
-                Neutraliseur N_proche(NDNV[0]);
+            if(!neutraliseurs_detresse.empty()) {
+                Neutraliseur N_proche(neutraliseurs_detresse[0]);
                 double dist_min((forme_.centre-N_proche.get_forme().centre).norme());
-                for (auto &neutraliseur: neutraliseurs_detresse) {
+                for(auto &neutraliseur: neutraliseurs_detresse) {
                     //trouver celui le plus proche
                     S2d direction(forme_.centre - neutraliseur.get_forme().centre);
                     double dist(direction.norme());
@@ -299,6 +279,8 @@ void Spatial::update(vector<Particule> &particules,
                     reparateurs.push_back(R);
                     ++nbRs_;
                     --nbRr_;
+                } else { //si réparateur trop loin, on crée un neutraliseur
+                    spawn_N = true;
                 }
             } else { //si réparateur trop loin, on crée un neutraliseur
                 spawn_N = true;
