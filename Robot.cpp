@@ -251,20 +251,12 @@ void Spatial::update(vector<Particule> &particules,
         }
 
         //Décision entre réparateur et neutraliseur
-        int N_en_manque(particules.size()-nbNs_);
-        int R_en_manque(neutraliseurs_detresse.size());
+        int N_en_manque(min(int(particules.size()-nbNs_), nbNr_));
+        int R_en_manque(min(int(neutraliseurs_detresse.size()), nbRr_));
         bool spawn_N(false);
         bool spawn_R(false);
-
-        if(N_en_manque > nbNr_ and N_en_manque > 0) {
-            N_en_manque = nbNr_;
-        }
-        if(R_en_manque > nbRr_ and R_en_manque > 0) {
-            R_en_manque = nbRr_;
-        }
         //Si égal, priorité va sur le réparateur, sinon celui qui a le plus besoin
         R_en_manque > 0 ? spawn_R = true : spawn_N = true;
-
         // Création nouveau réparateur
         if(spawn_R) {
             vector<Neutraliseur> NDNV; //neutraliseurs detresse non visés

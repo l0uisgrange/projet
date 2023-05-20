@@ -480,7 +480,7 @@ void init_Particule(const string& line, Etat& etape, Simulation* sim) {
     Carre c;
     if(ligne >> c.centre.x >> c.centre.y >> c.cote) {
         Particule P(c);
-        sim->add_particule(P);
+        sim->get_particules().push_back(P);
         if(int(sim->get_particules().size()) == sim->get_nbP()) {
             etape = SPATIAL;
         }
@@ -516,7 +516,7 @@ void init_Reparateur(const string& line, Etat& etape, Simulation* sim) {
             etape = NEUTRALISEUR;
         }
         Reparateur R(position);
-        sim->add_reparateur(R);
+        sim->get_reparateurs().push_back(R);
     } else {
         sim->set_dessiner(false);
     }
@@ -542,23 +542,11 @@ void init_Neutraliseur(const string& line, Simulation* sim) {
             Neutraliseur N(position, a1, c_n, panne,
                            k_update_panne,
                            sim->get_spatial().get_update());
-            sim->add_neutraliseur(N);
+            sim->get_neutraliseurs().push_back(N);
         }
     } else {
         sim->set_dessiner(false);
     }
-}
-
-void Simulation::add_particule(Particule& P){
-    particules_.push_back(P);
-}
-
-void Simulation::add_reparateur(Reparateur& R) {
-    reparateurs_.push_back(R);
-}
-
-void Simulation::add_neutraliseur(Neutraliseur& N) {
-    neutraliseurs_.push_back(N);
 }
 
 int Simulation::get_nbNp(){
