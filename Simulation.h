@@ -33,6 +33,7 @@ public:
     void erreurs_construction();
     void erreurs_superposition();
     void update_particules();
+    void update_reparateurs();
     void update_neutraliseurs();
     bool contact(Mobile& robot);
     void destroy_neutraliseurs();

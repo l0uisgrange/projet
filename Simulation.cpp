@@ -55,8 +55,7 @@ void Simulation::update_particules() {
     particules_ = tri_particules(nouvelle_liste);
 }
 
-std::vector<Particule> tri_particules(std::vector<Particule>& p) {
-    // Tri par insertion
+std::vector<Particule> tri_particules(std::vector<Particule>& p) {// Tri par insertion
     Carre c;
     Particule tmp(c);
     int j;
@@ -176,25 +175,24 @@ bool alignement_particule(Carre &cible, Mobile &robot) {
     int quadrant(choix_quadrant(delta_angle));
     Carre new_cible(cible);
     new_cible.centre = robot.get_forme().centre;
-    if(coin){
+    if(coin) {
         new_cible = cible;
     }
-        switch (quadrant) {
-            case 1: {
-                new_cible.centre.y -= r_neutraliseur;
-                break;
-            }
-            case 2:
-                new_cible.centre.x += r_neutraliseur;
-                break;
-            case 3:
-                new_cible.centre.y += r_neutraliseur;
-                break;
-            case 4:
-                new_cible.centre.x -= r_neutraliseur;
+    switch(quadrant) {
+        case 1: {
+            new_cible.centre.y -= r_neutraliseur;
+            break;
         }
+        case 2:
+            new_cible.centre.x += r_neutraliseur;
+            break;
+        case 3:
+            new_cible.centre.y += r_neutraliseur;
+            break;
+        case 4:
+            new_cible.centre.x -= r_neutraliseur;
+    }
     robot.turn(new_cible);
-
     if(fmod(abs(robot.get_angle()), M_PI/2) < epsil_alignement and !coin) {
         robot.set_collision(false);
         return true;
@@ -205,12 +203,12 @@ bool alignement_particule(Carre &cible, Mobile &robot) {
     return false;
 }
 
-int choix_quadrant(double angle){ //Pour savoir quelle face on touche
-    if(angle < 3*M_PI/4 and angle >= M_PI/4){
+int choix_quadrant(double angle){ // Pour savoir quelle face on touche
+    if(angle < 3*M_PI/4 and angle >= M_PI/4) {
         return 1;
-    } else if(angle <= M_PI/4 and angle > -M_PI/4){
+    } else if(angle <= M_PI/4 and angle > -M_PI/4) {
         return 2;
-    } else if(angle < -M_PI/4 and angle >= -3*M_PI/4){
+    } else if(angle < -M_PI/4 and angle >= -3*M_PI/4) {
         return 3;
     } else {
         return 4;
@@ -222,13 +220,12 @@ bool is_coin(Carre &cible, Mobile &robot){
     double rayon_lim(sqrt(pow(cible.cote/2,2) + pow(cible.cote/2+r_neutraliseur,2)));
     S2d vect_direction(cible.centre - robot.get_forme().centre);
     double distance_robot(vect_direction.norme());
-    if(rayon_lim > distance_robot){
+    if(rayon_lim > distance_robot) {
         return false;
     } else {
         return true;
     }
 }
-
 
 void Simulation::update_neutraliseurs() {
     double distance_minimale;
@@ -464,7 +461,6 @@ void Simulation::erreurs_construction() {
     }
 }
 
-
 void Simulation::set_nbP(int value) {
     if(value >= 0) {
         nbP_ = value;
@@ -552,7 +548,7 @@ void init_Neutraliseur(const string& line, Simulation* sim) {
 int Simulation::get_nbNp(){
     int nbNp(0);
     for(auto& N: neutraliseurs_) {
-        if (N.get_panne()) {
+        if(N.get_panne()) {
             nbNp++;
         }
     }
