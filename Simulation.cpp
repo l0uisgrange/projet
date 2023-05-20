@@ -203,7 +203,7 @@ bool alignement_particule(Carre &cible, Mobile &robot) {
     return false;
 }
 
-int choix_quadrant(double angle){ // Pour savoir quelle face on touche
+int choix_quadrant(double angle) { // Pour savoir quelle face on touche
     if(angle < 3*M_PI/4 and angle >= M_PI/4) {
         return 1;
     } else if(angle <= M_PI/4 and angle > -M_PI/4) {
