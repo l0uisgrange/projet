@@ -256,10 +256,10 @@ void Spatial::update(vector<Particule> &particules,
         bool spawn_N(false);
         bool spawn_R(false);
 
-        if(N_en_manque > nbNr_ and N_en_manque > 0){
+        if(N_en_manque > nbNr_ and N_en_manque > 0) {
             N_en_manque = nbNr_;
         }
-        if(R_en_manque > nbRr_ and R_en_manque > 0){
+        if(R_en_manque > nbRr_ and R_en_manque > 0) {
             R_en_manque = nbRr_;
         }
         //Si égal, priorité va sur le réparateur, sinon celui qui a le plus besoin

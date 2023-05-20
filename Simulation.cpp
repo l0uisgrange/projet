@@ -20,6 +20,7 @@ void Simulation::update() {
     destroy_neutraliseurs();
     spatial_.update(particules_, neutraliseurs_, reparateurs_);
     update_neutraliseurs();
+    update_reparateurs();
 }
 
 void Simulation::update_particules() {
@@ -77,6 +78,53 @@ void Simulation::destroy_neutraliseurs() {
         neutraliseurs_[i].get_k_update_panne() >= max_update) {
             neutraliseurs_[i] = neutraliseurs_[neutraliseurs_.size() - 1];
             neutraliseurs_.pop_back();
+        }
+    }
+}
+
+void Simulation::update_reparateurs() {
+    double distance_minimale(5 * dmax);
+    int id_r(-1);
+    for(const auto& neutraliseur : neutraliseurs_) {
+        if(neutraliseur.get_panne()) {
+            for(int r = 0; r < reparateurs_.size(); r++) {
+                if(reparateurs_[r].has_job()) {
+                    continue;
+                }
+                S2d vecteur_distance = neutraliseur.get_forme().centre
+                        - reparateurs_[r].get_forme().centre;
+                double distance = vecteur_distance.norme();
+                if(distance < distance_minimale
+                   and distance < (max_update - (spatial_.get_update()
+                   - neutraliseur.get_k_update_panne())) * vtran_max) {
+                    id_r = r;
+                    distance_minimale = distance;
+                }
+            }
+        }
+        if(id_r > -1) {
+            Cercle forme = reparateurs_[id_r].get_forme();
+            reparateurs_[id_r].move(neutraliseur.get_forme());
+            if(contact(reparateurs_[id_r])) {
+                reparateurs_[id_r].set_forme(forme);
+            }
+            reparateurs_[id_r].set_job(true);
+        }
+        distance_minimale = 5 * dmax;
+    }
+    for(int i = 0; i < reparateurs_.size(); i++) {
+        if(!reparateurs_[i].has_job()) {
+            reparateurs_[i].move(spatial_.get_forme());
+            S2d vecteur_distance = reparateurs_[i].get_forme().centre - spatial_.get_forme().centre;
+            double distance = vecteur_distance.norme();
+            if(distance <= r_spatial) {
+                spatial_.set_nbRs(spatial_.get_nbRs() - 1);
+                spatial_.set_nbRr(spatial_.get_nbRr() + 1);
+                reparateurs_[i] = reparateurs_[reparateurs_.size() - 1];
+                reparateurs_.pop_back();
+            }
+        } else {
+            reparateurs_[i].set_job(false);
         }
     }
 }
