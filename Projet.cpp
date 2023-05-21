@@ -1,6 +1,6 @@
 /**
  Projet.cpp
- Louis Grange et Daniel Ataide
+ Louis Grange (70%) et Daniel Ataide (30%)
  Version 1.0
 **/
 

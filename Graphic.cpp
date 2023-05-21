@@ -1,6 +1,6 @@
 /**
  Graphic.cpp
- Louis Grange et Daniel Ataide
+ Louis Grange (50%) et Daniel Ataide (50%)
  Version 1.3
 **/
 
