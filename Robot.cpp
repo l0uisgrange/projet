@@ -98,8 +98,8 @@ void Reparateur::draw() const {
     draw_cercle(forme_.centre.x, forme_.centre.y, forme_.rayon, NOIR);
 }
 
-void Reparateur::move(Cercle cible) {
-    S2d direction = cible.centre - forme_.centre;
+void Reparateur::move() {
+    S2d direction = but_ - forme_.centre;
     S2d direction_normalisee;
     double distance = direction.norme();
     direction_normalisee.x = direction.x / distance;
@@ -284,12 +284,39 @@ void Spatial::update(vector<Particule> &particules,
     }
 }
 
-void assigner_N(std::vector<Neutraliseur>& neutraliseurs, std::vector<Particule>& particules) {
+void Spatial::assigner_N(std::vector<Neutraliseur>& neutraliseurs,
+                         std::vector<Particule>& particules) const {
 
 }
 
-void assigner_R(std::vector<Reparateur>& reparateurs, std::vector<Neutraliseur>& neutraliseurs) {
-
+void Spatial::assigner_R(std::vector<Reparateur>& reparateurs,
+                         std::vector<Neutraliseur>& neutraliseurs) const {
+    double distance_minimale(5*dmax);
+    int id_r(-1);
+    for(const auto& neutraliseur : neutraliseurs) {
+        if(neutraliseur.get_panne()) {
+            for(int r = 0; r < reparateurs.size(); r++) {
+                if (reparateurs[r].has_job()) {
+                    continue;
+                }
+                S2d vecteur_distance = neutraliseur.get_forme().centre
+                                       - reparateurs[r].get_forme().centre;
+                if (vecteur_distance.norme() < distance_minimale
+                    and vecteur_distance.norme() < (max_update -
+                    (nbUpdate_ - neutraliseur.get_k_update_panne())) * vtran_max) {
+                    id_r = r;
+                    distance_minimale = vecteur_distance.norme();
+                }
+            }
+        }
+        if(id_r != -1) {
+            reparateurs[id_r].set_but(neutraliseur.get_forme().centre);
+            reparateurs[id_r].set_job(true);
+        }
+    }
+    for(auto& reparateur : reparateurs) {
+        reparateur.set_job(false);
+    }
 }
 
 std::vector<Neutraliseur> creer_neutraliseurs_detresse(

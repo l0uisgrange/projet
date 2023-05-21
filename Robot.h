@@ -88,7 +88,7 @@ public:
     S2d& get_but() { return but_; }
     void set_but(S2d n) { but_ = n; }
     void draw() const override;
-    void move(Cercle cible);
+    void move();
     void set_job(bool b) override { job_ = b; }
     bool has_job() const override { return job_; }
     virtual ~Reparateur() = default;
@@ -120,8 +120,8 @@ public:
     void update(std::vector<Particule>& particules,
                 std::vector<Neutraliseur>& neutraliseurs,
                 std::vector<Reparateur>& reparateurs);
-    void assigner_N(std::vector<Neutraliseur>& neutraliseurs, std::vector<Particule>& particules);
-    void assigner_R(std::vector<Reparateur>& reparateurs, std::vector<Neutraliseur>& neutraliseurs);
+    void assigner_N(std::vector<Neutraliseur>& neutraliseurs, std::vector<Particule>& particules) const;
+    void assigner_R(std::vector<Reparateur>& reparateurs, std::vector<Neutraliseur>& neutraliseurs) const;
     ~Spatial() override = default;
 private:
     Cercle forme_;
