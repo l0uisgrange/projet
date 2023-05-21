@@ -165,5 +165,6 @@ Particule trouver_P(Spatial *spatial, V_particule& particules_libres);
 bool single_superposition_R_N(V_neutraliseur& neutraliseurs,
                               V_reparateur& reparateurs, Cercle& new_N);
 double distance_min(Neutraliseur n, Particule p);
+bool dans_zone(S2d but, S2d point, S2d position);
 
 #endif

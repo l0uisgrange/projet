@@ -136,16 +136,30 @@ void Neutraliseur::turn(Carre& cible) {
     }
 }
 
+bool dans_zone(S2d but, S2d point, S2d position) {
+    // But : centre de particule
+    // Point : point en dehors de la zone
+    // Position : position du neutraliseur
+    if(but.x == point.x) {
+        if(abs(point.x - position.x) < 20) {
+            return true;
+        }
+    } else if(but.y == point.y) {
+        if(abs(point.y - position.y) < 20) {
+            return true;
+        }
+    }
+    return false;
+}
+
 void Neutraliseur::move() {
     S2d direction;
     if(coordination_ == 1) {
-        Carre zone_danger_large;
-        zone_danger_large.centre = but_.centre;
-        zone_danger_large.cote = but_.cote * risk_factor + r_neutraliseur + 1;
-        if(superposition(zone_danger_large, this->forme_)) {
+        S2d point = direction_type1(this, but_);
+        if(dans_zone(but_.centre, point, forme_.centre)) {
             direction = but_.centre - forme_.centre;
         } else {
-            direction = direction_type1(this, but_) - forme_.centre;
+            direction = point - forme_.centre;
         }
     } else {
         direction = but_.centre - forme_.centre;
