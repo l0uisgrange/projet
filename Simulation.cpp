@@ -88,7 +88,20 @@ void Simulation::update_reparateurs() {
     int id_r(-1);
     for(const auto& neutraliseur : neutraliseurs_) {
         if(neutraliseur.get_panne()) {
-            spatial_.get_but();
+            for(int r = 0; r < reparateurs_.size(); r++) {
+                if(reparateurs_[r].has_job()) {
+                    continue;
+                }
+                S2d vecteur_distance = neutraliseur.get_forme().centre
+                        - reparateurs_[r].get_forme().centre;
+                double distance = vecteur_distance.norme();
+                if(distance < distance_minimale
+                   and distance < (max_update - (spatial_.get_update()
+                   - neutraliseur.get_k_update_panne())) * vtran_max) {
+                    id_r = r;
+                    distance_minimale = distance;
+                }
+            }
         }
         if(id_r > -1) {
             Cercle forme = reparateurs_[id_r].get_forme();
