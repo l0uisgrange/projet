@@ -419,7 +419,7 @@ void creation_neutraliseur(Spatial *spatial, V_neutraliseur &neutraliseurs,
                            V_particule& particules, V_reparateur& reparateurs,
                            bool& spawn_N) {
     if(spawn_N and spatial->get_nbNs() < 3 and
-       spatial->get_nbNs() < particules.size()) {
+       spatial->get_nbNs() < int(particules.size())) {
         if(particules.size() > 0) {
             Particule P_max(trouver_P(spatial, particules));
             double angle(atan2(P_max.get_forme().centre.y,
