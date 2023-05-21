@@ -91,7 +91,7 @@ void Neutraliseur::set_k_update_panne(int update) {
 }
 
 Reparateur::Reparateur(S2d position)
-    : forme_(Cercle(position, r_reparateur)) {}
+    : forme_(Cercle(position, r_reparateur)), job_(false) {}
 
 void Reparateur::draw() const {
     fill_cercle(forme_.centre.x, forme_.centre.y, forme_.rayon, VERT);
@@ -287,8 +287,15 @@ void Spatial::update(vector<Particule> &particules,
 
 void Spatial::assigner_N(std::vector<Neutraliseur>& neutraliseurs,
                          std::vector<Particule>& particules) const {
+    cout << "ENTREE" << endl;
     for(int p=0; p<particules.size(); p++) {
-        while(!particules[p].is_target()) {
+        cout << "Particule " << p << endl;
+        bool trouvee(false);
+        int num = 0;
+        if(particules[p].is_target()) { continue; }
+        while(!trouvee) {
+            cout << "-- Recherche " << num << endl;
+            num++;
             double distance_minimale(5*dmax);
             int id_n(-1);
             int id_p(-1);
@@ -303,7 +310,12 @@ void Spatial::assigner_N(std::vector<Neutraliseur>& neutraliseurs,
                 }
             }
             // Si aucun résultat (robots tous occupés par exemple)
-            if(id_n == -1) { break; }
+            if(id_n < 0) {
+                cout << "-- Aucun résultat" << endl;
+                trouvee = true;
+                continue;
+            }
+            distance_minimale = 5*dmax;
             // Recherche de la particule b la plus proche de ce neutraliseur
             for(int a=0; a<particules.size(); a++) {
                 if(particules[a].is_target() or
@@ -317,14 +329,22 @@ void Spatial::assigner_N(std::vector<Neutraliseur>& neutraliseurs,
             }
             // Vérification que la particule b est la même que la courante
             if(id_p == p) {
+                cout << "-- Neutraliseur correct" << endl;
                 neutraliseurs[id_n].set_job(true);
                 neutraliseurs[id_n].set_but(particules[p].get_forme());
                 particules[p].set_target(true);
+                trouvee = true;
+                continue;
+            } else if(id_p > -1) {
+                cout << "-- Autre particule assignée" << endl;
+                neutraliseurs[id_n].set_job(true);
+                neutraliseurs[id_n].set_but(particules[id_p].get_forme());
+                particules[id_p].set_target(true);
             }
         }
     }
+    cout << "PRE-SORTIE" << endl;
     // Réinitialisation des jobs
-    for(auto& neutraliseur : neutraliseurs) { neutraliseur.set_job(false); }
     for(auto& particule : particules) { particule.set_target(false); }
 }
 
@@ -352,9 +372,6 @@ void Spatial::assigner_R(std::vector<Reparateur>& reparateurs,
             reparateurs[id_r].set_but(neutraliseur.get_forme().centre);
             reparateurs[id_r].set_job(true);
         }
-    }
-    for(auto& reparateur : reparateurs) {
-        reparateur.set_job(false);
     }
 }
 

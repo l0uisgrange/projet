@@ -84,11 +84,13 @@ void Simulation::destroy_neutraliseurs() {
 
 void Simulation::update_reparateurs() {
     for(auto& reparateur : reparateurs_) {
-        Cercle forme = reparateur.get_forme();
-        reparateur.move();
-        if(contact(reparateur)) {
-            // Annulation du déplacement si collision
-            reparateur.set_forme(forme);
+        if(reparateur.has_job()) {
+            Cercle forme = reparateur.get_forme();
+            reparateur.move();
+            if(contact(reparateur)) {
+                // Annulation du déplacement si collision
+                reparateur.set_forme(forme);
+            }
         }
     }
     // Retour à spatial si aucune tâche
@@ -210,13 +212,16 @@ bool is_coin(Carre &cible, Mobile &robot){
 
 void Simulation::update_neutraliseurs() {
     for(auto& neutraliseur: neutraliseurs_) {
-        Cercle forme = neutraliseur.get_forme();
-        if(!neutraliseur.get_collision()) {
-            neutraliseur.turn(neutraliseur.get_but());
-        }
-        neutraliseur.move();
-        if(contact(neutraliseur)) {
-            neutraliseur.set_forme(forme);
+        if(neutraliseur.has_job()) {
+            Cercle forme = neutraliseur.get_forme();
+            if(!neutraliseur.get_collision()) {
+                neutraliseur.turn(neutraliseur.get_but());
+            }
+            neutraliseur.move();
+            if(contact(neutraliseur)) {
+                neutraliseur.set_forme(forme);
+            }
+            neutraliseur.set_job(false);
         }
     }
 }
