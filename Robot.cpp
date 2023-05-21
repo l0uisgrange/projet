@@ -405,17 +405,12 @@ void creation_reparateur(Spatial *spatial, bool &spawn_N, bool &spawn_R,
 void creation_neutraliseur(Spatial *spatial, V_neutraliseur &neutraliseurs,
                            V_particule& particules, V_reparateur& reparateurs,
                            bool& spawn_N) {
-    if(spawn_N and spatial->get_nbNs() < 3) {
-        vector<Particule> particules_libres; //celles qui sont pas ciblés
-        for(const auto & particule : particules){
-            if(!particule.is_target()){
-                particules_libres.push_back(particule);
-            }
-        }
-        if(particules_libres.size() > 0) {
-            Particule P_proche(trouver_P_proche(spatial, particules_libres));
-            double angle(atan2(P_proche.get_forme().centre.y,
-                               P_proche.get_forme().centre.x));
+    if(spawn_N and spatial->get_nbNs() < 3 and
+        spatial->get_nbNs() < particules.size()) {
+        if(particules.size() > 0) {
+            Particule P_max(trouver_P(spatial, particules));
+            double angle(atan2(P_max.get_forme().centre.y,
+                               P_max.get_forme().centre.x));
             int c_n((spatial->get_nbNs() + spatial->get_nbNd()) % 3);
             Neutraliseur new_N(spatial->get_forme().centre, angle, c_n,
                                false, 0, spatial->get_update());
@@ -447,16 +442,14 @@ bool single_superposition_R_N(V_neutraliseur& neutraliseurs,
     return collision;
 }
 
-Particule trouver_P_proche(Spatial *spatial, V_particule& particules_libres){
-    Particule P_proche(particules_libres[0]); //trouver particule la plus proche
-    double dist_min((spatial->get_forme().centre -
-                     P_proche.get_forme().centre).norme());
+Particule trouver_P(Spatial *spatial, V_particule& particules_libres){
+    Particule P_max(particules_libres[0]); //trouver particule la plus proche
+    double taille_max(P_max.get_forme().cote);
     for (auto &P: particules_libres) {
-        double dist((spatial->get_forme().centre -
-                     P.get_forme().centre).norme());
-        if (dist < dist_min) {
-            P_proche = P;
+        double taille(P.get_forme().cote);
+        if (taille > taille_max) {
+            P_max = P;
         }
     }
-    return P_proche;
+    return P_max;
 }
