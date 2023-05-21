@@ -123,7 +123,6 @@ bool Simulation::contact(Mobile& robot) {
                     particules_.pop_back();
                 }
             }
-            cout << "Collision P" << endl;
             return true;
         }
     }
@@ -136,7 +135,6 @@ bool Simulation::contact(Mobile& robot) {
                 neutraliseur.set_panne(false);
                 robot.set_job(false);
             }
-            cout << "Collision N" << endl;
             return true;
         }
     }
@@ -144,11 +142,9 @@ bool Simulation::contact(Mobile& robot) {
         if(superposition(reparateur.get_forme(),
                          robot.get_forme(), true)
                          and reparateur.get_forme() != robot.get_forme()) {
-            cout << "Collision R" << endl;
             return true;
         }
     }
-    cout << "Pas de collision" << endl;
     return false;
 }
 
