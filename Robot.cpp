@@ -1,7 +1,7 @@
 /**
  Robot.cpp
  Louis Grange et Daniel Ataide
- Version 1.1
+ Version 2.4
 **/
 
 #include "Robot.h"
@@ -262,59 +262,51 @@ double distance_min(Neutraliseur n, Particule p) {
     return distance_temps;
 }
 
-void Spatial::assigner_N(std::vector<Neutraliseur>& neutraliseurs,
-                         std::vector<Particule>& particules) const {
-    for(int p=0; p<particules.size(); p++) {
+void Spatial::assigner_N(std::vector<Neutraliseur>& neu,
+                         std::vector<Particule>& part) const {
+    for(int p=0; p < part.size(); p++) {
         bool trouvee(false);
-        if(particules[p].is_target()) { continue; }
+        if(part[p].is_target()) { continue; }
         while(!trouvee) {
             double distance_minimale(10*dmax);
-            int id_n(-1);
-            int id_p(-1);
+            int id_n(-1), id_p(-1);
             // Recherche du neutraliseur le plus proche
-            for(int n=0; n<neutraliseurs.size(); n++) {
-                if(neutraliseurs[n].has_job()) { continue; }
-                if(distance_min(neutraliseurs[n], particules[p]) < distance_minimale) {
+            for(int n=0; n < neu.size(); n++) {
+                if(neu[n].has_job()) { continue; }
+                if(distance_min(neu[n], part[p]) < distance_minimale) {
                     id_n = n;
-                    distance_minimale = distance_min(neutraliseurs[n], particules[p]);
+                    distance_minimale = distance_min(neu[n], part[p]);
                 }
             }
             // Si aucun résultat (robots tous occupés par exemple)
-            if(id_n < 0) {
-                trouvee = true;
-                continue;
-            }
+            if(id_n < 0) { trouvee = true; continue; }
             distance_minimale = 10*dmax;
-            // Recherche de la particule b la plus proche de ce neutraliseur
-            for(int a=0; a<particules.size(); a++) {
-                if(particules[a].is_target() or
-                   particules[a].get_forme().cote < particules[p].get_forme().cote) { continue; }
-                if(distance_min(neutraliseurs[id_n], particules[a]) < distance_minimale) {
-                    distance_minimale = distance_min(neutraliseurs[id_n], particules[a]);
+            for(int a=0; a < part.size(); a++) {
+                if(part[a].is_target() or
+                   part[a].get_forme().cote < part[p].get_forme().cote) { continue; }
+                if(distance_min(neu[id_n], part[a]) < distance_minimale) {
+                    distance_minimale = distance_min(neu[id_n], part[a]);
                     id_p = a;
                 }
-            }
-            // Vérification que la particule b est la même que la courante
+            } // Vérification que la particule b est la même que la courante
             if(id_p == p) {
-                neutraliseurs[id_n].set_job(true);
-                neutraliseurs[id_n].set_but(particules[p].get_forme());
-                particules[p].set_target(true);
+                neu[id_n].set_job(true);
+                neu[id_n].set_but(part[p].get_forme());
+                part[p].set_target(true);
                 trouvee = true;
             } else if(id_p > -1) {
-                neutraliseurs[id_n].set_job(true);
-                neutraliseurs[id_n].set_but(particules[id_p].get_forme());
-                particules[id_p].set_target(true);
+                neu[id_n].set_job(true);
+                neu[id_n].set_but(part[id_p].get_forme());
+                part[id_p].set_target(true);
             }
         }
-    }
-    cout << "PRE-SORTIE" << endl;
-    // Réinitialisation des jobs
-    for(auto& particule : particules) { particule.set_target(false); }
+    } // Réinitialisation des jobs
+    for(auto& particule : part) { particule.set_target(false); }
 }
 
 void Spatial::assigner_R(std::vector<Reparateur>& reparateurs,
                          std::vector<Neutraliseur>& neutraliseurs) const {
-    for(const auto& neutraliseur : neutraliseurs) {
+    for(auto& neutraliseur : neutraliseurs) {
         double distance_minimale(5*dmax);
         int id_r(-1);
         if(neutraliseur.get_panne()) {

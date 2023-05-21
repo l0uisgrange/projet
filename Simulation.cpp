@@ -1,7 +1,7 @@
 /**
  Simulation.cpp
  Louis Grange et Daniel Ataide
- Version 1.5
+ Version 3.0
 **/
 
 #include "Simulation.h"
@@ -55,6 +55,7 @@ void Simulation::update_particules() {
         }
     }
     nbP_ = int(nouvelle_liste.size());
+    particules_ = nouvelle_liste;
 }
 
 void tri_particules(std::vector<Particule>& p) { // Tri par insertion
@@ -377,7 +378,7 @@ void Simulation::erreurs_construction() {
     if(spatial_.hors_domaine()) {
         dessiner_ = false;
     }
-    for(const auto& N : neutraliseurs_) {
+    for(auto& N : neutraliseurs_) {
         if(N.get_k_update_panne() > N.get_nbUpdate()) {
             cout << message::invalid_k_update(N.get_forme().centre.x,
                               N.get_forme().centre.y,
@@ -483,10 +484,10 @@ int Simulation::get_nbNp(){
 
 vector<Cercle> Simulation::get_cercles() {
     vector<Cercle> tab;
-    for(const auto& neutraliseur : neutraliseurs_) {
+    for(auto& neutraliseur : neutraliseurs_) {
         tab.push_back(neutraliseur.get_forme());
     }
-    for(const auto& reparateur : reparateurs_) {
+    for(auto& reparateur : reparateurs_) {
         tab.push_back(reparateur.get_forme());
     }
     return tab;
