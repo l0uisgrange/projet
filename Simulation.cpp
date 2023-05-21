@@ -122,7 +122,7 @@ bool Simulation::contact(Mobile& robot) {
             if(robot.get_forme().rayon == r_neutraliseur) {
                 robot.set_collision(true);
                 if(alignement_particule(particules_[i].get_forme(), robot)) {
-                    particules_[i]=particules_[particules_.size()-1];
+                    particules_[i] = particules_[particules_.size()-1];
                     particules_.pop_back();
                 }
             }
@@ -159,7 +159,7 @@ bool alignement_particule(Carre &cible, Mobile &robot) {
     int quadrant(choix_quadrant(direction));
     Carre new_cible(cible);
     if(!coin) {
-        new_cible.centre = robot.get_forme().centre;;
+        new_cible.centre = robot.get_forme().centre;
     }
     switch(quadrant) {
         case 1: {
