@@ -144,7 +144,10 @@ bool Simulation::contact(Mobile& robot) {
                 neutraliseur.set_panne(false);
                 robot.set_job(false);
             }
+            neutraliseur.set_collisionRN(true);
             return true;
+        } else {
+            neutraliseur.set_collisionRN(false);
         }
     }
     for(auto& reparateur : reparateurs_) {
