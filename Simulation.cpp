@@ -153,37 +153,41 @@ bool Simulation::contact(Mobile& robot) {
 
 bool alignement_particule(Carre &cible, Mobile &robot) {
     bool coin(is_coin(cible, robot));
-    S2d direction(cible.centre - robot.get_forme().centre);
+    S2d direction(robot.get_forme().centre - cible.centre);
     double angle_direction(atan2(direction.y, direction.x));
-    double delta_angle(angle_direction - robot.get_angle());
     int quadrant(choix_quadrant(angle_direction));
+    cout << "angle direction: " << angle_direction << endl;
     Carre new_cible(cible);
-    if(!coin) {
-        new_cible.centre = robot.get_forme().centre;
-    }
+    new_cible.centre = robot.get_forme().centre;
+
     switch(quadrant) {
         case 1: {
-            cout << "1" << endl;
             new_cible.centre.y -= r_neutraliseur;
             break;
         }
         case 2:
-            cout << "2" << endl;
             new_cible.centre.x -= r_neutraliseur;
             break;
         case 3:
-            cout << "3" << endl;
             new_cible.centre.y += r_neutraliseur;
             break;
         case 4:
-            cout << "4" << endl;
             new_cible.centre.x += r_neutraliseur;
             break;
     }
+    if(coin){
+        new_cible.centre = cible.centre;
+        cout <<"Coin!" << endl;
+    }
     robot.turn(new_cible);
+    direction = (cible.centre - robot.get_forme().centre);
+    angle_direction = atan2(direction.y, direction.x);
+    double delta_angle(angle_direction - robot.get_angle());
+    normalise_delta(delta_angle);
+    cout <<"delta angle: " << delta_angle << endl;
     if(fmod(abs(robot.get_angle()), M_PI/2) < epsil_alignement and !coin) {
         return true;
-    } else if(abs(delta_angle) < epsil_alignement and coin) {
+    } else if(abs(fmod(delta_angle, M_PI)) < epsil_alignement and coin) {
         return true;
     }
     return false;
@@ -194,7 +198,7 @@ int choix_quadrant(double angle) { // Pour savoir quelle face on touche
         return 1;
     } else if(angle < M_PI/4 and angle > -M_PI/4) {
         return 2;
-    } else if(angle < -M_PI/4 and angle >= -3*M_PI/4) {
+    } else if(angle <= -M_PI/4 and angle > -3*M_PI/4) {
         return 3;
     } else {
         return 4;
