@@ -242,10 +242,12 @@ void Spatial::update(vector<Particule> &particules,
         int R_en_manque(min(int(neutraliseurs_detresse.size()), nbRr_));
         // Priorité va sur le réparateur, sinon sur le neutraliseur
         R_en_manque > 0 ? spawn_R = true : spawn_N = true;
-        creation_reparateur(this, neutraliseurs_detresse, spawn_N, spawn_R,
+        if(nbRr_ > 0) {
+            creation_reparateur(this, neutraliseurs_detresse, spawn_N, spawn_R,
                             reparateurs);
+        }
         // Création nouveau neutraliseur
-        if(spawn_N and nbNs_ < 3){
+        if(spawn_N and nbNs_ < 3 and nbNr_ > 0) {
             vector<Particule> particules_libres; //celles qui sont pas ciblés
             for(const auto & particule : particules){
                 if(!particule.is_target()){
@@ -365,7 +367,7 @@ void Spatial::assigner_R(std::vector<Reparateur>& reparateurs,
         int id_r(-1);
         if(neutraliseur.get_panne()) {
             for(int r = 0; r < reparateurs.size(); r++) {
-                if (reparateurs[r].has_job()) {
+                if(reparateurs[r].has_job()) {
                     continue;
                 }
                 S2d vecteur_distance = neutraliseur.get_forme().centre
