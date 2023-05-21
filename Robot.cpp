@@ -428,7 +428,7 @@ void creation_neutraliseur(Spatial *spatial, V_neutraliseur &neutraliseurs,
             Neutraliseur new_N(spatial->get_forme().centre, angle, c_n,
                                false, 0, spatial->get_update());
             if(!single_superposition_R_N(neutraliseurs, reparateurs, new_N.get_forme())) {
-                new_N.set_job(true); //TODO: mettre cible
+                new_N.set_job(true);
                 neutraliseurs.push_back(new_N);
                 spatial->set_nbNr(spatial->get_nbNr() - 1);
                 spatial->set_nbNs(spatial->get_nbNs() + 1);
