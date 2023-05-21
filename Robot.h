@@ -57,7 +57,7 @@ public:
     bool get_collision() { return collision_; }
     void draw() const override;
     void turn(Carre& cible) override;
-    void move(Carre cible);
+    void move();
     std::string get_info() const;
     void set_angle(double angle) override {angle_ = angle;}
     void set_panne(bool panne) {panne_ = panne;}
@@ -66,10 +66,13 @@ public:
     void set_forme(Cercle c) override { forme_ = c; }
     void set_vrot(double vrot) override { vrot_ = vrot; }
     void set_job(bool b) override { job_ = b; }
+    void set_but(Carre b) { but_ = b; }
+    Carre& get_but() { return but_; }
     bool has_job() const override { return job_; }
     virtual ~Neutraliseur() = default;
 private:
     Cercle forme_;
+    Carre but_;
     double angle_;
     bool panne_;
     bool collision_;
