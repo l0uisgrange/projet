@@ -160,7 +160,7 @@ void creation_reparateur(Spatial *spatial, bool &spawn_N, bool &spawn_R,
 void creation_neutraliseur(Spatial *spatial, V_neutraliseur &neutraliseurs,
                            V_particule& particules, V_reparateur& reparateurs,
                            bool& spawn_N);
-Particule trouver_P(Spatial *spatial, V_particule& particules_libres);
+Particule trouver_P_proche(Spatial *spatial, V_particule& particules_libres);
 //vérifie superposition pour création de robot
 bool single_superposition_R_N(V_neutraliseur& neutraliseurs,
                               V_reparateur& reparateurs, Cercle& new_N);
