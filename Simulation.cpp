@@ -1,6 +1,6 @@
 /**
  Simulation.cpp
- Louis Grange () et Daniel Ataide() // TODO pourcentage
+ Louis Grange (40%) et Daniel Ataide (60%)
  Version 3.0
 **/
 
