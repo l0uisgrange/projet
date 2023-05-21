@@ -56,6 +56,7 @@ public:
     double& get_angle() override { return angle_; }
     double& get_vrot() override { return vrot_; }
     bool get_collision() { return collision_; }
+    void set_collisionRN(bool c) { collisionRN_ = c; }
     void draw() const override;
     void turn(Carre& cible) override;
     void move();
@@ -77,6 +78,7 @@ private:
     double angle_;
     bool panne_;
     bool collision_;
+    bool collisionRN_;
     int coordination_;
     double vrot_ = vrot_max;
     double vtran_ = vtran_max;

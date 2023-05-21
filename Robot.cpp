@@ -50,7 +50,7 @@ bool Spatial::hors_domaine() const {
 
 Neutraliseur::Neutraliseur(S2d position, double angle, int coordination, bool panne,
                            int k_update_panne, int nbUpdate)
-    : angle_(angle), panne_(panne), collision_(false), coordination_(coordination),
+    : angle_(angle), panne_(panne), collision_(false), collisionRN_(false), coordination_(coordination),
     k_update_panne_(k_update_panne), nbUpdate_(nbUpdate), job_(false) {
     forme_.centre.x = position.x;
     forme_.centre.y = position.y;
@@ -59,7 +59,7 @@ Neutraliseur::Neutraliseur(S2d position, double angle, int coordination, bool pa
 
 void Neutraliseur::draw() const {
     Couleurs couleur(NOIR);
-    if(collision_) {
+    if(collision_ or collisionRN_) {
         couleur = VIOLET;
     }
     if(panne_) {
