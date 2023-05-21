@@ -153,7 +153,7 @@ bool alignement_particule(Carre &cible, Mobile &robot) {
     S2d direction(cible.centre - robot.get_forme().centre);
     double angle_direction(atan2(direction.y, direction.x));
     double delta_angle(angle_direction - robot.get_angle());
-    int quadrant(choix_quadrant(delta_angle));
+    int quadrant(choix_quadrant(direction));
     Carre new_cible(cible);
     if(!coin) {
         new_cible.centre = robot.get_forme().centre;;
@@ -186,16 +186,18 @@ bool alignement_particule(Carre &cible, Mobile &robot) {
     return false;
 }
 
-int choix_quadrant(double angle) { // Pour savoir quelle face on touche
-    if(angle < 3*M_PI/4 and angle >= M_PI/4) {
+int choix_quadrant(S2d dir) { // Pour savoir quelle face on touche
+    double angle_direction(atan2(dir.y, dir.x));
+    if(angle_direction >= 0 and angle_direction <= M_PI/2) {
         return 1;
-    } else if(angle < M_PI/4 and angle >= -M_PI/4) {
+    } else if(angle_direction >= M_PI/2 and angle_direction <= M_PI) {
         return 2;
-    } else if(angle < -M_PI/4 and angle >= -3*M_PI/4) {
+    } else if(angle_direction <= 0 and angle_direction >= -M_PI/2) {
         return 3;
-    } else {
+    } else if(angle_direction <= -M_PI/2 and angle_direction >= -M_PI) {
         return 4;
     }
+    return 0;
 }
 
 bool is_coin(Carre &cible, Mobile &robot){
