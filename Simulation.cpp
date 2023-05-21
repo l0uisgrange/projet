@@ -100,8 +100,13 @@ void Simulation::update_reparateurs() {
     // Retour à spatial si aucune tâche
     for(auto& reparateur : reparateurs_) {
         if(!reparateur.has_job()) {
+            Cercle forme = reparateur.get_forme();
             reparateur.set_but(spatial_.get_forme().centre);
             reparateur.move();
+            if(contact(reparateur)) {
+                // Annulation du déplacement si collision
+                reparateur.set_forme(forme);
+            }
             S2d vecteur_distance = reparateur.get_forme().centre -
                                    spatial_.get_forme().centre;
             if(vecteur_distance.norme() <= r_spatial) {
@@ -379,9 +384,7 @@ void decodage_ligne(const string& line, Etat& etape, Simulation* simulation) {
             if(simulation->get_nbP() > 0) {
                 init_Particule(line, etape, simulation);
             } else {
-                etape = SPATIAL;
                 init_Spatial(line, etape, simulation);
-                etape = REPARATEUR;
             }
             break;
         case SPATIAL:
