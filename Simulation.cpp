@@ -118,13 +118,12 @@ bool Simulation::contact(Mobile& robot) {
                          robot.get_forme(), true)) {
             if(robot.get_forme().rayon == r_neutraliseur) {
                 robot.set_collision(true);
-                if(alignement_particule(particules_[i].get_forme(), robot)){
+                if(alignement_particule(particules_[i].get_forme(), robot)) {
                     particules_[i]=particules_[particules_.size()-1];
                     particules_.pop_back();
                 }
-            } else {
-                robot.set_collision(false);
             }
+            cout << "Collision P" << endl;
             return true;
         }
     }
@@ -137,6 +136,7 @@ bool Simulation::contact(Mobile& robot) {
                 neutraliseur.set_panne(false);
                 robot.set_job(false);
             }
+            cout << "Collision N" << endl;
             return true;
         }
     }
@@ -144,10 +144,11 @@ bool Simulation::contact(Mobile& robot) {
         if(superposition(reparateur.get_forme(),
                          robot.get_forme(), true)
                          and reparateur.get_forme() != robot.get_forme()) {
+            cout << "Collision R" << endl;
             return true;
         }
     }
-    robot.set_collision(false);
+    cout << "Pas de collision" << endl;
     return false;
 }
 
@@ -168,20 +169,19 @@ bool alignement_particule(Carre &cible, Mobile &robot) {
             break;
         }
         case 2:
-            new_cible.centre.x += r_neutraliseur;
+            new_cible.centre.x -= r_neutraliseur;
             break;
         case 3:
             new_cible.centre.y += r_neutraliseur;
             break;
         case 4:
-            new_cible.centre.x -= r_neutraliseur;
+            new_cible.centre.x += r_neutraliseur;
+            break;
     }
     robot.turn(new_cible);
     if(fmod(abs(robot.get_angle()), M_PI/2) < epsil_alignement and !coin) {
-        robot.set_collision(false);
         return true;
-    } else if (abs(delta_angle) < epsil_alignement and coin) {
-         robot.set_collision(false);
+    } else if(abs(delta_angle) < epsil_alignement and coin) {
         return true;
     }
     return false;
@@ -190,7 +190,7 @@ bool alignement_particule(Carre &cible, Mobile &robot) {
 int choix_quadrant(double angle) { // Pour savoir quelle face on touche
     if(angle < 3*M_PI/4 and angle >= M_PI/4) {
         return 1;
-    } else if(angle <= M_PI/4 and angle > -M_PI/4) {
+    } else if(angle < M_PI/4 and angle >= -M_PI/4) {
         return 2;
     } else if(angle < -M_PI/4 and angle >= -3*M_PI/4) {
         return 3;
@@ -221,8 +221,21 @@ void Simulation::update_neutraliseurs() {
             neutraliseur.move();
             if(contact(neutraliseur)) {
                 neutraliseur.set_forme(forme);
+            } else {
+                neutraliseur.set_collision(false);
             }
             neutraliseur.set_job(false);
+        } else {
+            Carre position_spatial;
+            position_spatial.centre = spatial_.get_forme().centre;
+            neutraliseur.set_but(position_spatial);
+            neutraliseur.set_job(true);
+            S2d vecteur_distance = neutraliseur.get_forme().centre - spatial_.get_forme().centre;
+            if(vecteur_distance.norme() < r_spatial) {
+                spatial_.set_nbNr(int(spatial_.get_nbNr())+1);
+                neutraliseur = neutraliseurs_[neutraliseurs_.size()-1];
+                neutraliseurs_.pop_back();
+            }
         }
     }
 }
