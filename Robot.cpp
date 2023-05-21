@@ -346,7 +346,7 @@ void creation_reparateur(Spatial *spatial,
                     N_proche = neutraliseur;
                 }
             }
-            //temps jusqu'au robot
+            //distance jusqu'au robot
             double dist_robot((max_update - (N_proche.get_nbUpdate()-
                                              N_proche.get_k_update_panne()))*vtran_max);
             if(dist_min < dist_robot){
