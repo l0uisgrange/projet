@@ -281,14 +281,14 @@ double distance_min(Neutraliseur n, Particule p) {
 
 void Spatial::assigner_N(std::vector<Neutraliseur>& neu,
                          std::vector<Particule>& part) const {
-    for(int p=0; p < part.size(); p++) {
+    for(int p=0; p < int(part.size()); p++) {
         bool trouvee(false);
         if(part[p].is_target()) { continue; }
         while(!trouvee) {
             double distance_minimale(10*dmax);
             int id_n(-1), id_p(-1);
             // Recherche du neutraliseur le plus proche
-            for(int n=0; n < neu.size(); n++) {
+            for(int n=0; n < int(neu.size()); n++) {
                 if(neu[n].has_job()) { continue; }
                 if(distance_min(neu[n], part[p]) < distance_minimale) {
                     id_n = n;
@@ -298,7 +298,7 @@ void Spatial::assigner_N(std::vector<Neutraliseur>& neu,
             // Si aucun résultat (robots tous occupés par exemple)
             if(id_n < 0) { trouvee = true; continue; }
             distance_minimale = 10*dmax;
-            for(int a=0; a < part.size(); a++) {
+            for(int a=0; a < int(part.size()); a++) {
                 if(part[a].is_target() or
                    part[a].get_forme().cote < part[p].get_forme().cote) { continue; }
                 if(distance_min(neu[id_n], part[a]) < distance_minimale) {
@@ -335,7 +335,7 @@ void Spatial::assigner_R(std::vector<Reparateur>& reparateurs,
         double distance_minimale(5*dmax);
         int id_r(-1);
         if(neutraliseur.get_panne()) {
-            for(int r = 0; r < reparateurs.size(); r++) {
+            for(int r = 0; r < int(reparateurs.size()); r++) {
                 if(reparateurs[r].has_job()) {
                     continue;
                 }

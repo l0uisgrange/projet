@@ -65,7 +65,7 @@ void tri_particules(std::vector<Particule>& p) { // Tri par insertion
     Carre c;
     Particule tmp(c);
     int j;
-    for(int pos(1); pos<p.size(); ++pos) {
+    for(int pos(1); pos<int(p.size()); ++pos) {
         tmp = p[pos];
         j = pos;
         while(j >= 1 and tmp.get_forme().cote > p[j-1].get_forme().cote) {
@@ -77,9 +77,9 @@ void tri_particules(std::vector<Particule>& p) { // Tri par insertion
 }
 
 void Simulation::destroy_neutraliseurs() {
-    for(int i = 0; i < neutraliseurs_.size(); i++) {
+    for(int i = 0; i < int(neutraliseurs_.size()); i++) {
         if(neutraliseurs_[i].get_panne() and spatial_.get_update() -
-        neutraliseurs_[i].get_k_update_panne() >= max_update) {
+        neutraliseurs_[i].get_k_update_panne() >= int(max_update)) {
             neutraliseurs_[i] = neutraliseurs_[neutraliseurs_.size() - 1];
             neutraliseurs_.pop_back();
         }
@@ -122,7 +122,7 @@ void Simulation::update_reparateurs() {
 }
 
 bool Simulation::contact(Mobile& robot) {
-    for(int i(0); i < particules_.size(); ++i) {
+    for(int i(0); i < int(particules_.size()); ++i) {
         if(superposition(particules_[i].get_forme(),
                          robot.get_forme(), true)) {
             if(robot.get_forme().rayon == r_neutraliseur) {
