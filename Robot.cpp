@@ -237,19 +237,24 @@ void Spatial::set_update(int update) {
 
 void Spatial::update(V_particule& particules, V_neutraliseur &neutraliseurs,
                      V_reparateur &reparateurs) {
-    if(fmod(nbUpdate_, modulo_update) == 0 or nbUpdate_ == 0) {
+    if(fmod(nbUpdate_, modulo_update) == 0 and nbUpdate_ != 0) {
+        cout << "Dans spatial update!" << endl;
         vector<Neutraliseur> neutraliseurs_detresse;
         neutraliseurs_detresse = creer_neutraliseurs_detresse(reparateurs,
                                                              neutraliseurs);
+        cout << "taille N detresse: " << neutraliseurs_detresse.size() << endl;
         bool spawn_N(false);
         bool spawn_R(false);
         int R_en_manque(min(int(neutraliseurs_detresse.size()), nbRr_));
         // Priorité va sur le réparateur, sinon sur le neutraliseur
         R_en_manque > 0 ? spawn_R = true : spawn_N = true;
-        if(nbRr_ > 0) {
+        cout <<"spawn_R: " << spawn_R << " ; spawn_N: " << spawn_N << endl;
+        if(nbRr_ > 0 and spawn_R) {
+            cout << "créer R" << endl;
             creation_reparateur(this, spawn_N, spawn_R, neutraliseurs_detresse,
                                 neutraliseurs, reparateurs);
         } else if(nbNr_ > 0) {
+            cout << "créer N " << endl;
             creation_neutraliseur(this, neutraliseurs, particules,
                                   reparateurs, spawn_N);
         }
@@ -404,17 +409,19 @@ void creation_neutraliseur(Spatial *spatial, V_neutraliseur &neutraliseurs,
                 particules_libres.push_back(particule);
             }
         }
-        Particule P_proche(trouver_P_proche(spatial, particules_libres));
-        double angle(atan2(P_proche.get_forme().centre.y,
-                           P_proche.get_forme().centre.x));
-        int c_n((spatial->get_nbNs()+spatial->get_nbNd())%3);
-        Neutraliseur new_N(spatial->get_forme().centre, angle, c_n,
-                           false, 0, spatial->get_update());
-        if(!single_superposition_R_N(neutraliseurs, reparateurs, new_N.get_forme())){
-            new_N.set_job(true); //TODO: mettre cible
-            neutraliseurs.push_back(new_N);
-            spatial->set_nbNr(spatial->get_nbNr()-1);
-            spatial->set_nbNs(spatial->get_nbNs()+1);
+        if(particules_libres.size() > 0) {
+            Particule P_proche(trouver_P_proche(spatial, particules_libres));
+            double angle(atan2(P_proche.get_forme().centre.y,
+                               P_proche.get_forme().centre.x));
+            int c_n((spatial->get_nbNs() + spatial->get_nbNd()) % 3);
+            Neutraliseur new_N(spatial->get_forme().centre, angle, c_n,
+                               false, 0, spatial->get_update());
+            if (!single_superposition_R_N(neutraliseurs, reparateurs, new_N.get_forme())) {
+                new_N.set_job(true); //TODO: mettre cible
+                neutraliseurs.push_back(new_N);
+                spatial->set_nbNr(spatial->get_nbNr() - 1);
+                spatial->set_nbNs(spatial->get_nbNs() + 1);
+            }
         }
     }
 }
@@ -441,10 +448,10 @@ Particule trouver_P_proche(Spatial *spatial, V_particule& particules_libres){
     Particule P_proche(particules_libres[0]); //trouver particule la plus proche
     double dist_min((spatial->get_forme().centre -
                      P_proche.get_forme().centre).norme());
-    for(auto &P : particules_libres){
+    for (auto &P: particules_libres) {
         double dist((spatial->get_forme().centre -
                      P.get_forme().centre).norme());
-        if(dist < dist_min){
+        if (dist < dist_min) {
             P_proche = P;
         }
     }

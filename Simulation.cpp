@@ -177,14 +177,12 @@ bool alignement_particule(Carre &cible, Mobile &robot) {
     }
     if(coin){
         new_cible.centre = cible.centre;
-        cout <<"Coin!" << endl;
     }
     robot.turn(new_cible);
     direction = (cible.centre - robot.get_forme().centre);
     angle_direction = atan2(direction.y, direction.x);
     double delta_angle(angle_direction - robot.get_angle());
     normalise_delta(delta_angle);
-    cout <<"delta angle: " << delta_angle << endl;
     if(fmod(abs(robot.get_angle()), M_PI/2) < epsil_alignement and !coin) {
         return true;
     } else if(abs(fmod(delta_angle, M_PI)) < epsil_alignement and coin) {
