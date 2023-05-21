@@ -296,7 +296,7 @@ void Spatial::assigner_N(std::vector<Neutraliseur>& neutraliseurs,
         while(!trouvee) {
             cout << "-- Recherche " << num << endl;
             num++;
-            double distance_minimale(5*dmax);
+            double distance_minimale(10*dmax);
             int id_n(-1);
             int id_p(-1);
             // Recherche du neutraliseur le plus proche
@@ -304,9 +304,14 @@ void Spatial::assigner_N(std::vector<Neutraliseur>& neutraliseurs,
                 if(neutraliseurs[n].has_job()) { continue; }
                 S2d vecteur_distance = neutraliseurs[n].get_forme().centre
                                        - particules[p].get_forme().centre;
-                if(vecteur_distance.norme() < distance_minimale) {
+                double distance_temps = vecteur_distance.norme()*vtran_max;
+                double angle_direction(atan2(vecteur_distance.y, vecteur_distance.x));
+                double delta_angle(angle_direction - neutraliseurs[n].get_angle());
+                normalise_delta(delta_angle);
+                distance_temps += delta_angle / vrot_max;
+                if(distance_temps < distance_minimale) {
                     id_n = n;
-                    distance_minimale = vecteur_distance.norme();
+                    distance_minimale = distance_temps;
                 }
             }
             // Si aucun résultat (robots tous occupés par exemple)
@@ -315,14 +320,19 @@ void Spatial::assigner_N(std::vector<Neutraliseur>& neutraliseurs,
                 trouvee = true;
                 continue;
             }
-            distance_minimale = 5*dmax;
+            distance_minimale = 10*dmax;
             // Recherche de la particule b la plus proche de ce neutraliseur
             for(int a=0; a<particules.size(); a++) {
                 if(particules[a].is_target() or
                    particules[a].get_forme().cote < particules[p].get_forme().cote) { continue; }
                 S2d vecteur_distance = neutraliseurs[id_n].get_forme().centre
                         - particules[a].get_forme().centre;
-                if(vecteur_distance.norme() < distance_minimale) {
+                double distance_temps = vecteur_distance.norme()*vtran_max;
+                double angle_direction(atan2(vecteur_distance.y, vecteur_distance.x));
+                double delta_angle(angle_direction - neutraliseurs[id_n].get_angle());
+                normalise_delta(delta_angle);
+                distance_temps += delta_angle / vrot_max;
+                if(distance_temps < distance_minimale) {
                     distance_minimale = vecteur_distance.norme();
                     id_p = a;
                 }
