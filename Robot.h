@@ -13,6 +13,8 @@
 #ifndef ROBOT_H
 #define ROBOT_H
 
+typedef std::vector<Particule> V_particule;
+
 class Robot {
 public:
     virtual void draw() const = 0;
@@ -24,7 +26,7 @@ public:
     using Robot::Robot;
     ~Mobile() override = default;
     virtual void set_forme(Cercle c) { forme_ = c; }
-    virtual Cercle get_forme() const { return forme_; }
+    virtual Cercle & get_forme() const { return forme_; }
     virtual void set_job(bool b) { job_ = b; }
     virtual bool has_job() const { return job_; }
     virtual void set_collision(bool b) { collision_ = b; }
@@ -46,7 +48,7 @@ public:
     Neutraliseur() = delete;
     Neutraliseur(S2d position, double angle, int coordination, bool panne,
                  int k_update_panne, int nbUpdate);
-    Cercle get_forme() const override { return forme_; }
+    Cercle& get_forme() const override { return forme_; }
     int get_k_update_panne() const { return k_update_panne_; }
     int get_nbUpdate() const { return nbUpdate_; }
     bool get_panne() const { return panne_; }
@@ -79,11 +81,13 @@ private:
     bool job_;
 };
 
+typedef std::vector<Neutraliseur> V_neutraliseur;
+
 class Reparateur : public Mobile {
 public:
     Reparateur() = delete;
     explicit Reparateur(S2d position);
-    Cercle get_forme() const override { return forme_; }
+    Cercle& get_forme() const override { return forme_; }
     void set_forme(Cercle c) override { forme_ = c; }
     S2d& get_but() { return but_; }
     void set_but(S2d n) { but_ = n; }
@@ -97,6 +101,8 @@ private:
     S2d but_;
     bool job_;
 };
+
+typedef std::vector<Reparateur> V_reparateur;
 
 class Spatial : public Robot {
 public:
@@ -117,11 +123,13 @@ public:
     void set_update(int update);
     void set_nbRr(int nb) { nbRr_ = nb; }
     void set_nbRs(int nb) { nbRs_ = nb; }
-    void update(std::vector<Particule>& particules,
-                std::vector<Neutraliseur>& neutraliseurs,
-                std::vector<Reparateur>& reparateurs);
-    void assigner_N(std::vector<Neutraliseur>& neutraliseurs, std::vector<Particule>& particules) const;
-    void assigner_R(std::vector<Reparateur>& reparateurs, std::vector<Neutraliseur>& neutraliseurs) const;
+    void set_nbNs(int nb) { nbNs_ = nb; }
+    void set_nbNr(int nb) { nbNr_ = nb; }
+    void update(V_particule& particules,
+                V_neutraliseur& neutraliseurs,
+                V_reparateur& reparateurs);
+    void assigner_N(V_neutraliseur& neutraliseurs, V_particule& particules) const;
+    void assigner_R(V_reparateur& reparateurs, V_neutraliseur& neutraliseurs) const;
     ~Spatial() override = default;
 private:
     Cercle forme_;
@@ -136,14 +144,19 @@ private:
 S2d direction_type1(Neutraliseur* N, Carre cible);
 double normalise_delta(double& delta_angle);
 double choix_vrot(double& delta_angle);
-std::vector<Neutraliseur> creer_neutraliseurs_detresse(
-            std::vector<Reparateur> &reparateurs,
-            std::vector<Neutraliseur> &neutraliseurs);
-void choix_R_ou_N(Spatial *spatial,bool& spawn_R, bool& spawn_N,
-                  int nbP, int nbN_detresse);
-void creation_reparateur(Spatial *spatial,
-                         std::vector<Neutraliseur> &neutraliseurs_detresse,
-                         bool &spawn_N, bool &spawn_R,
-                         std::vector<Reparateur> &reparateurs);
+V_neutraliseur creer_neutraliseurs_detresse(V_reparateur& reparateurs,
+            V_neutraliseur &neutraliseurs);
+void choix_R_ou_N(Spatial *spatial, bool& spawn_R, bool& spawn_N,
+                  int& nbP, int& nbN_detresse);
+void creation_reparateur(Spatial *spatial, bool &spawn_N, bool &spawn_R,
+                         V_neutraliseur &neutraliseurs_detresse,
+                         V_neutraliseur& neutraliseurs, V_reparateur& reparateurs);
+void creation_neutraliseur(Spatial *spatial, V_neutraliseur &neutraliseurs,
+                           V_particule& particules, V_reparateur& reparateurs,
+                           bool& spawn_N);
+Particule trouver_P_proche(Spatial *spatial, V_particule& particules_libres);
+//vérifie superposition pour création de robot
+bool single_superposition_R_N(V_neutraliseur& neutraliseurs,
+                              V_reparateur& reparateurs, Cercle& new_N);
 
 #endif
