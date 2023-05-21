@@ -167,7 +167,6 @@ bool alignement_particule(Carre &cible, Mobile &robot) {
     int quadrant(choix_quadrant(angle_direction));
     Carre new_cible(cible);
     new_cible.centre = robot.get_forme().centre;
-
     switch(quadrant) {
         case 1: {
             new_cible.centre.y -= r_neutraliseur;
@@ -249,6 +248,7 @@ void Simulation::update_neutraliseurs() {
             S2d vecteur_distance = neutraliseur.get_forme().centre -
                                    spatial_.get_forme().centre;
             if(vecteur_distance.norme() < r_spatial) {
+                spatial_.set_nbNs(int(spatial_.get_nbNs())-1);
                 spatial_.set_nbNr(int(spatial_.get_nbNr())+1);
                 neutraliseur = neutraliseurs_[neutraliseurs_.size()-1];
                 neutraliseurs_.pop_back();
