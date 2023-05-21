@@ -117,10 +117,8 @@ void Neutraliseur::turn(Carre& cible) {
     if(coordination_ == 1 and !collision_) {
         S2d point = direction_type1(this, but_);
         if(dans_zone(but_.centre, point, forme_.centre)) {
-            cout << "Dans zone" << endl;
             direction = but_.centre - forme_.centre;
         } else {
-            cout << "pas dans zone" << endl;
             direction = point - forme_.centre;
         }
     } else {

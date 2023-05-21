@@ -144,6 +144,9 @@ bool Simulation::contact(Mobile& robot) {
                 neutraliseur.set_panne(false);
                 robot.set_job(false);
             }
+            if(robot.get_forme().rayon == r_neutraliseur) {
+                robot.set_collisionRN(true);
+            }
             neutraliseur.set_collisionRN(true);
             return true;
         } else {
@@ -161,12 +164,10 @@ bool Simulation::contact(Mobile& robot) {
 }
 
 bool alignement_particule(Carre &cible, Mobile &robot) {
-    cout << "alignement..." << endl;
     bool coin(is_coin(cible, robot));
     S2d direction(robot.get_forme().centre - cible.centre);
     double angle_direction(atan2(direction.y, direction.x));
     int quadrant(choix_quadrant(angle_direction));
-    cout << "Quadrant: " << quadrant << endl;
     Carre new_cible(cible);
     new_cible.centre = robot.get_forme().centre;
     switch(quadrant) {
@@ -193,12 +194,9 @@ bool alignement_particule(Carre &cible, Mobile &robot) {
     angle_direction = atan2(direction.y, direction.x);
     double delta_angle(angle_direction - robot.get_angle());
     normalise_delta(delta_angle);
-    cout << "angle robot: " << fmod(abs(robot.get_angle()), M_PI/2) << endl;
     if(fmod(abs(robot.get_angle()), M_PI/2) < epsil_alignement and !coin) {
-        cout << "Neutralise, pas coin." << endl;
         return true;
     } else if(abs(fmod(delta_angle, M_PI)) < epsil_alignement and coin) {
-        cout << "Neutralise, coin." << endl;
         return true;
     }
     return false;

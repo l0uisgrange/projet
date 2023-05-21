@@ -34,6 +34,7 @@ public:
     virtual double& get_angle() { return angle_; }
     virtual void set_angle(double angle) {}
     virtual double& get_vrot() { return vrot_; }
+    virtual void set_collisionRN(bool c) { }
     virtual void set_vrot(double vrot) {}
 protected:
     void draw() const override {};
@@ -56,7 +57,7 @@ public:
     double& get_angle() override { return angle_; }
     double& get_vrot() override { return vrot_; }
     bool get_collision() { return collision_; }
-    void set_collisionRN(bool c) { collisionRN_ = c; }
+    void set_collisionRN(bool c) override { collisionRN_ = c; }
     void draw() const override;
     void turn(Carre& cible) override;
     void move();
