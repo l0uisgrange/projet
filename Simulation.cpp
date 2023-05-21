@@ -227,6 +227,7 @@ bool is_coin(Carre &cible, Mobile &robot){
 }
 
 void Simulation::update_neutraliseurs() {
+    V_neutraliseur a_garder;
     for(auto& neutraliseur: neutraliseurs_) {
         if(neutraliseur.has_job() and !neutraliseur.get_panne()) {
             Cercle forme = neutraliseur.get_forme();
@@ -240,6 +241,7 @@ void Simulation::update_neutraliseurs() {
                 neutraliseur.set_collision(false);
             }
             neutraliseur.set_job(false);
+            a_garder.push_back(neutraliseur);
         } else if(!neutraliseur.get_panne()) {
             Cercle forme = neutraliseur.get_forme();
             neutraliseur.move();
@@ -254,11 +256,12 @@ void Simulation::update_neutraliseurs() {
             if(vecteur_distance.norme() < r_spatial) {
                 spatial_.set_nbNs(int(spatial_.get_nbNs())-1);
                 spatial_.set_nbNr(int(spatial_.get_nbNr())+1);
-                neutraliseur = neutraliseurs_[neutraliseurs_.size()-1];
-                neutraliseurs_.pop_back();
+            } else {
+                a_garder.push_back(neutraliseur);
             }
         }
     }
+    neutraliseurs_ = a_garder;
 }
 
 void Simulation::set_Spatial(Spatial &S) {
