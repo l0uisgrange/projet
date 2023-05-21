@@ -242,7 +242,7 @@ void Spatial::update(vector<Particule> &particules,
         int R_en_manque(min(int(neutraliseurs_detresse.size()), nbRr_));
         // Priorité va sur le réparateur, sinon sur le neutraliseur
         R_en_manque > 0 ? spawn_R = true : spawn_N = true;
-        if(nbRr_ > 0) {
+        if(spawn_R and nbRr_ > 0) {
             creation_reparateur(this, neutraliseurs_detresse, spawn_N, spawn_R,
                             reparateurs);
         }
@@ -412,34 +412,32 @@ void creation_reparateur(Spatial *spatial,
                          bool &spawn_N, bool &spawn_R,
                          vector<Reparateur> &reparateurs) {
     // Création nouveau réparateur
-    if(spawn_R) {
-        if(neutraliseurs_detresse.size() > 0) {
-            Neutraliseur N_proche(neutraliseurs_detresse[0]);
-            double dist_min((spatial->get_forme().centre -
-                            N_proche.get_forme().centre).norme());
-            for (auto &neutraliseur: neutraliseurs_detresse) {
-                //trouver celui le plus proche
-                S2d direction(spatial->get_forme().centre -
-                            neutraliseur.get_forme().centre);
-                double dist(direction.norme());
-                if (dist < dist_min) {
-                    dist_min = dist;
-                    N_proche = neutraliseur;
-                }
+    if(!neutraliseurs_detresse.empty()) {
+        Neutraliseur N_proche(neutraliseurs_detresse[0]);
+        double dist_min((spatial->get_forme().centre -
+                        N_proche.get_forme().centre).norme());
+        for (auto &neutraliseur: neutraliseurs_detresse) {
+            //trouver celui le plus proche
+            S2d direction(spatial->get_forme().centre -
+                        neutraliseur.get_forme().centre);
+            double dist(direction.norme());
+            if (dist < dist_min) {
+                dist_min = dist;
+                N_proche = neutraliseur;
             }
-            //distance jusqu'au robot
-            double dist_robot((max_update - (N_proche.get_nbUpdate()-
-                                             N_proche.get_k_update_panne()))*vtran_max);
-            if(dist_min < dist_robot){
-                Reparateur R(spatial->get_forme().centre); //TODO: mettre contrôle superpostion
-                reparateurs.push_back(R);
-                spatial->set_nbRs(spatial->get_nbRs()+1);
-                spatial->set_nbRr(spatial->get_nbRr()-1);
-            } else { //si réparateur trop loin, on crée un neutraliseur
-                spawn_N = true;
-            }
-        } else {
+        }
+        //distance jusqu'au robot
+        double dist_robot((max_update - (N_proche.get_nbUpdate()-
+                                         N_proche.get_k_update_panne()))*vtran_max);
+        if(dist_min < dist_robot){
+            Reparateur R(spatial->get_forme().centre); //TODO: mettre contrôle superpostion
+            reparateurs.push_back(R);
+            spatial->set_nbRs(spatial->get_nbRs()+1);
+            spatial->set_nbRr(spatial->get_nbRr()-1);
+        } else { // si réparateur trop loin, on crée un neutraliseur
             spawn_N = true;
         }
+    } else {
+        spawn_N = true;
     }
 }
