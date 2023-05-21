@@ -27,9 +27,9 @@ public:
     virtual Cercle get_forme() const { return forme_; }
     virtual void set_job(bool b) { job_ = b; }
     virtual bool has_job() const { return job_; }
-    virtual void set_collision(bool b) { collision_ = b; }
+    virtual void set_collision(bool b) {} ;
     virtual void turn(Carre& cible) {};
-    virtual double& get_angle() {}
+    virtual double& get_angle() { }
     virtual void set_angle(double angle) {}
     virtual double& get_vrot() {}
     virtual void set_vrot(double vrot) {}
@@ -38,7 +38,6 @@ protected:
 private:
     Cercle forme_;
     bool job_;
-    bool collision_;
 };
 
 class Neutraliseur : public Mobile {
