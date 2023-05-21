@@ -29,15 +29,12 @@ public:
     std::vector<Reparateur>& get_reparateurs() { return reparateurs_; };
     std::vector<Particule>& get_particules() { return particules_; };
     Spatial& get_spatial() { return spatial_; };
-    void add_neutraliseur(Neutraliseur& N);
-    void add_reparateur(Reparateur& R);
-    void add_particule(Particule& P);
     void lecture(std::ifstream& entree);
     void erreurs_construction();
     void erreurs_superposition();
     void update_particules();
+    void update_reparateurs();
     void update_neutraliseurs();
-    void decisions_spatial();
     bool contact(Mobile& robot);
     void destroy_neutraliseurs();
     void draw_simulation();

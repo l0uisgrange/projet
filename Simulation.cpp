@@ -19,6 +19,8 @@ void Simulation::update() {
     update_particules();
     destroy_neutraliseurs();
     spatial_.update(particules_, neutraliseurs_, reparateurs_);
+    spatial_.assigner_N(neutraliseurs_, particules_);
+    spatial_.assigner_R(reparateurs_, neutraliseurs_);
     update_neutraliseurs();
     update_reparateurs();
 }
@@ -55,8 +57,7 @@ void Simulation::update_particules() {
     particules_ = tri_particules(nouvelle_liste);
 }
 
-std::vector<Particule> tri_particules(std::vector<Particule>& p) {
-    // Tri par insertion
+std::vector<Particule> tri_particules(std::vector<Particule>& p) {// Tri par insertion
     Carre c;
     Particule tmp(c);
     int j;
@@ -116,8 +117,7 @@ void Simulation::update_reparateurs() {
         if(!reparateurs_[i].has_job()) {
             reparateurs_[i].move(spatial_.get_forme());
             S2d vecteur_distance = reparateurs_[i].get_forme().centre - spatial_.get_forme().centre;
-            double distance = vecteur_distance.norme();
-            if(distance <= r_spatial) {
+            if(vecteur_distance.norme() <= r_spatial) {
                 spatial_.set_nbRs(spatial_.get_nbRs() - 1);
                 spatial_.set_nbRr(spatial_.get_nbRr() + 1);
                 reparateurs_[i] = reparateurs_[reparateurs_.size() - 1];
@@ -176,25 +176,24 @@ bool alignement_particule(Carre &cible, Mobile &robot) {
     int quadrant(choix_quadrant(delta_angle));
     Carre new_cible(cible);
     new_cible.centre = robot.get_forme().centre;
-    if(coin){
+    if(coin) {
         new_cible = cible;
     }
-        switch (quadrant) {
-            case 1: {
-                new_cible.centre.y -= r_neutraliseur;
-                break;
-            }
-            case 2:
-                new_cible.centre.x += r_neutraliseur;
-                break;
-            case 3:
-                new_cible.centre.y += r_neutraliseur;
-                break;
-            case 4:
-                new_cible.centre.x -= r_neutraliseur;
+    switch(quadrant) {
+        case 1: {
+            new_cible.centre.y -= r_neutraliseur;
+            break;
         }
+        case 2:
+            new_cible.centre.x += r_neutraliseur;
+            break;
+        case 3:
+            new_cible.centre.y += r_neutraliseur;
+            break;
+        case 4:
+            new_cible.centre.x -= r_neutraliseur;
+    }
     robot.turn(new_cible);
-
     if(fmod(abs(robot.get_angle()), M_PI/2) < epsil_alignement and !coin) {
         robot.set_collision(false);
         return true;
@@ -205,12 +204,12 @@ bool alignement_particule(Carre &cible, Mobile &robot) {
     return false;
 }
 
-int choix_quadrant(double angle){ //Pour savoir quelle face on touche
-    if(angle < 3*M_PI/4 and angle >= M_PI/4){
+int choix_quadrant(double angle) { // Pour savoir quelle face on touche
+    if(angle < 3*M_PI/4 and angle >= M_PI/4) {
         return 1;
-    } else if(angle <= M_PI/4 and angle > -M_PI/4){
+    } else if(angle <= M_PI/4 and angle > -M_PI/4) {
         return 2;
-    } else if(angle < -M_PI/4 and angle >= -3*M_PI/4){
+    } else if(angle < -M_PI/4 and angle >= -3*M_PI/4) {
         return 3;
     } else {
         return 4;
@@ -222,13 +221,12 @@ bool is_coin(Carre &cible, Mobile &robot){
     double rayon_lim(sqrt(pow(cible.cote/2,2) + pow(cible.cote/2+r_neutraliseur,2)));
     S2d vect_direction(cible.centre - robot.get_forme().centre);
     double distance_robot(vect_direction.norme());
-    if(rayon_lim > distance_robot){
+    if(rayon_lim > distance_robot) {
         return false;
     } else {
         return true;
     }
 }
-
 
 void Simulation::update_neutraliseurs() {
     double distance_minimale;
@@ -464,7 +462,6 @@ void Simulation::erreurs_construction() {
     }
 }
 
-
 void Simulation::set_nbP(int value) {
     if(value >= 0) {
         nbP_ = value;
@@ -480,7 +477,7 @@ void init_Particule(const string& line, Etat& etape, Simulation* sim) {
     Carre c;
     if(ligne >> c.centre.x >> c.centre.y >> c.cote) {
         Particule P(c);
-        sim->add_particule(P);
+        sim->get_particules().push_back(P);
         if(int(sim->get_particules().size()) == sim->get_nbP()) {
             etape = SPATIAL;
         }
@@ -516,7 +513,7 @@ void init_Reparateur(const string& line, Etat& etape, Simulation* sim) {
             etape = NEUTRALISEUR;
         }
         Reparateur R(position);
-        sim->add_reparateur(R);
+        sim->get_reparateurs().push_back(R);
     } else {
         sim->set_dessiner(false);
     }
@@ -542,29 +539,17 @@ void init_Neutraliseur(const string& line, Simulation* sim) {
             Neutraliseur N(position, a1, c_n, panne,
                            k_update_panne,
                            sim->get_spatial().get_update());
-            sim->add_neutraliseur(N);
+            sim->get_neutraliseurs().push_back(N);
         }
     } else {
         sim->set_dessiner(false);
     }
 }
 
-void Simulation::add_particule(Particule& P){
-    particules_.push_back(P);
-}
-
-void Simulation::add_reparateur(Reparateur& R) {
-    reparateurs_.push_back(R);
-}
-
-void Simulation::add_neutraliseur(Neutraliseur& N) {
-    neutraliseurs_.push_back(N);
-}
-
 int Simulation::get_nbNp(){
     int nbNp(0);
     for(auto& N: neutraliseurs_) {
-        if (N.get_panne()) {
+        if(N.get_panne()) {
             nbNp++;
         }
     }

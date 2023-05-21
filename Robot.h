@@ -120,6 +120,8 @@ public:
     void update(std::vector<Particule>& particules,
                 std::vector<Neutraliseur>& neutraliseurs,
                 std::vector<Reparateur>& reparateurs);
+    void assigner_N(std::vector<Neutraliseur>& neutraliseurs, std::vector<Particule>& particules);
+    void assigner_R(std::vector<Reparateur>& reparateurs, std::vector<Neutraliseur>& neutraliseurs);
     ~Spatial() override = default;
 private:
     Cercle forme_;
