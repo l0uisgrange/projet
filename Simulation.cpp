@@ -19,6 +19,8 @@ void Simulation::update() {
     update_particules();
     destroy_neutraliseurs();
     spatial_.update(particules_, neutraliseurs_, reparateurs_);
+    spatial_.assigner_N(neutraliseurs_, particules_);
+    spatial_.assigner_R(reparateurs_, neutraliseurs_);
     update_neutraliseurs();
     update_reparateurs();
 }
@@ -86,20 +88,7 @@ void Simulation::update_reparateurs() {
     int id_r(-1);
     for(const auto& neutraliseur : neutraliseurs_) {
         if(neutraliseur.get_panne()) {
-            for(int r = 0; r < reparateurs_.size(); r++) {
-                if(reparateurs_[r].has_job()) {
-                    continue;
-                }
-                S2d vecteur_distance = neutraliseur.get_forme().centre
-                        - reparateurs_[r].get_forme().centre;
-                double distance = vecteur_distance.norme();
-                if(distance < distance_minimale
-                   and distance < (max_update - (spatial_.get_update()
-                   - neutraliseur.get_k_update_panne())) * vtran_max) {
-                    id_r = r;
-                    distance_minimale = distance;
-                }
-            }
+            spatial_.get_but();
         }
         if(id_r > -1) {
             Cercle forme = reparateurs_[id_r].get_forme();
@@ -115,8 +104,7 @@ void Simulation::update_reparateurs() {
         if(!reparateurs_[i].has_job()) {
             reparateurs_[i].move(spatial_.get_forme());
             S2d vecteur_distance = reparateurs_[i].get_forme().centre - spatial_.get_forme().centre;
-            double distance = vecteur_distance.norme();
-            if(distance <= r_spatial) {
+            if(vecteur_distance.norme() <= r_spatial) {
                 spatial_.set_nbRs(spatial_.get_nbRs() - 1);
                 spatial_.set_nbRr(spatial_.get_nbRr() + 1);
                 reparateurs_[i] = reparateurs_[reparateurs_.size() - 1];

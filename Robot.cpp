@@ -311,3 +311,11 @@ void Spatial::update(vector<Particule> &particules,
         }
     }
 }
+
+void assigner_N(std::vector<Neutraliseur>& neutraliseurs, std::vector<Particule>& particules) {
+
+}
+
+void assigner_R(std::vector<Reparateur>& reparateurs, std::vector<Neutraliseur>& neutraliseurs) {
+
+}
