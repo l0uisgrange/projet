@@ -50,8 +50,9 @@ bool Spatial::hors_domaine() const {
 
 Neutraliseur::Neutraliseur(S2d position, double angle, int coordination, bool panne,
                            int k_update_panne, int nbUpdate)
-    : angle_(angle), panne_(panne), collision_(false), collisionRN_(false), coordination_(coordination),
-    k_update_panne_(k_update_panne), nbUpdate_(nbUpdate), job_(false) {
+    : angle_(angle), panne_(panne), collision_(false), collisionRN_(false),
+    coordination_(coordination), k_update_panne_(k_update_panne),
+    nbUpdate_(nbUpdate), job_(false) {
     forme_.centre.x = position.x;
     forme_.centre.y = position.y;
     forme_.rayon = r_neutraliseur;
@@ -396,7 +397,7 @@ void creation_reparateur(Spatial *spatial, bool &spawn_N, bool &spawn_R,
             }
             //distance jusqu'au robot
             double dist_robot((max_update - (N_proche.get_nbUpdate()-
-                                             N_proche.get_k_update_panne()))*vtran_max);
+                                N_proche.get_k_update_panne()))*vtran_max);
             if(dist_min < dist_robot){
                 Reparateur R(spatial->get_forme().centre);
                 if(!single_superposition_R_N(neutraliseurs,
@@ -417,17 +418,12 @@ void creation_reparateur(Spatial *spatial, bool &spawn_N, bool &spawn_R,
 void creation_neutraliseur(Spatial *spatial, V_neutraliseur &neutraliseurs,
                            V_particule& particules, V_reparateur& reparateurs,
                            bool& spawn_N) {
-    if(spawn_N and spatial->get_nbNs() < 3) {
-        vector<Particule> particules_libres; //celles qui sont pas ciblés
-        for(const auto & particule : particules){
-            if(!particule.is_target()){
-                particules_libres.push_back(particule);
-            }
-        }
-        if(particules_libres.size() > 0) {
-            Particule P_proche(trouver_P(spatial, particules_libres));
-            double angle(atan2(P_proche.get_forme().centre.y,
-                               P_proche.get_forme().centre.x));
+    if(spawn_N and spatial->get_nbNs() < 3 and
+       spatial->get_nbNs() < particules.size()) {
+        if(particules.size() > 0) {
+            Particule P_max(trouver_P(spatial, particules));
+            double angle(atan2(P_max.get_forme().centre.y,
+                               P_max.get_forme().centre.x));
             int c_n((spatial->get_nbNs() + spatial->get_nbNd()) % 3);
             Neutraliseur new_N(spatial->get_forme().centre, angle, c_n,
                                false, 0, spatial->get_update());
@@ -460,13 +456,13 @@ bool single_superposition_R_N(V_neutraliseur& neutraliseurs,
 }
 
 Particule trouver_P(Spatial *spatial, V_particule& particules_libres){
-    Particule P_proche(particules_libres[0]); //trouver particule la plus proche
-    int taille_max(P_proche.get_forme().cote);
+    Particule P_max(particules_libres[0]); //trouver particule la plus proche
+    double taille_max(P_max.get_forme().cote);
     for (auto &P: particules_libres) {
-        int taille(P.get_forme().cote);
+        double taille(P.get_forme().cote);
         if (taille > taille_max) {
-            P_proche = P;
+            P_max = P;
         }
     }
-    return P_proche;
+    return P_max;
 }
