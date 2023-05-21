@@ -162,5 +162,6 @@ Particule trouver_P_proche(Spatial *spatial, V_particule& particules_libres);
 //vérifie superposition pour création de robot
 bool single_superposition_R_N(V_neutraliseur& neutraliseurs,
                               V_reparateur& reparateurs, Cercle& new_N);
+double distance_min(Neutraliseur n, Particule p);
 
 #endif
