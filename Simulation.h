@@ -62,6 +62,6 @@ void superposition_P_R_N(std::vector<Cercle>& tab1, std::vector<Carre>& tab2,
                          Simulation* sim);
 void tri_particules(std::vector<Particule>& particules);
 bool alignement_particule(Carre &cible, Mobile &robot);
-int choix_quadrant(S2d direction);
+int choix_quadrant(double angle);
 bool is_coin(Carre &cible, Mobile &robot);
 #endif

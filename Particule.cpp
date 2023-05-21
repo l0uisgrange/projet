@@ -38,7 +38,4 @@ void Particule::draw() const {
                forme_.cote, GRIS);
     draw_carre(forme_.centre.x-forme_.cote/2, forme_.centre.y-forme_.cote/2,
                forme_.cote, ROUGE);
-    //TODO enlever
-    draw_carre(forme_.centre.x-forme_.cote*risk_factor/2, forme_.centre.y-forme_.cote*risk_factor/2,
-               forme_.cote*risk_factor, GRIS);
 }

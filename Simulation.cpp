@@ -122,7 +122,7 @@ bool Simulation::contact(Mobile& robot) {
             if(robot.get_forme().rayon == r_neutraliseur) {
                 robot.set_collision(true);
                 if(alignement_particule(particules_[i].get_forme(), robot)) {
-                    particules_[i]=particules_[particules_.size()-1];
+                    particules_[i] = particules_[particules_.size()-1];
                     particules_.pop_back();
                 }
             }
@@ -156,10 +156,10 @@ bool alignement_particule(Carre &cible, Mobile &robot) {
     S2d direction(cible.centre - robot.get_forme().centre);
     double angle_direction(atan2(direction.y, direction.x));
     double delta_angle(angle_direction - robot.get_angle());
-    int quadrant(choix_quadrant(direction));
+    int quadrant(choix_quadrant(angle_direction));
     Carre new_cible(cible);
     if(!coin) {
-        new_cible.centre = robot.get_forme().centre;;
+        new_cible.centre = robot.get_forme().centre;
     }
     switch(quadrant) {
         case 1: {
@@ -189,18 +189,16 @@ bool alignement_particule(Carre &cible, Mobile &robot) {
     return false;
 }
 
-int choix_quadrant(S2d dir) { // Pour savoir quelle face on touche
-    double angle_direction(atan2(dir.y, dir.x));
-    if(angle_direction >= 0 and angle_direction <= M_PI/2) {
+int choix_quadrant(double angle) { // Pour savoir quelle face on touche
+    if(angle < 3*M_PI/4 and angle >= M_PI/4) {
         return 1;
-    } else if(angle_direction >= M_PI/2 and angle_direction <= M_PI) {
+    } else if(angle < M_PI/4 and angle > -M_PI/4) {
         return 2;
-    } else if(angle_direction <= 0 and angle_direction >= -M_PI/2) {
+    } else if(angle < -M_PI/4 and angle >= -3*M_PI/4) {
         return 3;
-    } else if(angle_direction <= -M_PI/2 and angle_direction >= -M_PI) {
+    } else {
         return 4;
     }
-    return 0;
 }
 
 bool is_coin(Carre &cible, Mobile &robot){
