@@ -259,6 +259,8 @@ void Simulation::update_neutraliseurs() {
             } else {
                 a_garder.push_back(neutraliseur);
             }
+        } else if(neutraliseur.get_panne()) {
+            a_garder.push_back(neutraliseur);
         }
     }
     neutraliseurs_ = a_garder;
