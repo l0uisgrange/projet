@@ -114,11 +114,13 @@ void Reparateur::move() {
 
 void Neutraliseur::turn(Carre& cible) {
     S2d direction;
-    if(coordination_ == 1) {
+    if(coordination_ == 1 and !collision_) {
         S2d point = direction_type1(this, but_);
         if(dans_zone(but_.centre, point, forme_.centre)) {
+            cout << "Dans zone" << endl;
             direction = but_.centre - forme_.centre;
         } else {
+            cout << "pas dans zone" << endl;
             direction = point - forme_.centre;
         }
     } else {
@@ -235,7 +237,7 @@ double normalise_delta(double& delta_angle){
     return delta_angle;
 }
 
-double choix_vrot(double& delta_angle){
+double choix_vrot(double delta_angle){
     double vrot(vrot_max);
     if(abs(delta_angle) < M_PI/12){
         vrot = vrot_max/2;

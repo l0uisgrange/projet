@@ -149,11 +149,9 @@ private:
 
 S2d direction_type1(Neutraliseur* N, Carre cible);
 double normalise_delta(double& delta_angle);
-double choix_vrot(double& delta_angle);
+double choix_vrot(double delta_angle);
 V_neutraliseur creer_neutraliseurs_detresse(V_reparateur& reparateurs,
             V_neutraliseur &neutraliseurs);
-void choix_R_ou_N(Spatial *spatial, bool& spawn_R, bool& spawn_N,
-                  int& nbP, int& nbN_detresse);
 void creation_reparateur(Spatial *spatial, bool &spawn_N, bool &spawn_R,
                          V_neutraliseur &neutraliseurs_detresse,
                          V_neutraliseur& neutraliseurs, V_reparateur& reparateurs);
