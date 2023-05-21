@@ -238,57 +238,15 @@ void Spatial::update(V_particule& particules, V_neutraliseur &neutraliseurs,
                                                              neutraliseurs);
         bool spawn_N(false);
         bool spawn_R(false);
-        int nbP(particules.size());
-        int nbN_detresse(neutraliseurs_detresse.size());
-        choix_R_ou_N(this, spawn_R, spawn_N, nbP,
-                     nbN_detresse);
-        creation_reparateur(this, spawn_N, spawn_R, neutraliseurs_detresse,
-                            neutraliseurs, reparateurs);
-        creation_neutraliseur(this, neutraliseurs, particules, reparateurs, spawn_N);
         int R_en_manque(min(int(neutraliseurs_detresse.size()), nbRr_));
         // Priorité va sur le réparateur, sinon sur le neutraliseur
         R_en_manque > 0 ? spawn_R = true : spawn_N = true;
         if(nbRr_ > 0) {
-            creation_reparateur(this, neutraliseurs_detresse, spawn_N, spawn_R,
-                            reparateurs);
-        }
-        // Création nouveau neutraliseur
-        if(spawn_N and nbNs_ < 3 and nbNr_ > 0) {
-            vector<Particule> particules_libres; //celles qui sont pas ciblés
-            for(const auto & particule : particules){
-                if(!particule.is_target()){
-                    particules_libres.push_back(particule);
-                }
-            }
-            //trouver particule libre plus proche
-            Particule P_proche(particules_libres[0]);
-            double dist_min((forme_.centre-P_proche.get_forme().centre).norme());
-            for(auto &P : particules_libres){
-                double dist((forme_.centre-P.get_forme().centre).norme());
-                if(dist < dist_min){
-                    P_proche = P;
-                }
-            }
-            //création nouveau neutraliseur, avec bonnes paramètres
-            double angle(atan2(P_proche.get_forme().centre.y,
-                               P_proche.get_forme().centre.x));
-            int c_n((nbNs_+nbNd_)%3);
-            Neutraliseur new_N(forme_.centre, angle, c_n, false, 0, nbUpdate_);
-            //Check superposition avec un neutraliseur
-            bool collision(false);
-            for(auto &N: neutraliseurs){
-                if(superposition(new_N.get_forme(), N.get_forme())){
-                    collision = true;
-                }
-            }
-            if(!collision){
-                //TODO: mettre cible
-                new_N.set_job(true);
-                neutraliseurs.push_back(new_N);
-                --nbNr_;
-                ++nbNs_;
-            }
-            neutraliseurs.push_back(new_N);
+            creation_reparateur(this, spawn_N, spawn_R, neutraliseurs_detresse,
+                                neutraliseurs, reparateurs);
+        } else if(nbNr_ > 0) {
+            creation_neutraliseur(this, neutraliseurs, particules,
+                                  reparateurs, spawn_N);
         }
     }
 }
@@ -412,10 +370,9 @@ V_neutraliseur creer_neutraliseurs_detresse(V_reparateur& reparateurs,
     return neutraliseurs_detresse;
 }
 
-void creation_reparateur(Spatial *spatial,
-                         vector<Neutraliseur> &neutraliseurs_detresse,
-                         bool &spawn_N, bool &spawn_R,
-                         vector<Reparateur> &reparateurs) {
+void creation_reparateur(Spatial *spatial, bool &spawn_N, bool &spawn_R,
+                         V_neutraliseur &neutraliseurs_detresse,
+                         V_neutraliseur& neutraliseurs, V_reparateur& reparateurs) {
     // Création nouveau réparateur
     if(spawn_R) {
         if(neutraliseurs_detresse.size() > 0) {
