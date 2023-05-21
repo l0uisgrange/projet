@@ -102,7 +102,8 @@ void Simulation::update_reparateurs() {
         if(!reparateur.has_job()) {
             reparateur.set_but(spatial_.get_forme().centre);
             reparateur.move();
-            S2d vecteur_distance = reparateur.get_forme().centre - spatial_.get_forme().centre;
+            S2d vecteur_distance = reparateur.get_forme().centre -
+                                   spatial_.get_forme().centre;
             if(vecteur_distance.norme() <= r_spatial) {
                 spatial_.set_nbRs(spatial_.get_nbRs() - 1);
                 spatial_.set_nbRr(spatial_.get_nbRr() + 1);
@@ -156,7 +157,6 @@ bool alignement_particule(Carre &cible, Mobile &robot) {
     S2d direction(robot.get_forme().centre - cible.centre);
     double angle_direction(atan2(direction.y, direction.x));
     int quadrant(choix_quadrant(angle_direction));
-    cout << "angle direction: " << angle_direction << endl;
     Carre new_cible(cible);
     new_cible.centre = robot.get_forme().centre;
 
@@ -230,11 +230,16 @@ void Simulation::update_neutraliseurs() {
             }
             neutraliseur.set_job(false);
         } else if(!neutraliseur.get_panne()) {
-            Carre position_spatial;
-            position_spatial.centre = spatial_.get_forme().centre;
-            neutraliseur.set_but(position_spatial);
-            neutraliseur.set_job(true);
-            S2d vecteur_distance = neutraliseur.get_forme().centre - spatial_.get_forme().centre;
+            Cercle forme = neutraliseur.get_forme();
+            neutraliseur.move();
+            neutraliseur.turn(neutraliseur.get_but());
+            if(contact(neutraliseur)) {
+                neutraliseur.set_forme(forme);
+            } else {
+                neutraliseur.set_collision(false);
+            }
+            S2d vecteur_distance = neutraliseur.get_forme().centre -
+                                   spatial_.get_forme().centre;
             if(vecteur_distance.norme() < r_spatial) {
                 spatial_.set_nbNr(int(spatial_.get_nbNr())+1);
                 neutraliseur = neutraliseurs_[neutraliseurs_.size()-1];

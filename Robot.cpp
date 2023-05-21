@@ -306,6 +306,14 @@ void Spatial::assigner_N(std::vector<Neutraliseur>& neu,
             }
         }
     } // Réinitialisation des jobs
+    for(auto& neutraliseur : neu) {
+        if(!neutraliseur.has_job()) {
+            Carre forme;
+            forme.centre = forme_.centre;
+            neutraliseur.set_but(forme);
+            neutraliseur.set_job(false);
+        }
+    }
     for(auto& particule : part) { particule.set_target(false); }
 }
 
@@ -397,7 +405,7 @@ void creation_reparateur(Spatial *spatial, bool &spawn_N, bool &spawn_R,
 void creation_neutraliseur(Spatial *spatial, V_neutraliseur &neutraliseurs,
                            V_particule& particules, V_reparateur& reparateurs,
                            bool& spawn_N) {
-    if(spawn_N and spatial->get_nbNs() < 3){
+    if(spawn_N and spatial->get_nbNs() < 3) {
         vector<Particule> particules_libres; //celles qui sont pas ciblés
         for(const auto & particule : particules){
             if(!particule.is_target()){
@@ -411,7 +419,7 @@ void creation_neutraliseur(Spatial *spatial, V_neutraliseur &neutraliseurs,
             int c_n((spatial->get_nbNs() + spatial->get_nbNd()) % 3);
             Neutraliseur new_N(spatial->get_forme().centre, angle, c_n,
                                false, 0, spatial->get_update());
-            if (!single_superposition_R_N(neutraliseurs, reparateurs, new_N.get_forme())) {
+            if(!single_superposition_R_N(neutraliseurs, reparateurs, new_N.get_forme())) {
                 new_N.set_job(true); //TODO: mettre cible
                 neutraliseurs.push_back(new_N);
                 spatial->set_nbNr(spatial->get_nbNr() - 1);
