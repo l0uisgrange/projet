@@ -238,23 +238,18 @@ void Spatial::set_update(int update) {
 void Spatial::update(V_particule& particules, V_neutraliseur &neutraliseurs,
                      V_reparateur &reparateurs) {
     if(fmod(nbUpdate_, modulo_update) == 0 and nbUpdate_ != 0) {
-        cout << "Dans spatial update!" << endl;
         vector<Neutraliseur> neutraliseurs_detresse;
         neutraliseurs_detresse = creer_neutraliseurs_detresse(reparateurs,
                                                              neutraliseurs);
-        cout << "taille N detresse: " << neutraliseurs_detresse.size() << endl;
         bool spawn_N(false);
         bool spawn_R(false);
         int R_en_manque(min(int(neutraliseurs_detresse.size()), nbRr_));
         // Priorité va sur le réparateur, sinon sur le neutraliseur
         R_en_manque > 0 ? spawn_R = true : spawn_N = true;
-        cout <<"spawn_R: " << spawn_R << " ; spawn_N: " << spawn_N << endl;
         if(nbRr_ > 0 and spawn_R) {
-            cout << "créer R" << endl;
             creation_reparateur(this, spawn_N, spawn_R, neutraliseurs_detresse,
                                 neutraliseurs, reparateurs);
         } else if(nbNr_ > 0) {
-            cout << "créer N " << endl;
             creation_neutraliseur(this, neutraliseurs, particules,
                                   reparateurs, spawn_N);
         }
