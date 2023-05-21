@@ -375,6 +375,8 @@ void decodage_ligne(const string& line, Etat& etape, Simulation* simulation) {
                 init_Particule(line, etape, simulation);
             } else {
                 etape = SPATIAL;
+                init_Spatial(line, etape, simulation);
+                etape = REPARATEUR;
             }
             break;
         case SPATIAL:
