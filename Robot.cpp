@@ -286,14 +286,53 @@ void Spatial::update(vector<Particule> &particules,
 
 void Spatial::assigner_N(std::vector<Neutraliseur>& neutraliseurs,
                          std::vector<Particule>& particules) const {
-
+    double distance_minimale(5*dmax);
+    int id_n(-1);
+    for(auto& particule : particules) {
+        while(!particule.is_target()) {
+            for(int n=0; n<neutraliseurs.size(); n++) {
+                if(neutraliseurs[n].has_job()) {
+                    continue;
+                }
+                S2d vecteur_distance = neutraliseurs[n].get_forme().centre
+                                       - particule.get_forme().centre;
+                if(vecteur_distance.norme() < distance_minimale
+                    and vecteur_distance.norme() < (max_update -
+                                                    (nbUpdate_ - particule.get_())) * vtran_max) {
+                    id_n = n;
+                    distance_minimale = vecteur_distance.norme();
+                }
+            }
+            for(int a = 0; a < particules_.size(); a++) {
+                if(particules_[a].get_forme().cote < cote or particules_[a].is_target()) {
+                    continue;
+                }
+                S2d vecteur_distance = neutraliseurs_[id_n].get_forme().centre
+                        - particules_[a].get_forme().centre;
+                double distance = vecteur_distance.norme();
+                if(distance < distance_minimale) {
+                    distance_minimale = distance;
+                    id_p = a;
+                }
+            }
+            if(id_n == -1) {
+                particule.set_target(true);
+            }
+        }
+    }
+    for(auto& neutraliseur : neutraliseurs) {
+        neutraliseur.set_job(false);
+    }
+    for(auto& particule : particules) {
+        particule.set_target(false);
+    }
 }
 
 void Spatial::assigner_R(std::vector<Reparateur>& reparateurs,
                          std::vector<Neutraliseur>& neutraliseurs) const {
-    double distance_minimale(5*dmax);
-    int id_r(-1);
     for(const auto& neutraliseur : neutraliseurs) {
+        double distance_minimale(5*dmax);
+        int id_r(-1);
         if(neutraliseur.get_panne()) {
             for(int r = 0; r < reparateurs.size(); r++) {
                 if (reparateurs[r].has_job()) {

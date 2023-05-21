@@ -17,6 +17,7 @@ static default_random_engine e;
 void Simulation::update() {
     spatial_.set_update(spatial_.get_update() + 1);
     update_particules();
+    tri_particules(particules_);
     destroy_neutraliseurs();
     spatial_.update(particules_, neutraliseurs_, reparateurs_);
     spatial_.assigner_N(neutraliseurs_, particules_);
@@ -54,10 +55,9 @@ void Simulation::update_particules() {
         }
     }
     nbP_ = int(nouvelle_liste.size());
-    particules_ = tri_particules(nouvelle_liste);
 }
 
-std::vector<Particule> tri_particules(std::vector<Particule>& p) {// Tri par insertion
+void tri_particules(std::vector<Particule>& p) { // Tri par insertion
     Carre c;
     Particule tmp(c);
     int j;
@@ -70,7 +70,6 @@ std::vector<Particule> tri_particules(std::vector<Particule>& p) {// Tri par ins
         }
         p[j] = tmp;
     }
-    return p;
 }
 
 void Simulation::destroy_neutraliseurs() {
@@ -210,75 +209,15 @@ bool is_coin(Carre &cible, Mobile &robot){
 }
 
 void Simulation::update_neutraliseurs() {
-    double distance_minimale;
-    int id_n;
-    int id_p;
-    bool var;
-    for(int p = 0; p < particules_.size(); p++) {
-        if(particules_[p].is_target()) {
-            continue;
+    for(auto& neutraliseur: neutraliseurs_) {
+        Cercle forme = neutraliseur.get_forme();
+        if(!neutraliseur.get_collision()) {
+            neutraliseur.turn(neutraliseur.get_but());
         }
-        var = true;
-        while(var) {
-            distance_minimale = 5 * dmax;
-            id_n = -1;
-            for(int n = 0; n < neutraliseurs_.size(); n++) {
-                if(!neutraliseurs_[n].has_job() and !neutraliseurs_[n].get_panne()) {
-                    S2d vecteur_distance = neutraliseurs_[n].get_forme().centre
-                            - particules_[p].get_forme().centre;
-                    double distance_temps = vecteur_distance.norme() * vtran_max;
-                    double angle_direction(atan2(vecteur_distance.y, vecteur_distance.x));
-                    double delta_angle(angle_direction - neutraliseurs_[n].get_angle());
-                    normalise_delta(delta_angle);
-                    distance_temps += delta_angle / vrot_max;
-                    if(distance_temps < distance_minimale) {
-                        distance_minimale = distance_temps;
-                        id_n = n;
-                    }
-                }
-            }
-            distance_minimale = 5 * dmax;
-            double cote = particules_[p].get_forme().cote;
-            id_p = p;
-            if(id_n > -1) {
-                for(int a = 0; a < particules_.size(); a++) {
-                    if(particules_[a].get_forme().cote < cote or particules_[a].is_target()) {
-                        continue;
-                    }
-                    S2d vecteur_distance = neutraliseurs_[id_n].get_forme().centre
-                            - particules_[a].get_forme().centre;
-                    double distance = vecteur_distance.norme();
-                    if(distance < distance_minimale) {
-                        distance_minimale = distance;
-                        id_p = a;
-                    }
-                }
-                Cercle forme = neutraliseurs_[id_n].get_forme();
-                cout << endl << "timer:  " << spatial_.get_update() << endl;
-                if(!neutraliseurs_[id_n].get_collision()) {
-                    neutraliseurs_[id_n].turn(particules_[id_p].get_forme());
-                }
-                neutraliseurs_[id_n].move(particules_[id_p].get_forme());
-                if(contact(neutraliseurs_[id_n])) {
-                    neutraliseurs_[id_n].set_forme(forme);
-                }
-                neutraliseurs_[id_n].set_job(true);
-                particules_[id_p].set_target(true);
-                if(id_p != p) {
-                    var = true;
-                } else {
-                    var = false;
-                }
-            } else {
-                var = false;
-            }
+        neutraliseur.move();
+        if(contact(neutraliseur)) {
+            neutraliseur.set_forme(forme);
         }
-    }
-    for(auto& neutraliseur : neutraliseurs_) {
-        neutraliseur.set_job(false);
-    }
-    for(auto& particule : particules_) {
-        particule.set_target(false);
     }
 }
 
