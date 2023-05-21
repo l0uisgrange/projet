@@ -36,12 +36,14 @@ public:
     void update_reparateurs();
     void update_neutraliseurs();
     bool contact(Mobile& robot);
+    bool is_running() { return running_; }
     void destroy_neutraliseurs();
     void draw_simulation();
     void update();
     void clear();
 private:
     int nbP_;
+    bool running_;
     std::vector<Neutraliseur> neutraliseurs_;
     std::vector<Reparateur> reparateurs_;
     std::vector<Particule> particules_;

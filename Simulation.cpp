@@ -1,6 +1,6 @@
 /**
  Simulation.cpp
- Louis Grange et Daniel Ataide
+ Louis Grange () et Daniel Ataide() // TODO pourcentage
  Version 3.0
 **/
 
@@ -24,6 +24,9 @@ void Simulation::update() {
     spatial_.assigner_R(reparateurs_, neutraliseurs_);
     update_neutraliseurs();
     update_reparateurs();
+    if(particules_.empty() and neutraliseurs_.empty() and reparateurs_.empty()) {
+        running_ = false;
+    }
 }
 
 void Simulation::update_particules() {
@@ -517,7 +520,8 @@ vector<Carre> Simulation::get_carres() {
 }
 
 Simulation::Simulation(int nbP)
-    : nbP_(nbP), spatial_(Spatial(S2d(), 0, 0, 0, 0, 0, 0)), dessiner_(false) {}
+    : nbP_(nbP), running_(true), spatial_(Spatial(S2d(), 0, 0, 0, 0, 0, 0)),
+    dessiner_(false) {}
 
 void Simulation::draw_simulation() {
     spatial_.draw();

@@ -173,6 +173,11 @@ void Neutraliseur::move() {
             break;
         case 2:
             if(abs(delta_angle) < M_PI/3 or collision_) {
+                vtran_ = min(double(0.5*direction.norme()),
+                             double(vtran_max));
+                if(abs(delta_angle) > M_PI/6) {
+                    vtran_ /= 2;
+                }
                 forme_.centre.x += vect_angle.x * vtran_ * delta_t;
                 forme_.centre.y += vect_angle.y * vtran_ * delta_t;
             }

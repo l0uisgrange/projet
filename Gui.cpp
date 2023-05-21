@@ -189,6 +189,8 @@ void Window::fichier_selectionne(int reponse, Gtk::FileChooserDialog* dialogue) 
         drawingArea_.set_sim(sim2);
         actualiser_stats();
         drawingArea_.queue_draw();
+        start_button_.set_sensitive(true);
+        step_button_.set_sensitive(true);
     } else if (reponse == 2) {
         ofstream fw(dialogue->get_file()->get_path(), std::ofstream::out);
         fw.is_open();
@@ -244,26 +246,35 @@ void Window::save_button_clicked() {
     dialogue->add_button("Annuler", Gtk::ResponseType::CANCEL);
     dialogue->add_button("Sauvegarder", 2);
     dialogue->show();
-
 }
 
 void Window::start_button_clicked() {
     if(minuteur_) {
         minuteur_ = false;
         start_button_.set_label("start");
-    } else {
+    } else if(drawingArea_.get_sim().is_running()) {
         minuteur_ = true;
         sigc::slot<bool()> my_slot = sigc::bind(sigc::mem_fun(*this,
                                                               &Window::on_timeout));
         auto conn = Glib::signal_timeout().connect(my_slot, int(delta_t*250));
         start_button_.set_label("stop");
+    } else if(!drawingArea_.get_sim().is_running()) {
+        start_button_.set_label("start");
+        start_button_.set_sensitive(false);
+        step_button_.set_sensitive(false);
     }
 }
 
 void Window::step_button_clicked() {
-    drawingArea_.get_sim().update();
-    actualiser_stats();
-    drawingArea_.queue_draw();
+    if(drawingArea_.get_sim().is_running()) {
+        drawingArea_.get_sim().update();
+        actualiser_stats();
+        drawingArea_.queue_draw();
+    } else {
+        start_button_.set_label("start");
+        start_button_.set_sensitive(false);
+        step_button_.set_sensitive(false);
+    }
 }
 
 bool Window::touche_clavier(guint keyval, guint keycode, Gdk::ModifierType state) {
@@ -279,12 +290,17 @@ bool Window::touche_clavier(guint keyval, guint keycode, Gdk::ModifierType state
 }
 
 bool Window::on_timeout() {
-    if(minuteur_) {
+    if(minuteur_ and drawingArea_.get_sim().is_running()) {
         drawingArea_.get_sim().update();
         actualiser_stats();
         drawingArea_.queue_draw();
         return true;
     } else {
+        if(!drawingArea_.get_sim().is_running()) {
+            start_button_.set_label("start");
+            start_button_.set_sensitive(false);
+            step_button_.set_sensitive(false);
+        }
         return false;
     }
 }
