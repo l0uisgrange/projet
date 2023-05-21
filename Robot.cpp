@@ -286,33 +286,39 @@ void Spatial::update(vector<Particule> &particules,
 
 void Spatial::assigner_N(std::vector<Neutraliseur>& neutraliseurs,
                          std::vector<Particule>& particules) const {
-    for(auto& particule : particules) {
-        while(!particule.is_target()) {
+    for(int p=0; p<particules.size(); p++) {
+        while(!particules[p].is_target()) {
             double distance_minimale(5*dmax);
             int id_n(-1);
+            int id_p(-1);
+            // Recherche du neutraliseur le plus proche
             for(int n=0; n<neutraliseurs.size(); n++) {
                 if(neutraliseurs[n].has_job()) { continue; }
                 S2d vecteur_distance = neutraliseurs[n].get_forme().centre
-                                       - particule.get_forme().centre;
+                                       - particules[p].get_forme().centre;
                 if(vecteur_distance.norme() < distance_minimale) {
                     id_n = n;
                     distance_minimale = vecteur_distance.norme();
                 }
             }
-            for(int a = 0; a < particules_.size(); a++) {
-                if(particules_[a].get_forme().cote < cote or particules_[a].is_target()) {
-                    continue;
-                }
-                S2d vecteur_distance = neutraliseurs_[id_n].get_forme().centre
-                        - particules_[a].get_forme().centre;
-                double distance = vecteur_distance.norme();
-                if(distance < distance_minimale) {
-                    distance_minimale = distance;
+            // Si aucun résultat (robots tous occupés par exemple)
+            if(id_n == -1) { break; }
+            // Recherche de la particule b la plus proche de ce neutraliseur
+            for(int a=0; a<particules.size(); a++) {
+                if(particules[a].is_target() or
+                   particules[a].get_forme().cote < particules[p].get_forme().cote) { continue; }
+                S2d vecteur_distance = neutraliseurs[id_n].get_forme().centre
+                        - particules[a].get_forme().centre;
+                if(vecteur_distance.norme() < distance_minimale) {
+                    distance_minimale = vecteur_distance.norme();
                     id_p = a;
                 }
             }
-            if(id_n == -1) {
-                particule.set_target(true);
+            // Vérification que la particule b est la même que la courante
+            if(id_p == p) {
+                neutraliseurs[id_n].set_job(true);
+                neutraliseurs[id_n].set_but(particules[p].get_forme().centre);
+                particules[p].set_target(true);
             }
         }
     }

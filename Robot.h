@@ -64,10 +64,13 @@ public:
     void set_forme(Cercle c) override { forme_ = c; }
     void set_vrot(double vrot) override { vrot_ = vrot; }
     void set_job(bool b) override { job_ = b; }
+    void set_but(S2d b) { but_ = b; }
+    S2d get_but() { return but_; }
     bool has_job() const override { return job_; }
     virtual ~Neutraliseur() = default;
 private:
     Cercle forme_;
+    S2d but_;
     double angle_;
     bool panne_;
     bool collision_;
