@@ -155,22 +155,25 @@ bool alignement_particule(Carre &cible, Mobile &robot) {
     double delta_angle(angle_direction - robot.get_angle());
     int quadrant(choix_quadrant(delta_angle));
     Carre new_cible(cible);
-    new_cible.centre = robot.get_forme().centre;
-    if(coin) {
-        new_cible = cible;
+    if(!coin) {
+        new_cible.centre = robot.get_forme().centre;;
     }
     switch(quadrant) {
         case 1: {
+            cout << "1" << endl;
             new_cible.centre.y -= r_neutraliseur;
             break;
         }
         case 2:
+            cout << "2" << endl;
             new_cible.centre.x -= r_neutraliseur;
             break;
         case 3:
+            cout << "3" << endl;
             new_cible.centre.y += r_neutraliseur;
             break;
         case 4:
+            cout << "4" << endl;
             new_cible.centre.x += r_neutraliseur;
             break;
     }
@@ -209,7 +212,7 @@ bool is_coin(Carre &cible, Mobile &robot){
 
 void Simulation::update_neutraliseurs() {
     for(auto& neutraliseur: neutraliseurs_) {
-        if(neutraliseur.has_job()) {
+        if(neutraliseur.has_job() and !neutraliseur.get_panne()) {
             Cercle forme = neutraliseur.get_forme();
             if(!neutraliseur.get_collision()) {
                 neutraliseur.turn(neutraliseur.get_but());
@@ -221,7 +224,7 @@ void Simulation::update_neutraliseurs() {
                 neutraliseur.set_collision(false);
             }
             neutraliseur.set_job(false);
-        } else {
+        } else if(!neutraliseur.get_panne()) {
             Carre position_spatial;
             position_spatial.centre = spatial_.get_forme().centre;
             neutraliseur.set_but(position_spatial);
