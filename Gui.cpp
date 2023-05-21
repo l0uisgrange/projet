@@ -1,6 +1,6 @@
 /**
  Gui.cpp
- Louis Grange (60%) et Daniel Ataide (40%)
+ Louis Grange (70%) et Daniel Ataide (30%)
  Version 1.0
 **/
 

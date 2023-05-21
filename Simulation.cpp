@@ -371,7 +371,11 @@ void decodage_ligne(const string& line, Etat& etape, Simulation* simulation) {
             break;
         }
         case PARTICULE:
-            init_Particule(line, etape, simulation);
+            if(simulation->get_nbP() > 0) {
+                init_Particule(line, etape, simulation);
+            } else {
+                etape = SPATIAL;
+            }
             break;
         case SPATIAL:
             init_Spatial(line, etape, simulation);

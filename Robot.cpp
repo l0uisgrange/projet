@@ -1,6 +1,6 @@
 /**
  Robot.cpp
- Louis Grange (50%) et Daniel Ataide (50%)
+ Louis Grange (40%) et Daniel Ataide (60%)
  Version 2.4
 **/
 
