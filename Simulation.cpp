@@ -125,6 +125,7 @@ bool Simulation::contact(Mobile& robot) {
     for(int i(0); i < int(particules_.size()); ++i) {
         if(superposition(particules_[i].get_forme(),
                          robot.get_forme(), true)) {
+            cout << "Dans contact" << endl;
             if(robot.get_forme().rayon == r_neutraliseur) {
                 robot.set_collision(true);
                 if(alignement_particule(particules_[i].get_forme(), robot)) {
