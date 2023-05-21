@@ -377,7 +377,7 @@ void Simulation::erreurs_construction() {
     if(spatial_.hors_domaine()) {
         dessiner_ = false;
     }
-    for(const auto& N : neutraliseurs_) {
+    for(auto& N : neutraliseurs_) {
         if(N.get_k_update_panne() > N.get_nbUpdate()) {
             cout << message::invalid_k_update(N.get_forme().centre.x,
                               N.get_forme().centre.y,
@@ -483,10 +483,10 @@ int Simulation::get_nbNp(){
 
 vector<Cercle> Simulation::get_cercles() {
     vector<Cercle> tab;
-    for(const auto& neutraliseur : neutraliseurs_) {
+    for(auto& neutraliseur : neutraliseurs_) {
         tab.push_back(neutraliseur.get_forme());
     }
-    for(const auto& reparateur : reparateurs_) {
+    for(auto& reparateur : reparateurs_) {
         tab.push_back(reparateur.get_forme());
     }
     return tab;

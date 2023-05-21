@@ -26,7 +26,7 @@ public:
     using Robot::Robot;
     ~Mobile() override = default;
     virtual void set_forme(Cercle c) { forme_ = c; }
-    virtual Cercle & get_forme() const { return forme_; }
+    virtual Cercle& get_forme() { return forme_; }
     virtual void set_job(bool b) { job_ = b; }
     virtual bool has_job() const { return job_; }
     virtual void set_collision(bool b) {} ;
@@ -49,7 +49,7 @@ public:
     Neutraliseur() = delete;
     Neutraliseur(S2d position, double angle, int coordination, bool panne,
                  int k_update_panne, int nbUpdate);
-    Cercle& get_forme() const override { return forme_; }
+    Cercle& get_forme() override { return forme_; }
     int get_k_update_panne() const { return k_update_panne_; }
     int get_nbUpdate() const { return nbUpdate_; }
     bool get_panne() const { return panne_; }
@@ -91,7 +91,7 @@ class Reparateur : public Mobile {
 public:
     Reparateur() = delete;
     explicit Reparateur(S2d position);
-    Cercle& get_forme() const override { return forme_; }
+    Cercle& get_forme() override { return forme_; }
     void set_forme(Cercle c) override { forme_ = c; }
     S2d& get_but() { return but_; }
     void set_but(S2d n) { but_ = n; }
@@ -132,7 +132,7 @@ public:
     void update(V_particule& particules,
                 V_neutraliseur& neutraliseurs,
                 V_reparateur& reparateurs);
-    void assigner_N(V_neutraliseur& neutraliseurs, V_particule& particules) const;
+    void assigner_N(V_neutraliseur& neu, V_particule& part) const;
     void assigner_R(V_reparateur& reparateurs, V_neutraliseur& neutraliseurs) const;
     ~Spatial() override = default;
 private:
