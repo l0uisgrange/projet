@@ -413,7 +413,7 @@ void creation_neutraliseur(Spatial *spatial, V_neutraliseur &neutraliseurs,
             }
         }
         if(particules_libres.size() > 0) {
-            Particule P_proche(trouver_P_proche(spatial, particules_libres));
+            Particule P_proche(trouver_P(spatial, particules_libres));
             double angle(atan2(P_proche.get_forme().centre.y,
                                P_proche.get_forme().centre.x));
             int c_n((spatial->get_nbNs() + spatial->get_nbNd()) % 3);
@@ -447,14 +447,12 @@ bool single_superposition_R_N(V_neutraliseur& neutraliseurs,
     return collision;
 }
 
-Particule trouver_P_proche(Spatial *spatial, V_particule& particules_libres){
+Particule trouver_P(Spatial *spatial, V_particule& particules_libres){
     Particule P_proche(particules_libres[0]); //trouver particule la plus proche
-    double dist_min((spatial->get_forme().centre -
-                     P_proche.get_forme().centre).norme());
+    int taille_max(P_proche.get_forme().cote);
     for (auto &P: particules_libres) {
-        double dist((spatial->get_forme().centre -
-                     P.get_forme().centre).norme());
-        if (dist < dist_min) {
+        int taille(P.get_forme().cote);
+        if (taille > taille_max) {
             P_proche = P;
         }
     }
